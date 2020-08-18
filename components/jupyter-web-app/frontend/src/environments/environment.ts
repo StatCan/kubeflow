@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: "https://kubeflow.covid.cloud.statcan.ca/jupyter/api/namespaces/saffa-alvi/notebooks",
+  apiUrl: "http://localhost:5000",
   resource: "notebooks",
   ui: "default",
   rokUrl: ""
