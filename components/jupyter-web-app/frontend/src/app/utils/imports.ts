@@ -23,7 +23,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-const mm = [
+const materialModules = [
   MatButtonModule,
     MatMenuModule,
     MatToolbarModule,
@@ -49,8 +49,8 @@ const mm = [
 ]
 
 @NgModule({
-    imports: [ ...mm ],
-    exports: [...mm
+    imports: [ ...materialModules ],
+    exports: [...materialModules
     ],
     providers: [     
     ]
