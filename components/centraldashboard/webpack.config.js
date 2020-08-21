@@ -91,7 +91,7 @@ module.exports = {
             },
             // Roboto Font and Material Icons
             {
-                test: /(iconfont|roboto)\/.*\.(eot|svg|ttf|woff2?)$/,
+      		test: /\.(woff2|eot|ttf)$/,
                 use: {
                     loader: 'url-loader',
                     options: {
