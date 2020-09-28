@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import '@polymer/test-fixture/test-fixture';
 import 'jasmine-ajax';
-import {mockIronAjax, yieldForRequests, yieldForRequests2} from '../ajax_test_helper';
+import {mockIronAjax, yieldForRequests, sleep} from '../ajax_test_helper';
 import {flush} from '@polymer/polymer/lib/utils/flush.js';
 
 import './dashboard-view';
@@ -137,15 +137,21 @@ describe('Manage Users View', () => {
 
         flush();
 
-        await yieldForRequests2();
-
-        expect(manageUsersView.$.ContribError.opened)
+        //await yieldForRequests2();
+        let s = sleep(1);
+        
+        s.then(response => {
+            expect(manageUsersView.$.ContribError.opened)
             .toBe(
                 true,
                 'Error toast is not opened'
             );
-         expect(manageUsersView.contribError)
+            expect(manageUsersView.contribError)
              .toBe('Failed for test');
+        });
+        s.catch(error =>{
+            console.log(error);
+        });
     });
 
     it('Should add contributors correctly', async () => {
