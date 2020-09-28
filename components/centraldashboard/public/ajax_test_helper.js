@@ -37,12 +37,25 @@ export function sleep(t) {
     return new Promise((res) => setTimeout(res, t));
 }
 
+export function sleep2(t) {
+    let p = new Promise((res) => {
+        setTimeout(res, t)
+    });
+    p.then(r => console.log('then: ' + r));
+    p.catch(e => console.log('reject : ' + e));
+    return p;
+}
+
 /**
  * Simply yields to the next tick, so that all Promised requests can do their
  * thing.
  */
 export async function yieldForRequests() {
     await sleep(1); // Waits till next tick
+}
+
+export async function yieldForRequests2() {
+    await sleep2(1); // Waits till next tick
 }
 
 /**

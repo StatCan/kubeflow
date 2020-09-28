@@ -171,10 +171,16 @@ describe('Registration Page', () => {
 
         $e('.Main-Content .iron-selected .actions > paper-button:nth-of-type(1)').click();
 
-        await yieldForAsync(); // So the view can render
-
-        expect(flowcomplete).not.toHaveBeenCalled();
-        expect(input.error).toBe('Test Error!');
+        //await yieldForAsync(); // So the view can render
+        let s = sleep(1);
+        
+        s.then(response => {
+            expect(flowcomplete).not.toHaveBeenCalled();
+            expect(input.error).toBe('Test Error!');
+        });
+        s.catch(error =>{
+            console.log(error);
+        });
     });
 
     it('Should show validate client side errors', async () => {

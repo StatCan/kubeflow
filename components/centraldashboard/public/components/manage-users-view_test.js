@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import '@polymer/test-fixture/test-fixture';
 import 'jasmine-ajax';
-import {mockIronAjax, yieldForRequests} from '../ajax_test_helper';
+import {mockIronAjax, yieldForRequests, yieldForRequests2} from '../ajax_test_helper';
 import {flush} from '@polymer/polymer/lib/utils/flush.js';
 
 import './dashboard-view';
@@ -136,15 +136,16 @@ describe('Manage Users View', () => {
         manageUsersView.namespaces = [oNs];
 
         flush();
-        await yieldForRequests();
+
+        await yieldForRequests2();
 
         expect(manageUsersView.$.ContribError.opened)
             .toBe(
                 true,
                 'Error toast is not opened'
             );
-        expect(manageUsersView.contribError)
-            .toBe('Failed for test');
+         expect(manageUsersView.contribError)
+             .toBe('Failed for test');
     });
 
     it('Should add contributors correctly', async () => {
