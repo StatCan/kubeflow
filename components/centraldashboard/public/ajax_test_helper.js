@@ -45,6 +45,14 @@ export async function yieldForRequests() {
     await sleep(1); // Waits till next tick
 }
 
+export async function yieldForRequests2() {
+    const s = sleep(1);
+
+    s
+    .then(response => console.log("then : " + response))
+    .catch(error => console.log(error));
+}
+
 /**
  * Helper method that will mock a request directly on the iron-ajax element
  * by overriding its `generateRequest()` method
