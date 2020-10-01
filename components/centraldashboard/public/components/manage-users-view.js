@@ -77,9 +77,10 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
     /**
      * Triggers an API call to create a new Contributor
      */
-    addNewContrib() {
+    addNewContrib(e) {
+        // Need to call the api directly here.
         const api = this.$.AddContribAjax;
-        api.body = {contributor: this.newContribEmail};
+        api.body = {contributor: e.target.$.inputElement.value};
         api.generateRequest();
     }
     /**
