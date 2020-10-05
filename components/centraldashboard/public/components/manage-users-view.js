@@ -33,6 +33,7 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
         return {
             user: {type: String, value: 'Loading...'},
             isClusterAdmin: {type: Boolean, value: false},
+            allContributors: Array,
             namespaces: Array,
             ownedNamespace: {type: Object, value: () => ({})},
             newContribEmail: String,
@@ -61,6 +62,19 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
                 [namespaces[i].namespace,
                     this.uppercaseFirst(namespaces[i].role)],
             );
+        }
+        return arr;
+    }
+
+    getOwnedContributors(){
+        const {allContributors, ownedNamespace} = this;
+        if(!allContributors) return;
+        const arr = [];
+        for(let i =0; i< allContributors.length; i++){            
+            if(allContributors[i][1] === ownedNamespace.user){
+                var ns = {namespace: allContributors[i][0], owner:allContributors[i][1], contributorList:allContributors[i][2]};
+                arr.push(ns);
+            }
         }
         return arr;
     }
@@ -154,6 +168,14 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
      */
     shouldFetchAllNamespaces(ownedNamespace, isClusterAdmin) {
         return isClusterAdmin && !this.empty(ownedNamespace);
+    }
+    /**
+     * [ComputedProp] Should the ajax call for all namespaces run?
+     * @param {object} ownedNamespace
+     * @return {boolean}
+     */
+    shouldFetchAll(ownedNamespace) {
+        return !this.empty(ownedNamespace);
     }
 }
 
