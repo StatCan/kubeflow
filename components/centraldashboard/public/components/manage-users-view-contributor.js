@@ -15,7 +15,7 @@ import css from './manage-users-view-contributor.css';
 import template from './manage-users-view-contributor.pug';
 import utilitiesMixin from './utilities-mixin.js';
 
-export class ManageUsersView extends utilitiesMixin(PolymerElement) {
+export class ManageUsersViewContributor extends utilitiesMixin(PolymerElement) {
     static get template() {
         return html([`
             <style>${css.toString()}</style>
@@ -109,4 +109,4 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
     }
 }
 
-customElements.define('manage-users-view', ManageUsersView);
+customElements.define('manage-users-view-contributor', ManageUsersViewContributor);

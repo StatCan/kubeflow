@@ -23,8 +23,11 @@ section#Main-Content
                 vaadin-grid-column(width='15em', path='0', flex-grow='2', header='Namespaces')
                 vaadin-grid-column(width='9em', path='1', header='Your role')
     article.Contributors(hidden$='[[empty(ownedNamespace)]]')
+        h2
+            span.text Rm span Contributors are open
         template(is='dom-repeat', items='[[multiOwnedNamespaces]]' as='multiOwnedNamespace')
-            manage-user-view-contributor(multi-owned-namespace='[[multiOwnedNamespace]]')
+            h3
+                span.text Rm span - [[multiOwnedNamespace.namespace]]
     article.Cluster-Namespaces(hidden$='[[empty(isClusterAdmin)]]')
         h2
             iron-icon.icon(icon='kubeflow:namespace')
