@@ -1,7 +1,6 @@
 :host {
     background: white;
     position: relative;
-    display: inline-block;
 }
 h1, h2 {
     font-family: Google Sans;
@@ -12,9 +11,6 @@ h1 {
     color: black;
     padding: 1rem;
     border-bottom: 1px solid var(--border-color);
-}
-#Main-Content {
-    padding: 1rem;
 }
 article:not(:first-of-type) {
     margin-top: 1.5em;
@@ -41,13 +37,9 @@ h2 .icon {
 .content.small {
     max-width: 640px;
 }
-
-#NoNamespaceError {margin-top: 1em}
 #ContribError {
     background: #F44336
 }
-
-
 .contributor {
     @apply --layout-horizontal;
     position: relative;
@@ -56,6 +48,6 @@ h2 .icon {
     border: 2px solid var(--action-color);
     border-radius: 3px;
     transition: border-color .25s;
+    display: block;
 }
-
 [hidden] {display: none !important}
