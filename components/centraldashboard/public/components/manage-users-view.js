@@ -12,8 +12,6 @@ import '@vaadin/vaadin-grid/vaadin-grid-sort-column.js';
 
 import {html, PolymerElement} from '@polymer/polymer';
 
-import './resources/paper-chip.js';
-import './resources/md2-input/md2-input.js';
 import './manage-users-view-contributor.js';
 import css from './manage-users-view.css';
 import template from './manage-users-view.pug';
@@ -36,18 +34,16 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
             isClusterAdmin: {type: Boolean, value: false},
             namespaces: Array,
             ownedNamespace: {type: Object, value: () => ({})},
-            newContribEmail: String,
-            contribError: Object,
-            contributorInputEl: Object,
         };
     }
+    
     /**
      * Main ready method for Polymer Elements.
      */
     ready() {
         super.ready();
-        this.contributorInputEl = this.$.ContribEmail;
     }
+    
     /**
      * Returns namespaces and roles
      * @param {[object]} ns Namespaces array.
@@ -76,24 +72,6 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
     }
 
     /**
-     * Triggers an API call to create a new Contributor
-     */
-    addNewContrib(e) {
-        // Need to call the api directly here.
-        const api = this.$.AddContribAjax;
-        api.body = {contributor: e.target.$.inputElement.value};
-        api.generateRequest();
-    }
-    /**
-     * Triggers an API call to remove a Contributor
-     * @param {Event} e
-     */
-    removeContributor(e) {
-        const api = this.$.RemoveContribAjax;
-        api.body = {contributor: e.model.item};
-        api.generateRequest();
-    }
-    /**
      * Takes an event from iron-ajax and isolates the error from a request that
      * failed
      * @param {IronAjaxEvent} e
@@ -103,41 +81,7 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
         const bd = e.detail.request.response||{};
         return bd.error || e.detail.error || e.detail;
     }
-    /**
-     * Iron-Ajax response / error handler for addNewContributor
-     * @param {IronAjaxEvent} e
-     */
-    handleContribCreate(e) {
-        if (e.detail.error) {
-            const error = this._isolateErrorFromIronRequest(e);
-            this.contribCreateError = error;
-            return;
-        }
-        this.contributorList = e.detail.response;
-        this.newContribEmail = this.contribCreateError = '';
-    }
-    /**
-     * Iron-Ajax response / error handler for removeContributor
-     * @param {IronAjaxEvent} e
-     */
-    handleContribDelete(e) {
-        if (e.detail.error) {
-            const error = this._isolateErrorFromIronRequest(e);
-            this.contribCreateError = error;
-            return;
-        }
-        this.contributorList = e.detail.response;
-        this.newContribEmail = this.contribCreateError = '';
-    }
-    /**
-     * Iron-Ajax error handler for getContributors
-     * @param {IronAjaxEvent} e
-     */
-    onContribFetchError(e) {
-        const error = this._isolateErrorFromIronRequest(e);
-        this.contribError = error;
-        this.$.ContribError.show();
-    }
+
     /**
      * Iron-Ajax error handler for getContributors
      * @param {IronAjaxEvent} e
