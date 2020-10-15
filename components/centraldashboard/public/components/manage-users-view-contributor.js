@@ -108,5 +108,5 @@ export class ManageUsersViewContributor extends utilitiesMixin(PolymerElement) {
         this.$.ContribError.show();
     }
 }
-
+/* eslint-disable max-len */
 customElements.define('manage-users-view-contributor', ManageUsersViewContributor);
