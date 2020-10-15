@@ -97,10 +97,6 @@ describe('Manage Users View', () => {
             ['ns1', user, contribList.join(', ')],
         ];
         mockIronAjax(
-            manageUsersView.$.GetContribsAjax,
-            contribList,
-        );
-        mockIronAjax(
             manageUsersView.$.GetAllNamespacesAjax,
             allPeeps,
         );
