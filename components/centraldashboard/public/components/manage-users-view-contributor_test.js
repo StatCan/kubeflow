@@ -84,7 +84,7 @@ describe('Manage Users View Contributor', () => {
         flush();
         await yieldForRequests();
 
-        const input = manageUsersView.shadowRoot.querySelector('.Contributors md2-input');
+        const input = manageUsersView.shadowRoot.querySelector('.contributor md2-input');
         input.value = 'new@google.com';
         input.fireEnter();
 
@@ -116,7 +116,7 @@ describe('Manage Users View Contributor', () => {
         flush();
         await yieldForRequests();
 
-        const chip = manageUsersView.shadowRoot.querySelector('.Contributors md2-input paper-chip:nth-of-type(1)');
+        const chip = manageUsersView.shadowRoot.querySelector('.contributor md2-input paper-chip:nth-of-type(1)');
         chip.fireRemove({});
 
         await yieldForRequests();
