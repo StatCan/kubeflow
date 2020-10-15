@@ -54,12 +54,6 @@ describe('Manage Users View', () => {
     });
 
     it('UI State should show user / contribs and unhide sections when namespace available', async () => {
-        const contribList = ['foo@kubeflow.org', 'bar@kubeflow.org'];
-        mockIronAjax(
-            manageUsersView.$.GetContribsAjax,
-            contribList,
-        );
-
         manageUsersView.user = user;
         manageUsersView.ownedNamespace = oNs;
         manageUsersView.namespaces = generalNs;
@@ -74,20 +68,12 @@ describe('Manage Users View', () => {
         expect(manageUsersView.shadowRoot.querySelector('.Contributors')
             .hasAttribute('hidden')).toBe(false, 'Contributors was still hidden');
         expect(manageUsersView.shadowRoot.querySelector('.Cluster-Namespaces')
-            .hasAttribute('hidden')).toBe(true, 'Cluster Namespaces should have been hidden');
-        expect(manageUsersView.shadowRoot.querySelector('.Contributors > h2 > .text').innerText)
-            .toBe('Contributors to your namespace - ns1');
-
+            .hasAttribute('hidden')).toBe(true, 'Cluster Namespaces should have been hidden');       
         // View prop expectations
         expect(manageUsersView.shadowRoot.querySelector('.Namespaces vaadin-grid').items)
             .toEqual(
-                [['ns1', 'Owner'], ['ns2, ns3', 'Contributor']],
+                [['ns1', 'Owner'], ['ns2', 'Contributor'], ['ns3', 'Contributor']],
                 'Invalid namespace memberships'
-            );
-        expect(manageUsersView.contributorList)
-            .toEqual(
-                contribList,
-                'Invalid list of contributors'
             );
     });
 

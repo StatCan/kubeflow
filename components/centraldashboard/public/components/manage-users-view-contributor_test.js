@@ -127,4 +127,29 @@ describe('Manage Users View Contributor', () => {
                 'Invalid list of contributors'
             );
     });
+
+    it('UI State should show contribs when namespace available', async () => {
+        const contribList = ['foo@kubeflow.org', 'bar@kubeflow.org'];
+        mockIronAjax(
+            manageUsersView.$.GetContribsAjax,
+            contribList,
+        );
+
+        manageUsersView.user = user;
+        manageUsersView.ownedNamespace = oNs;
+        manageUsersView.namespaces = generalNs;
+
+        flush();
+        await yieldForRequests();
+
+        expect(manageUsersView.shadowRoot.querySelector('.contributor > h2 > .text').innerText)
+            .toBe('Contributors to your namespace - ns1');
+
+        // View prop expectations
+        expect(manageUsersView.contributorList)
+            .toEqual(
+                contribList,
+                'Invalid list of contributors'
+            );
+    });
 });
