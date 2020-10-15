@@ -20,7 +20,7 @@ section#Main-Content
                 vaadin-grid-column(width='9em', path='1', header='Your role')
     article.Contributors(hidden$='[[empty(ownedNamespace)]]')     
         template(is='dom-repeat', items='[[multiOwnedNamespaces]]' as='multiOwnedNamespace')
-            manage-users-view-contributor(multi-owned-namespace='[[multiOwnedNamespace]]')
+            manage-users-view-contributor(owned-namespace='[[multiOwnedNamespace]]')
     article.Cluster-Namespaces(hidden$='[[empty(isClusterAdmin)]]')
         h2
             iron-icon.icon(icon='kubeflow:namespace')
