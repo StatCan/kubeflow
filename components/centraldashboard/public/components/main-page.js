@@ -23,6 +23,8 @@ import '@polymer/neon-animation/neon-animatable.js';
 import '@polymer/neon-animation/neon-animated-pages.js';
 import '@polymer/neon-animation/animations/fade-in-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
+import {AppLocalizeBehavior} from "@polymer/app-localize-behavior/app-localize-behavior.js";
+import {mixinBehavior, mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
@@ -45,11 +47,20 @@ import {IFRAME_LINK_PREFIX} from './iframe-link.js';
 /**
  * Entry point for application UI.
  */
-export class MainPage extends utilitiesMixin(PolymerElement) {
+export class MainPage extends mixinBehaviors([AppLocalizeBehavior, utilitiesMixin], PolymerElement)  {
     static get template() {
         const vars = {logo};
         return html([
             `<style>${css.toString()}</style>${template(vars)}`]);
+    }
+
+    constructor(){
+        super();
+        this.language='en';
+        this.resources = {
+            'en': {'home':'Home'},
+            'fr': {'home':'Acceuil'}
+        };
     }
 
     static get properties() {
