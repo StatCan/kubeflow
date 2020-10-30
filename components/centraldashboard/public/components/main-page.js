@@ -24,7 +24,7 @@ import '@polymer/neon-animation/neon-animated-pages.js';
 import '@polymer/neon-animation/animations/fade-in-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
 import {AppLocalizeBehavior} from "@polymer/app-localize-behavior/app-localize-behavior.js";
-import {mixinBehavior, mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
+import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
@@ -56,7 +56,6 @@ export class MainPage extends utilitiesMixin( mixinBehaviors([AppLocalizeBehavio
 
     constructor(){
         super();
-        this.language = this.getBrowserLang();;
         this.resources = {
             "en": {
                 "menuHome":"Home",
@@ -91,30 +90,6 @@ export class MainPage extends utilitiesMixin( mixinBehaviors([AppLocalizeBehavio
             }
         };
     }
-
-    //Get the language from the browser default language
-    getBrowserLang() {
-        if (typeof window === 'undefined' || typeof window.navigator === 'undefined') {
-          return undefined;
-        }
-    
-        let browserLang = window.navigator.languages ? window.navigator.languages[0] : null;
-        browserLang = browserLang || window.navigator.language || window.navigator.browserLanguage || window.navigator.userLanguage;
-    
-        if (typeof browserLang === 'undefined') {
-          return undefined
-        }
-    
-        if (browserLang.indexOf('-') !== -1) {
-          browserLang = browserLang.split('-')[0];
-        }
-    
-        if (browserLang.indexOf('_') !== -1) {
-          browserLang = browserLang.split('_')[0];
-        }
-    
-        return browserLang;
-      }
 
     static get properties() {
         return {
