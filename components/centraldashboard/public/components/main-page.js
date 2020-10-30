@@ -47,7 +47,7 @@ import {IFRAME_LINK_PREFIX} from './iframe-link.js';
 /**
  * Entry point for application UI.
  */
-export class MainPage extends mixinBehaviors([AppLocalizeBehavior, utilitiesMixin], PolymerElement)  {
+export class MainPage extends utilitiesMixin( mixinBehaviors([AppLocalizeBehavior], PolymerElement))  {
     static get template() {
         const vars = {logo};
         return html([
@@ -56,12 +56,65 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior, utilitiesMixi
 
     constructor(){
         super();
-        this.language='en';
+        this.language = this.getBrowserLang();;
         this.resources = {
-            'en': {'home':'Home'},
-            'fr': {'home':'Acceuil'}
+            "en": {
+                "menuHome":"Home",
+                "menuPipelines": "Pipelines",
+                "menuNotebookServers":"Notebook Servers",
+                "menuKatib":"Katib",
+                "menuArtifactStore": "Artifact Store",
+                "menuManageContributors": "Manage Contributors",
+                "menuGitHub": "GitHub",
+                "menuDocumentation": "Documentation",
+                "menuPrivacy": "Privacy",
+                "menuPrivacyTitle": "Kubeflow Privacy Policy",
+                "menuUsageReporting": "Usage Reporting",
+                "menuUsageReportingTitle": "Kubeflow Usage Reporting",
+                "tabDashboard": "Dashboard",
+                "tabActivity": "Activity"
+            },
+            "fr": {
+                "menuHome":"Acceuil",
+                "menuPipelines": "Pipelines",
+                "menuNotebookServers":"Serveur Bloc-notes",
+                "menuKatib":"Katib",
+                "menuArtifactStore": "Magasin d'artefact",
+                "menuGitHub": "GitHub",
+                "menuDocumentation": "Documentation",
+                "menuPrivacy": "Confidentialité",
+                "menuPrivacyTitle": "Politique de confidentialié de Kubeflow",
+                "menuUsageReporting": "Rapport d'utilisation",
+                "menuUsageReportingTitle": "Rapport d'utilisation de Kubeflow",
+                "tabDashboard": "Tableau de bord",
+                "tabActivity": "Activité"
+            }
         };
     }
+
+    //Get the language from the browser default language
+    getBrowserLang() {
+        if (typeof window === 'undefined' || typeof window.navigator === 'undefined') {
+          return undefined;
+        }
+    
+        let browserLang = window.navigator.languages ? window.navigator.languages[0] : null;
+        browserLang = browserLang || window.navigator.language || window.navigator.browserLanguage || window.navigator.userLanguage;
+    
+        if (typeof browserLang === 'undefined') {
+          return undefined
+        }
+    
+        if (browserLang.indexOf('-') !== -1) {
+          browserLang = browserLang.split('-')[0];
+        }
+    
+        if (browserLang.indexOf('_') !== -1) {
+          browserLang = browserLang.split('_')[0];
+        }
+    
+        return browserLang;
+      }
 
     static get properties() {
         return {
@@ -79,19 +132,19 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior, utilitiesMixi
                 value: [
                     {
                         link: '/pipeline/',
-                        text: 'Pipelines',
+                        text: 'menuPipelines',
                     },
                     {
                         link: '/jupyter/',
-                        text: 'Notebook Servers',
+                        text: 'menuNotebookServers',
                     },
                     {
                         link: '/katib/',
-                        text: 'Katib',
+                        text: 'menuKatib',
                     },
                     {
                         link: '/metadata/',
-                        text: 'Artifact Store',
+                        text: 'menuArtifactStore',
                     },
                 ],
             },
