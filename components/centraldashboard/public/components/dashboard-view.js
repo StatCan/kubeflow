@@ -31,6 +31,69 @@ export class DashboardView extends utilitiesMixin( mixinBehaviors([AppLocalizeBe
         `]);
     }
 
+    constructor(){
+        super();
+        this.resources = {
+            "en": {
+                "headingQuickLinks":"Quick shortcuts",
+                "quicklinkUploadText": "Upload a pipeline",
+                "quicklinkUploadDesc": "Pipelines",
+                "quicklinkViewAllText": "View all pipeline runs",
+                "quicklinkViewAllDesc": "Pipelines",
+                "quicklinkCreateNewText": "Create a new Notebook server",
+                "quicklinkCreateNewDesc": "Notebook Servers",
+                "quicklinkViewKatibText": "View Katib Studies",
+                "quicklinkViewKatibDesc": "Katib",
+                "quicklinkMetadataArtifactsText": "View Metadata Artifacts",
+                "quicklinkMetadataArtifactsDesc": "Artifact Store",
+                "headingRecentPipelines": "Recent Pipelines",
+                "headingDocumentation": "Documentation"
+            },
+            "fr": {
+                "headingQuickLinks":"Raccourcis",
+                "quicklinkUploadText": "FR Upload a pipeline",
+                "quicklinkUploadDesc": "Pipelines",
+                "quicklinkViewAllText": "FR View all pipeline runs",
+                "quicklinkViewAllDesc": "Pipelines",
+                "quicklinkCreateNewText": "FR Create a new Notebook server",
+                "quicklinkCreateNewDesc": "FR Notebook Servers",
+                "quicklinkViewKatibText": "FR View Katib Studies",
+                "quicklinkViewKatibDesc": "Katib",
+                "quicklinkMetadataArtifactsText": "FR View Metadata Artifacts",
+                "quicklinkMetadataArtifactsDesc": "FR Artifact Store",
+                "headingRecentPipelines": "Pipelines Recentes",
+                "headingDocumentation": "Documentation"
+            }
+        };
+        this.language = this.getBrowserLang();
+    }
+
+    getBrowserLang() {
+        if (typeof window === 'undefined' || 
+            typeof window.navigator === 'undefined') {
+            return undefined;
+        }
+    
+        let browserLang = window.navigator.languages ? 
+            window.navigator.languages[0] : null;
+        browserLang = browserLang || window.navigator.language || 
+            window.navigator.browserLanguage || window.navigator.userLanguage;
+    
+        if (typeof browserLang === 'undefined') {
+            return undefined
+        }
+    
+        if (browserLang.indexOf('-') !== -1) {
+            browserLang = browserLang.split('-')[0];
+        }
+    
+        if (browserLang.indexOf('_') !== -1) {
+            browserLang = browserLang.split('_')[0];
+        }
+    
+        return browserLang;
+    }
+
     /**
      * Object describing property-related metadata used by Polymer features
      */
@@ -70,28 +133,28 @@ export class DashboardView extends utilitiesMixin( mixinBehaviors([AppLocalizeBe
                 type: Array,
                 value: [
                     {
-                        text: 'Upload a pipeline',
-                        desc: 'Pipelines',
+                        text: 'quicklinkUploadText',
+                        desc: 'quicklinkUploadDesc',
                         link: `/pipeline/`,
                     },
                     {
-                        text: 'View all pipeline runs',
-                        desc: 'Pipelines',
+                        text: 'quicklinkViewAllText',
+                        desc: 'quicklinkViewAllDesc',
                         link: `/pipeline/#/runs`,
                     },
                     {
-                        text: 'Create a new Notebook server',
-                        desc: 'Notebook Servers',
+                        text: 'quicklinkCreateNewText',
+                        desc: 'quicklinkCreateNewDesc',
                         link: `/jupyter/new?namespace=kubeflow`,
                     },
                     {
-                        text: 'View Katib Studies',
-                        desc: 'Katib',
+                        text: 'quicklinkViewKatibText',
+                        desc: 'quicklinkViewKatibDesc',
                         link: `/katib/`,
                     },
                     {
-                        text: 'View Metadata Artifacts',
-                        desc: 'Artifact Store',
+                        text: 'quicklinkMetadataArtifactsText',
+                        desc: 'quicklinkMetadataArtifactsDesc',
                         link: `/metadata/`,
                     },
                 ],

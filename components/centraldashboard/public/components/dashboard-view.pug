@@ -1,14 +1,15 @@
 div#grid
     .column
-        paper-card#Quick-Links(heading='Quick shortcuts')
+        paper-card#Quick-Links(heading="{{localize('headingQuickLinks')}}")
             template(is='dom-repeat', items='[[quickLinks]]')
                 iframe-link.link(href$="[[item.link]]")
                     paper-icon-item
                         iron-icon(icon='kubeflow:bolt', slot='item-icon')
                         paper-item-body(two-line)
-                            .header [[item.text]]
-                            aside(secondary) [[item.desc]]
+                            .header {{localize(item.text)}}
+                            aside(secondary) {{localize(item.desc)}}
                         paper-ripple
+        //- TODOWG: Translate platformDetails
         template(is='dom-if', if='[[platformDetails.resourceChartsLink]]')
             resource-chart(header-text='Cluster CPU Utilization', metric='cpu',
                 interval='Last60m',
@@ -21,7 +22,7 @@ div#grid
         pipelines-card(heading='Recent Pipeline Runs', artifact-type='runs')
     .column
         notebooks-card(namespace='[[namespace]]')
-        pipelines-card(heading='Recent Pipelines', artifact-type='pipelines')
+        pipelines-card(heading="{{localize('headingRecentPipelines')}}", artifact-type='pipelines')
     .column
         template(is='dom-if', if='[[platformDetails.links]]')
             paper-card#Platform-Links(class$='[[platformDetails.name]]',
