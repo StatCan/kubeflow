@@ -10,38 +10,6 @@ const VALID_QUERY_PARAMS = ['ns'];
  */
 export default (superClass) => class extends superClass {
     /**
-     * Allows control of the language
-     */ 
-    constructor(){
-        super();
-        this.language = this.getBrowserLang();
-    }
-
-    //Get the language from the browser default language
-    getBrowserLang() {
-        if (typeof window === 'undefined' || typeof window.navigator === 'undefined') {
-            return undefined;
-        }
-    
-        let browserLang = window.navigator.languages ? window.navigator.languages[0] : null;
-        browserLang = browserLang || window.navigator.language || window.navigator.browserLanguage || window.navigator.userLanguage;
-    
-        if (typeof browserLang === 'undefined') {
-            return undefined
-        }
-    
-        if (browserLang.indexOf('-') !== -1) {
-            browserLang = browserLang.split('-')[0];
-        }
-    
-        if (browserLang.indexOf('_') !== -1) {
-            browserLang = browserLang.split('_')[0];
-        }
-    
-        return browserLang;
-        }
-
-    /**
      * Provide a logical OR functionality for the Polymer DOM
      * @param {...boolean} e
      * @return {boolean}

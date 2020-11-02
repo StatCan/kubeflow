@@ -23,6 +23,7 @@ import '@polymer/neon-animation/neon-animatable.js';
 import '@polymer/neon-animation/neon-animated-pages.js';
 import '@polymer/neon-animation/animations/fade-in-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
+// eslint-disable-next-line max-len
 import {AppLocalizeBehavior} from "@polymer/app-localize-behavior/app-localize-behavior.js";
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
@@ -47,6 +48,7 @@ import {IFRAME_LINK_PREFIX} from './iframe-link.js';
 /**
  * Entry point for application UI.
  */
+// eslint-disable-next-line max-len
 export class MainPage extends utilitiesMixin( mixinBehaviors([AppLocalizeBehavior], PolymerElement))  {
     static get template() {
         const vars = {logo};
@@ -89,6 +91,33 @@ export class MainPage extends utilitiesMixin( mixinBehaviors([AppLocalizeBehavio
                 "tabActivity": "Activité"
             }
         };
+        this.language = this.getBrowserLang();
+    }
+
+    getBrowserLang() {
+        if (typeof window === 'undefined' || 
+            typeof window.navigator === 'undefined') {
+            return undefined;
+        }
+    
+        let browserLang = window.navigator.languages ? 
+            window.navigator.languages[0] : null;
+        browserLang = browserLang || window.navigator.language || 
+            window.navigator.browserLanguage || window.navigator.userLanguage;
+    
+        if (typeof browserLang === 'undefined') {
+            return undefined
+        }
+    
+        if (browserLang.indexOf('-') !== -1) {
+            browserLang = browserLang.split('-')[0];
+        }
+    
+        if (browserLang.indexOf('_') !== -1) {
+            browserLang = browserLang.split('_')[0];
+        }
+    
+        return browserLang;
     }
 
     static get properties() {
