@@ -7,6 +7,9 @@ import '@polymer/paper-ripple/paper-ripple.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-progress/paper-progress.js';
 import './iframe-link.js';
+// eslint-disable-next-line max-len
+import {AppLocalizeBehavior} from "@polymer/app-localize-behavior/app-localize-behavior.js";
+import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
 import {html, PolymerElement} from '@polymer/polymer';
 
@@ -21,7 +24,8 @@ const getListNotebooksUrl = (namespace, server) =>
 /**
  * Component to retrieve and display recently modified Jupyter Notebooks.
  */
-export class NotebooksCard extends PolymerElement {
+// eslint-disable-next-line max-len
+export class NotebooksCard extends  mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
     static get template() {
         return html`
         <style include="card-styles">
@@ -33,10 +37,10 @@ export class NotebooksCard extends PolymerElement {
             loading="{{loading}}" on-response="_onNotebookServersResponse"
             on-error="_onError">
         </iron-ajax>
-        <paper-card heading="Recent Notebooks">
+        <paper-card heading="{{localize('headingRecentNotebooks')}}">
             <paper-progress indeterminate class="slow"
                 hidden$="[[!loading]]"></paper-progress>
-            <header id="message" hidden$="[[!message]]">[[message]]</header>
+            <header id="message" hidden$="[[!message]]">{{localize(message)}}</header>
             <template is="dom-repeat" items="[[notebooks]]">
                 <iframe-link class="link" href$="[[item.href]]">
                     <paper-icon-item>
@@ -56,6 +60,48 @@ export class NotebooksCard extends PolymerElement {
         `;
     }
 
+    constructor(){
+        super();
+        this.language = this.getBrowserLang();
+        this.resources = {
+            "en": {
+                "headingRecentNotebooks":"Recent Notebooks",
+                "msgChooseNamespace": "Choose a namespace to see Notebooks"
+            },
+            "fr": {
+                "headingRecentNotebooks": "Bloc-notes recents",
+                "msgChooseNamespace": "FR Choose a namespace to see Notebooks",
+
+            }
+        };
+    }
+
+    getBrowserLang() {
+        if (typeof window === 'undefined' || 
+            typeof window.navigator === 'undefined') {
+            return undefined;
+        }
+    
+        let browserLang = window.navigator.languages ? 
+            window.navigator.languages[0] : null;
+        browserLang = browserLang || window.navigator.language || 
+            window.navigator.browserLanguage || window.navigator.userLanguage;
+    
+        if (typeof browserLang === 'undefined') {
+            return undefined
+        }
+    
+        if (browserLang.indexOf('-') !== -1) {
+            browserLang = browserLang.split('-')[0];
+        }
+    
+        if (browserLang.indexOf('_') !== -1) {
+            browserLang = browserLang.split('_')[0];
+        }
+    
+        return browserLang;
+    }
+
     static get properties() {
         return {
             loading: {
@@ -64,7 +110,7 @@ export class NotebooksCard extends PolymerElement {
             },
             message: {
                 type: String,
-                value: 'Choose a namespace to see Notebooks',
+                value: 'msgChooseNamespace',
             },
             namespace: String,
             listNotebookServersUrl: {
