@@ -47,49 +47,59 @@ export class DashboardView extends utilitiesMixin( mixinBehaviors([AppLocalizeBe
                 "quicklinkMetadataArtifactsText": "View Metadata Artifacts",
                 "quicklinkMetadataArtifactsDesc": "Artifact Store",
                 "headingRecentPipelines": "Recent Pipelines",
+                "headingRecentPipelinesRuns": "Recent Pipeline Runs",
                 "headingDocumentation": "Documentation",
                 "docItemAAWDText": "FR Advanced Analytics Workspace Docs",
                 "docItemAAWDDesc": "FR Helpful guides about our data and " +
                     "analysis tools",
+                "docItemAAWDLink": `https://statcan.github.io/daaas/`,
                 "docItemVideoTutorialText": "Video Tutorial Series",
                 "docItemVideoTutorialDesc": "YouTube playlist of videos " +
-                "for getting started with Advanced Analytics Workspace tools",
+                    "for getting started with Advanced Analytics Workspace tools",
+                "docItemVideoTutorialLink": `https://www.youtube.com/playlist?list=PL1zlA2D7AHugkDdiyeUHWOKGKUd3MB_nD`,
                 "docItemCommunityChatText": "Community Chat",
                 "docItemCommunityChatDesc": "Slack workspace for " + 
                     "discussion/support - requires sign-up for emails " +
                     "outside @canada.ca",
+                "docItemCommunityChatLink":`https://statcan-aaw.slack.com/`,
                 "docItemOfficialKubeflowDocsText": "Official Kubeflow Docs",
                 "docItemOfficialKubeflowDocsDesc": "Advanced documentation " +
-                    "for installing, running, and using Kubeflow"
+                    "for installing, running, and using Kubeflow",
+                "docItemOfficialKubeflowDocsLink":`https://www.kubeflow.org/docs/`
             },
             "fr": {
                 "headingQuickLinks":"Raccourcis",
-                "quicklinkUploadText": "FR Upload a pipeline",
+                "quicklinkUploadText": "Télécharger un pipeline",
                 "quicklinkUploadDesc": "Pipelines",
-                "quicklinkViewAllText": "FR View all pipeline runs",
+                "quicklinkViewAllText": "Voir tous les pipelines exécutés",
                 "quicklinkViewAllDesc": "Pipelines",
-                "quicklinkCreateNewText": "FR Create a new Notebook server",
-                "quicklinkCreateNewDesc": "FR Notebook Servers",
-                "quicklinkViewKatibText": "FR View Katib Studies",
+                "quicklinkCreateNewText": "Créer un nouveau serveur bloc-notes",
+                "quicklinkCreateNewDesc": "Serveur bloc-notes",
+                "quicklinkViewKatibText": "Voir Katib Studies",
                 "quicklinkViewKatibDesc": "Katib",
-                "quicklinkMetadataArtifactsText": "FR View Metadata Artifacts",
-                "quicklinkMetadataArtifactsDesc": "FR Artifact Store",
-                "headingRecentPipelines": "Pipelines Recentes",
+                "quicklinkMetadataArtifactsText": "Voir le magasin d'artefacts",
+                "quicklinkMetadataArtifactsDesc": "Magasin d'artefact",
+                "headingRecentPipelines": "Pipelines récentes",
+                "headingRecentPipelinesRuns": "Voir tous les pipeline récentes exécutés",
                 "headingDocumentation": "Documentation",
-                "docItemAAWDText": "FR Advanced Analytics Workspace Docs",
-                "docItemAAWDDesc": "FR Helpful guides about our data and " +
-                    "analysis tools",
-                "docItemVideoTutorialText": "FR Video Tutorial Series",
-                "docItemVideoTutorialDesc": "FR YouTube playlist of videos " +
-                    "for getting started with Advanced Analytics Workspace " +
-                    "tools",
-                "docItemCommunityChatText": "FR Community Chat",
-                "docItemCommunityChatDesc": "FR Slack workspace for " +
-                    "discussion/support - requires sign-up for emails " +
-                    "outside @canada.ca",
-                "docItemOfficialKubeflowDocsText": "FR Official Kubeflow Docs",
-                "docItemOfficialKubeflowDocsDesc": "FR Advanced documentation"+
-                    " for installing, running, and using Kubeflow"
+                "docItemAAWDText": "Documents de l'espace d'analyses avancées",
+                "docItemAAWDDesc": "Guides utiles pour nos données et " +
+                    "outils d'analyse",
+                "docItemAAWDLink": `https://statcan.github.io/daaas/`,
+                "docItemVideoTutorialText": "Série de didacticiels vidéo",
+                "docItemVideoTutorialDesc": "Playlist de vidéos YouTube " +
+                    "pour commencer avec les outils de l'espace " +
+                    "d'analyses avancées",
+                "docItemVideoTutorialLink": `https://www.youtube.com/playlist?list=PL1zlA2D7AHugkDdiyeUHWOKGKUd3MB_nD`,
+                "docItemCommunityChatText": "Clavardage de la communauté",
+                "docItemCommunityChatDesc": "Espace de travail Slack pour " +
+                    "discussion/support - besoin de s'inscrire pour les " +
+                    "courriels en dehors de @canada.ca",
+                "docItemCommunityChatLink":`https://statcan-aaw.slack.com/`,
+                "docItemOfficialKubeflowDocsText": "Documents Kubeflow Officiels",
+                "docItemOfficialKubeflowDocsDesc": "Documentation avancé"+
+                    " pour installer, exécuter et utiliser Kubeflow",
+                "docItemOfficialKubeflowDocsLink":`https://www.kubeflow.org/docs/`
             }
         };
         this.language = this.getBrowserLang();
@@ -132,22 +142,22 @@ export class DashboardView extends utilitiesMixin( mixinBehaviors([AppLocalizeBe
                     {
                         text: 'docItemAAWDText',
                         desc: 'docItemAAWDDesc',
-                        link: `https://statcan.github.io/daaas/`,
+                        link: 'docItemAAWDLink',
                     },
                     {
                         text: 'docItemVideoTutorialText',
                         desc: 'docItemVideoTutorialDesc',
-                        link: `https://www.youtube.com/playlist?list=PL1zlA2D7AHugkDdiyeUHWOKGKUd3MB_nD`,
+                        link: 'docItemVideoTutorialLink',
                     },
                     {
                         text: 'docItemCommunityChatText',
                         desc: 'docItemCommunityChatDesc',
-                        link: `https://statcan-aaw.slack.com/`,
+                        link: 'docItemCommunityChatLink',
                     },
                     {
                         text: 'docItemOfficialKubeflowDocsText',
                         desc: 'docItemOfficialKubeflowDocsDesc',
-                        link: `https://www.kubeflow.org/docs/`,
+                        link: 'docItemOfficialKubeflowDocsLink',
                     },
                 ],
             },

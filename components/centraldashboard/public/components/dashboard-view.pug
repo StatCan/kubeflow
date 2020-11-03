@@ -19,7 +19,7 @@ div#grid
                 interval='Last60m',
                 external-link='[[platformDetails.resourceChartsLink]]'
                 external-link-text='[[platformDetails.resourceChartsLinkText]]')
-        pipelines-card(heading='Recent Pipeline Runs', artifact-type='runs')
+        pipelines-card(heading="{{localize('headingRecentPipelinesRuns')}}", artifact-type='runs')
     .column
         notebooks-card(namespace='[[namespace]]')
         pipelines-card(heading="{{localize('headingRecentPipelines')}}", artifact-type='pipelines')
@@ -39,7 +39,7 @@ div#grid
                                 slot='item-icon', alt='[[item.text]]', tabindex=-1)
         paper-card#Documentation(heading="{{localize('headingDocumentation')}}")
             template(is='dom-repeat', items='[[documentationItems]]')
-                a.link(href$='[[item.link]]', tabindex='-1',
+                a.link(href$="{{localize(item.link)}}", tabindex='-1',
                             target='_blank')
                     paper-icon-item.external
                         paper-ripple
@@ -47,4 +47,4 @@ div#grid
                             .header  {{localize(item.text)}}
                             aside(secondary) {{localize(item.desc)}}
                         paper-icon-button.button(icon='open-in-new',
-                            slot='item-icon', alt='[[item.text]]', tabindex=-1)
+                            slot='item-icon', alt='{{localize(item.text)}}', tabindex=-1)
