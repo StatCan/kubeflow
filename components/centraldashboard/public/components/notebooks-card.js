@@ -50,7 +50,7 @@ export class NotebooksCard extends  mixinBehaviors([AppLocalizeBehavior], Polyme
                         <paper-item-body two-line>
                             <div class="header">[[item.name]]</div>
                             <aside secondary>
-                                Accessed [[item.lastModified]]
+                                {{localize('txtAccessed')}}[[item.lastModified]]
                             </aside>
                         </paper-item-body>
                     </paper-icon-item>
@@ -66,11 +66,13 @@ export class NotebooksCard extends  mixinBehaviors([AppLocalizeBehavior], Polyme
         this.resources = {
             "en": {
                 "headingRecentNotebooks":"Recent Notebooks",
-                "msgChooseNamespace": "Choose a namespace to see Notebooks"
+                "msgChooseNamespace": "Choose a namespace to see Notebooks",
+                "txtAccessed": "Accessed "
             },
             "fr": {
                 "headingRecentNotebooks": "Bloc-notes recents",
-                "msgChooseNamespace": "FR Choose a namespace to see Notebooks",
+                "msgChooseNamespace": "Choisisser un espace de noms pour voir les bloc-notes",
+                "txtAccessed": "Accédé "
 
             }
         };

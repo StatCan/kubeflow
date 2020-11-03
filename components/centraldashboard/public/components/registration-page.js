@@ -8,6 +8,9 @@ import '@polymer/neon-animation/neon-animatable.js';
 import '@polymer/neon-animation/neon-animated-pages.js';
 import '@polymer/neon-animation/animations/fade-in-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
+// eslint-disable-next-line max-len
+import {AppLocalizeBehavior} from "@polymer/app-localize-behavior/app-localize-behavior.js";
+import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
@@ -23,12 +26,73 @@ import utilitiesMixin from './utilities-mixin.js';
 /**
  * Entry point for application UI.
  */
-export class RegistrationPage extends utilitiesMixin(PolymerElement) {
+// eslint-disable-next-line max-len
+export class RegistrationPage extends utilitiesMixin(mixinBehaviors([AppLocalizeBehavior], PolymerElement)) {
     static get template() {
         const vars = {logo};
         return html([
             `<style>${css.toString()}</style>${template(vars)}`]);
     }
+
+    constructor(){
+        super();
+        this.resources = {
+            "en": {
+                "lblWelcome":"Welcome",
+                "registrationDesc": "In order to use Kubeflow, a namespace for your account must be created. Follow the steps to get started",
+                "btnStartSetup": "Start Setup",
+                "lblNamespace": "Namespace",
+                "lblNamespaceDesc": "A namespace is a collection of Kubeflow services. Resources created within a namespace are isolated to that namespace. By default, a namespace will be created for you.",
+                "lblNamespaceName": "Namespace Name",
+                "btnFinish": "Finish",
+                "btnBack": "Go back",
+                "linkGitHub": "GitHub",
+                "linkDocumentation": "Documentation",
+                "linkPrivacy": "Privacy"
+            },
+            "fr": {
+                "lblWelcome":"Bienvenue",
+                "registrationDesc": "Afin d'utiliser Kubeflow, un espace de noms doit être créé pour votre compte. Suiver les étapes pour commencer",
+                "btnStartSetup": "Commencer",
+                "lblNamespace": "Espace de nom",
+                "lblNamespaceDesc": "Un espace de nom est une collection de services Kubeflow. Les ressources créées dans cet espace sont isolés à cette espace de nom. Par défault, un espace de nom sera créé pour vous.",
+                "lblNamespaceName": "Nom",
+                "btnFinish": "Finir",
+                "btnBack": "Retour",
+                "linkGitHub": "GitHub",
+                "linkDocumentation": "Documentation",
+                "linkPrivacy": "Confidentialité"
+            }
+        };
+        this.language = this.getBrowserLang();
+    }
+
+    getBrowserLang() {
+        if (typeof window === 'undefined' || 
+            typeof window.navigator === 'undefined') {
+            return undefined;
+        }
+    
+        let browserLang = window.navigator.languages ? 
+            window.navigator.languages[0] : null;
+        browserLang = browserLang || window.navigator.language || 
+            window.navigator.browserLanguage || window.navigator.userLanguage;
+    
+        if (typeof browserLang === 'undefined') {
+            return undefined
+        }
+    
+        if (browserLang.indexOf('-') !== -1) {
+            browserLang = browserLang.split('-')[0];
+        }
+    
+        if (browserLang.indexOf('_') !== -1) {
+            browserLang = browserLang.split('_')[0];
+        }
+    
+        return browserLang;
+    }
+
 
     static get properties() {
         return {

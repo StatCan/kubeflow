@@ -49,7 +49,7 @@ import {IFRAME_LINK_PREFIX} from './iframe-link.js';
  * Entry point for application UI.
  */
 // eslint-disable-next-line max-len
-export class MainPage extends utilitiesMixin( mixinBehaviors([AppLocalizeBehavior], PolymerElement))  {
+export class MainPage extends utilitiesMixin(mixinBehaviors([AppLocalizeBehavior], PolymerElement)) {
     static get template() {
         const vars = {logo};
         return html([
@@ -73,7 +73,8 @@ export class MainPage extends utilitiesMixin( mixinBehaviors([AppLocalizeBehavio
                 "menuUsageReporting": "Usage Reporting",
                 "menuUsageReportingTitle": "Kubeflow Usage Reporting",
                 "tabDashboard": "Dashboard",
-                "tabActivity": "Activity"
+                "tabActivity": "Activity",
+                "footerBuildVersion": "Build: {buildVersion} | Dashboard: v {dashVersion} | Isolation-Mode: {isolationMode}"
             },
             "fr": {
                 "menuHome":"Acceuil",
@@ -88,7 +89,8 @@ export class MainPage extends utilitiesMixin( mixinBehaviors([AppLocalizeBehavio
                 "menuUsageReporting": "Rapport d'utilisation",
                 "menuUsageReportingTitle": "Rapport d'utilisation de Kubeflow",
                 "tabDashboard": "Tableau de bord",
-                "tabActivity": "Activité"
+                "tabActivity": "Activité",
+                "footerBuildVersion": "Version: {buildVersion} | Dashboard: v {dashVersion} | Mode d'isolation: {isolationMode}"
             }
         };
         this.language = this.getBrowserLang();

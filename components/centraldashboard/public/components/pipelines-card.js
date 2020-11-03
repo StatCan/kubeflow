@@ -9,6 +9,9 @@ import '@polymer/paper-progress/paper-progress.js';
 import './iframe-link.js';
 
 import {html, PolymerElement} from '@polymer/polymer';
+// eslint-disable-next-line max-len
+import {AppLocalizeBehavior} from "@polymer/app-localize-behavior/app-localize-behavior.js";
+import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
 import './card-styles.js';
 
@@ -20,7 +23,8 @@ const VALID_ARTIFACT_TYPES = new Set([PIPELINES, RUNS]);
 /**
  * Component to retrieve and display Pipelines or Pipeline Runs
  */
-export class PipelinesCard extends PolymerElement {
+// eslint-disable-next-line max-len
+export class PipelinesCard extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
     static get template() {
         return html`
         <style include="card-styles">
@@ -51,13 +55,55 @@ export class PipelinesCard extends PolymerElement {
                         </iron-icon>
                         <paper-item-body two-line>
                             <div class="header">[[item.name]]</div>
-                            <aside secondary>Created [[item.created]]</aside>
+                            <aside secondary>
+                                {{localize('txtCreated')}} [[item.created]]
+                            </aside>
                         </paper-item-body>
                     </paper-icon-item>
                 </iframe-link>
             </template>
         </paper-card>
         `;
+    }
+
+    constructor(){
+        super();
+        this.language = this.getBrowserLang();
+        this.resources = {
+            "en": {
+                "txtCreated": "Created "
+            },
+            "fr": {
+                "txtCreated": "Créé"
+
+            }
+        };
+    }
+
+    getBrowserLang() {
+        if (typeof window === 'undefined' || 
+            typeof window.navigator === 'undefined') {
+            return undefined;
+        }
+    
+        let browserLang = window.navigator.languages ? 
+            window.navigator.languages[0] : null;
+        browserLang = browserLang || window.navigator.language || 
+            window.navigator.browserLanguage || window.navigator.userLanguage;
+    
+        if (typeof browserLang === 'undefined') {
+            return undefined
+        }
+    
+        if (browserLang.indexOf('-') !== -1) {
+            browserLang = browserLang.split('-')[0];
+        }
+    
+        if (browserLang.indexOf('_') !== -1) {
+            browserLang = browserLang.split('_')[0];
+        }
+    
+        return browserLang;
     }
 
     static get properties() {
