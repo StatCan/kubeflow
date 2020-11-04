@@ -41,7 +41,7 @@ export class NotebooksCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
             <paper-progress indeterminate class="slow"
                 hidden$="[[!loading]]"></paper-progress>
             <header id="message" hidden$="[[!message]]">
-                {{localize(message)}}
+                {{localize(message, 'namespace', namespace)}}
             </header>
             <template is="dom-repeat" items="[[notebooks]]">
                 <iframe-link class="link" href$="[[item.href]]">
@@ -64,17 +64,24 @@ export class NotebooksCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
 
     constructor() {
         super();
-        this.language = this.getBrowserLang();
+        const currentLanguage = this.getBrowserLang();
+        const lang = currentLanguage.match(/en|fr/) ? currentLanguage : 'en';
+        this.language = lang;
         this.resources = {
             'en': {
                 'headingRecentNotebooks': 'Recent Notebooks',
                 'msgChooseNamespace': 'Choose a namespace to see Notebooks',
+                'errRetrievingNotebooks': 'Error retrieving Notebooks',
+                'errNoNotebooks': `No Notebooks in namespace {namespace}`,
                 'txtAccessed': 'Accessed ',
             },
             'fr': {
-                'headingRecentNotebooks': 'Bloc-notes recents',
+                'headingRecentNotebooks': 'Bloc-notes récents',
                 'msgChooseNamespace': 'Choisisser un espace de noms ' +
-                    'pour voir les bloc-notes',
+                    'pour voir les bloc-notes {namespace}',
+                'errRetrievingNotebooks': 'Erreur en récupérant les bloc-notes',
+                'errNoNotebooks': 'Pas de bloc-notes dans l\'espace ' +
+                    'de noms {namespace}',
                 'txtAccessed': 'Accédé ',
             },
         };
@@ -158,7 +165,7 @@ export class NotebooksCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
             this._onError();
         }
         this.message = this.notebooks.length ?
-            '' : `No Notebooks in namespace ${this.namespace}`;
+            '' : 'errNoNotebooks';
         this.loading = false;
     }
 
@@ -195,7 +202,7 @@ export class NotebooksCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
      */
     _onError() {
         this.splice('notebooks', 0);
-        this.message = 'Error retrieving Notebooks';
+        this.message = 'errRetrievingNotebooks';
     }
 }
 
