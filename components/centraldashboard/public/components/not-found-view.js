@@ -1,8 +1,8 @@
 import {html, PolymerElement} from '@polymer/polymer';
 // eslint-disable-next-line max-len
-import {AppLocalizeBehavior} from "@polymer/app-localize-behavior/app-localize-behavior.js";
+import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-behavior.js';
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
-
+// eslint-disable-next-line max-len
 export class NotFoundView extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
     static get template() {
         return html`
@@ -26,50 +26,50 @@ export class NotFoundView extends mixinBehaviors([AppLocalizeBehavior], PolymerE
         `;
     }
 
-    constructor(){
+    constructor() {
         super();
         this.resources = {
-            "en": {
-                "invalidPagePart1":"Sorry, ",
-                "invalidPagePart2": " is not a valid page"
+            'en': {
+                'invalidPagePart1': 'Sorry, ',
+                'invalidPagePart2': ' is not a valid page',
             },
-            "fr": {
-                "invalidPagePart1":"Désolé, ",
-                "invalidPagePart2": " n'est pas une page valide"
-            }
+            'fr': {
+                'invalidPagePart1': 'Désolé, ',
+                'invalidPagePart2': ' n\'est pas une page valide',
+            },
         };
         this.language = this.getBrowserLang();
     }
 
     getBrowserLang() {
-        if (typeof window === 'undefined' || 
+        if (typeof window === 'undefined' ||
             typeof window.navigator === 'undefined') {
             return undefined;
         }
-    
-        let browserLang = window.navigator.languages ? 
+
+        let browserLang = window.navigator.languages ?
             window.navigator.languages[0] : null;
-        browserLang = browserLang || window.navigator.language || 
+        browserLang = browserLang || window.navigator.language ||
             window.navigator.browserLanguage || window.navigator.userLanguage;
-    
+
         if (typeof browserLang === 'undefined') {
-            return undefined
+            return undefined;
         }
-    
+
         if (browserLang.indexOf('-') !== -1) {
             browserLang = browserLang.split('-')[0];
         }
-    
+
         if (browserLang.indexOf('_') !== -1) {
             browserLang = browserLang.split('_')[0];
         }
-    
+
         return browserLang;
     }
 
     /**
-      * Object describing property-related metadata used by Polymer features
-      */
+     * Object describing property-related metadata used by Polymer features
+     */
     static get properties() {
         return {
             path: String,

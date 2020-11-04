@@ -9,7 +9,7 @@ import '@polymer/neon-animation/neon-animated-pages.js';
 import '@polymer/neon-animation/animations/fade-in-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
 // eslint-disable-next-line max-len
-import {AppLocalizeBehavior} from "@polymer/app-localize-behavior/app-localize-behavior.js";
+import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-behavior.js';
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
@@ -34,62 +34,72 @@ export class RegistrationPage extends utilitiesMixin(mixinBehaviors([AppLocalize
             `<style>${css.toString()}</style>${template(vars)}`]);
     }
 
-    constructor(){
+    constructor() {
         super();
         this.resources = {
-            "en": {
-                "lblWelcome":"Welcome",
-                "registrationDesc": "In order to use Kubeflow, a namespace for your account must be created. Follow the steps to get started",
-                "btnStartSetup": "Start Setup",
-                "lblNamespace": "Namespace",
-                "lblNamespaceDesc": "A namespace is a collection of Kubeflow services. Resources created within a namespace are isolated to that namespace. By default, a namespace will be created for you.",
-                "lblNamespaceName": "Namespace Name",
-                "btnFinish": "Finish",
-                "btnBack": "Go back",
-                "linkGitHub": "GitHub",
-                "linkDocumentation": "Documentation",
-                "linkPrivacy": "Privacy"
+            'en': {
+                'lblWelcome': 'Welcome',
+                'registrationDesc': 'In order to use Kubeflow, a namespace ' +
+                    'for your account must be created. Follow the steps to ' +
+                    'get started',
+                'btnStartSetup': 'Start Setup',
+                'lblNamespace': 'Namespace',
+                'lblNamespaceDesc': 'A namespace is a collection of ' +
+                    'Kubeflow services. Resources created within a namespace' +
+                    ' are isolated to that namespace. By default, a namespace' +
+                    ' will be created for you.',
+                'lblNamespaceName': 'Namespace Name',
+                'btnFinish': 'Finish',
+                'btnBack': 'Go back',
+                'linkGitHub': 'GitHub',
+                'linkDocumentation': 'Documentation',
+                'linkPrivacy': 'Privacy',
             },
-            "fr": {
-                "lblWelcome":"Bienvenue",
-                "registrationDesc": "Afin d'utiliser Kubeflow, un espace de noms doit être créé pour votre compte. Suiver les étapes pour commencer",
-                "btnStartSetup": "Commencer",
-                "lblNamespace": "Espace de nom",
-                "lblNamespaceDesc": "Un espace de nom est une collection de services Kubeflow. Les ressources créées dans cet espace sont isolés à cette espace de nom. Par défault, un espace de nom sera créé pour vous.",
-                "lblNamespaceName": "Nom",
-                "btnFinish": "Finir",
-                "btnBack": "Retour",
-                "linkGitHub": "GitHub",
-                "linkDocumentation": "Documentation",
-                "linkPrivacy": "Confidentialité"
-            }
+            'fr': {
+                'lblWelcome': 'Bienvenue',
+                'registrationDesc': 'Afin d\'utiliser Kubeflow, un espace de' +
+                    'noms doit être créé pour votre compte. Suiver les ' +
+                    'étapes pour commencer',
+                'btnStartSetup': 'Commencer',
+                'lblNamespace': 'Espace de nom',
+                'lblNamespaceDesc': 'Un espace de nom est une collection de ' +
+                    'services Kubeflow. Les ressources créées dans cet ' +
+                    'espace sont isolés à cette espace de nom. Par défault, ' +
+                    'un espace de nom sera créé pour vous.',
+                'lblNamespaceName': 'Nom',
+                'btnFinish': 'Finir',
+                'btnBack': 'Retour',
+                'linkGitHub': 'GitHub',
+                'linkDocumentation': 'Documentation',
+                'linkPrivacy': 'Confidentialité',
+            },
         };
         this.language = this.getBrowserLang();
     }
 
     getBrowserLang() {
-        if (typeof window === 'undefined' || 
+        if (typeof window === 'undefined' ||
             typeof window.navigator === 'undefined') {
             return undefined;
         }
-    
-        let browserLang = window.navigator.languages ? 
+
+        let browserLang = window.navigator.languages ?
             window.navigator.languages[0] : null;
-        browserLang = browserLang || window.navigator.language || 
+        browserLang = browserLang || window.navigator.language ||
             window.navigator.browserLanguage || window.navigator.userLanguage;
-    
+
         if (typeof browserLang === 'undefined') {
-            return undefined
+            return undefined;
         }
-    
+
         if (browserLang.indexOf('-') !== -1) {
             browserLang = browserLang.split('-')[0];
         }
-    
+
         if (browserLang.indexOf('_') !== -1) {
             browserLang = browserLang.split('_')[0];
         }
-    
+
         return browserLang;
     }
 
@@ -147,7 +157,7 @@ export class RegistrationPage extends utilitiesMixin(mixinBehaviors([AppLocalize
         if (finalRgx.test(this.namespaceName)) return true;
         this.showError(
             `Name can only start and end with alpha-num characters, `+
-            `dashes are only permitted between start and end. (minlength >= 1)`
+            `dashes are only permitted between start and end. (minlength >= 1)`,
         );
     }
 
@@ -173,8 +183,10 @@ export class RegistrationPage extends utilitiesMixin(mixinBehaviors([AppLocalize
         if (this.error && this.error.response) {
             return this.waitForRedirect = false;
         }
-        // Poll for profile over a span of 20 seconds (every 300ms)
-        // if still not there, let the user click next again!
+        /*
+         * Poll for profile over a span of 20 seconds (every 300ms)
+         * if still not there, let the user click next again!
+         */
         const success = await this.pollProfile(66, 300);
         if (success) this._successSetup();
         this.waitForRedirect = false;

@@ -8,7 +8,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-progress/paper-progress.js';
 import './iframe-link.js';
 // eslint-disable-next-line max-len
-import {AppLocalizeBehavior} from "@polymer/app-localize-behavior/app-localize-behavior.js";
+import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-behavior.js';
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
 import {html, PolymerElement} from '@polymer/polymer';
@@ -25,7 +25,7 @@ const getListNotebooksUrl = (namespace, server) =>
  * Component to retrieve and display recently modified Jupyter Notebooks.
  */
 // eslint-disable-next-line max-len
-export class NotebooksCard extends  mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
+export class NotebooksCard extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
     static get template() {
         return html`
         <style include="card-styles">
@@ -40,7 +40,9 @@ export class NotebooksCard extends  mixinBehaviors([AppLocalizeBehavior], Polyme
         <paper-card heading="{{localize('headingRecentNotebooks')}}">
             <paper-progress indeterminate class="slow"
                 hidden$="[[!loading]]"></paper-progress>
-            <header id="message" hidden$="[[!message]]">{{localize(message)}}</header>
+            <header id="message" hidden$="[[!message]]">
+                {{localize(message)}}
+            </header>
             <template is="dom-repeat" items="[[notebooks]]">
                 <iframe-link class="link" href$="[[item.href]]">
                     <paper-icon-item>
@@ -60,47 +62,47 @@ export class NotebooksCard extends  mixinBehaviors([AppLocalizeBehavior], Polyme
         `;
     }
 
-    constructor(){
+    constructor() {
         super();
         this.language = this.getBrowserLang();
         this.resources = {
-            "en": {
-                "headingRecentNotebooks":"Recent Notebooks",
-                "msgChooseNamespace": "Choose a namespace to see Notebooks",
-                "txtAccessed": "Accessed "
+            'en': {
+                'headingRecentNotebooks': 'Recent Notebooks',
+                'msgChooseNamespace': 'Choose a namespace to see Notebooks',
+                'txtAccessed': 'Accessed ',
             },
-            "fr": {
-                "headingRecentNotebooks": "Bloc-notes recents",
-                "msgChooseNamespace": "Choisisser un espace de noms pour voir les bloc-notes",
-                "txtAccessed": "Accédé "
-
-            }
+            'fr': {
+                'headingRecentNotebooks': 'Bloc-notes recents',
+                'msgChooseNamespace': 'Choisisser un espace de noms ' +
+                    'pour voir les bloc-notes',
+                'txtAccessed': 'Accédé ',
+            },
         };
     }
 
     getBrowserLang() {
-        if (typeof window === 'undefined' || 
+        if (typeof window === 'undefined' ||
             typeof window.navigator === 'undefined') {
             return undefined;
         }
-    
-        let browserLang = window.navigator.languages ? 
+
+        let browserLang = window.navigator.languages ?
             window.navigator.languages[0] : null;
-        browserLang = browserLang || window.navigator.language || 
+        browserLang = browserLang || window.navigator.language ||
             window.navigator.browserLanguage || window.navigator.userLanguage;
-    
+
         if (typeof browserLang === 'undefined') {
-            return undefined
+            return undefined;
         }
-    
+
         if (browserLang.indexOf('-') !== -1) {
             browserLang = browserLang.split('-')[0];
         }
-    
+
         if (browserLang.indexOf('_') !== -1) {
             browserLang = browserLang.split('_')[0];
         }
-    
+
         return browserLang;
     }
 
