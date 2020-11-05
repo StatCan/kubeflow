@@ -19,6 +19,7 @@ import './notebooks-card.js';
 import './pipelines-card.js';
 import './resource-chart.js';
 import {getGCPData} from './resources/cloud-platform-data.js';
+import {localisation} from '../assets/i18n/localisation.json'
 
 // eslint-disable-next-line max-len
 export class DashboardView extends utilitiesMixin( mixinBehaviors([AppLocalizeBehavior], PolymerElement)) {
@@ -33,81 +34,10 @@ export class DashboardView extends utilitiesMixin( mixinBehaviors([AppLocalizeBe
 
     constructor() {
         super();
-        this.resources = {
-            'en': {
-                'headingQuickLinks': 'Quick shortcuts',
-                'quicklinkUploadText': 'Upload a pipeline',
-                'quicklinkUploadDesc': 'Pipelines',
-                'quicklinkViewAllText': 'View all pipeline runs',
-                'quicklinkViewAllDesc': 'Pipelines',
-                'quicklinkCreateNewText': 'Create a new Notebook server',
-                'quicklinkCreateNewDesc': 'Notebook Servers',
-                'quicklinkViewKatibText': 'View Katib Studies',
-                'quicklinkViewKatibDesc': 'Katib',
-                'quicklinkMetadataArtifactsText': 'View Metadata Artifacts',
-                'quicklinkMetadataArtifactsDesc': 'Artifact Store',
-                'headingRecentPipelines': 'Recent Pipelines',
-                'headingRecentPipelinesRuns': 'Recent Pipeline Runs',
-                'headingDocumentation': 'Documentation',
-                'docItemAAWDText': 'FR Advanced Analytics Workspace Docs',
-                'docItemAAWDDesc': 'FR Helpful guides about our data and ' +
-                    'analysis tools',
-                'docItemAAWDLink': `https://statcan.github.io/daaas/`,
-                'docItemVideoTutorialText': 'Video Tutorial Series',
-                'docItemVideoTutorialDesc': 'YouTube playlist of videos ' +
-                    'for getting started with Advanced Analytics ' +
-                    'Workspace tools',
-                'docItemVideoTutorialLink': `https://www.youtube.com/playlist?list=PL1zlA2D7AHugkDdiyeUHWOKGKUd3MB_nD`,
-                'docItemCommunityChatText': 'Community Chat',
-                'docItemCommunityChatDesc': 'Slack workspace for ' +
-                    'discussion/support - requires sign-up for emails ' +
-                    'outside @canada.ca',
-                'docItemCommunityChatLink': `https://statcan-aaw.slack.com/`,
-                'docItemOfficialKubeflowDocsText': 'Official Kubeflow Docs',
-                'docItemOfficialKubeflowDocsDesc': 'Advanced documentation ' +
-                    'for installing, running, and using Kubeflow',
-                'docItemOfficialKubeflowDocsLink': `https://www.kubeflow.org/docs/`,
-            },
-            'fr': {
-                'headingQuickLinks': 'Raccourcis',
-                'quicklinkUploadText': 'Télécharger un pipeline',
-                'quicklinkUploadDesc': 'Pipelines',
-                'quicklinkViewAllText': 'Voir tous les pipelines exécutés',
-                'quicklinkViewAllDesc': 'Pipelines',
-                'quicklinkCreateNewText': 'Créer un nouveau serveur bloc-notes',
-                'quicklinkCreateNewDesc': 'Serveur bloc-notes',
-                'quicklinkViewKatibText': 'Voir Katib Studies',
-                'quicklinkViewKatibDesc': 'Katib',
-                'quicklinkMetadataArtifactsText': 'Voir le magasin ' +
-                    'd\'artefacts',
-                'quicklinkMetadataArtifactsDesc': 'Magasin d\'artefact',
-                'headingRecentPipelines': 'Pipelines récentes',
-                'headingRecentPipelinesRuns': 'Voir tous les pipeline ' +
-                    'récentes exécutés',
-                'headingDocumentation': 'Documentation',
-                'docItemAAWDText': 'Documents de l\'espace d\'analyses ' +
-                    'avancées',
-                'docItemAAWDDesc': 'Guides utiles pour nos données et ' +
-                    'outils d\'analyse',
-                'docItemAAWDLink': `https://statcan.github.io/daaas/`,
-                'docItemVideoTutorialText': 'Série de didacticiels vidéo',
-                'docItemVideoTutorialDesc': 'Playlist de vidéos YouTube ' +
-                    'pour commencer avec les outils de l\'espace ' +
-                    'd\'analyses avancées',
-                'docItemVideoTutorialLink': `https://www.youtube.com/playlist?list=PL1zlA2D7AHugkDdiyeUHWOKGKUd3MB_nD`,
-                'docItemCommunityChatText': 'Clavardage de la communauté',
-                'docItemCommunityChatDesc': 'Espace de travail Slack pour ' +
-                    'discussion/support - besoin de s\'inscrire pour les ' +
-                    'courriels en dehors de @canada.ca',
-                'docItemCommunityChatLink': `https://statcan-aaw.slack.com/`,
-                'docItemOfficialKubeflowDocsText': 'Documents Kubeflow ' +
-                    'Officiels',
-                'docItemOfficialKubeflowDocsDesc': 'Documentation avancé'+
-                    ' pour installer, exécuter et utiliser Kubeflow',
-                'docItemOfficialKubeflowDocsLink': `https://www.kubeflow.org/docs/`,
-            },
-        };
-        this.language = this.getBrowserLang();
+        this.resources = localisation;
+        const currentLanguage = this.getBrowserLang();
+        const lang = (currentLanguage == undefined && currentLanguage.match(/en|fr/)) ? currentLanguage : 'en';
+        this.language = lang;
     }
 
     getBrowserLang() {
@@ -145,24 +75,24 @@ export class DashboardView extends utilitiesMixin( mixinBehaviors([AppLocalizeBe
                 type: Array,
                 value: [
                     {
-                        text: 'docItemAAWDText',
-                        desc: 'docItemAAWDDesc',
-                        link: 'docItemAAWDLink',
+                        text: 'dashboardView.docItemAAWDText',
+                        desc: 'dashboardView.docItemAAWDDesc',
+                        link: 'dashboardView.docItemAAWDLink',
                     },
                     {
-                        text: 'docItemVideoTutorialText',
-                        desc: 'docItemVideoTutorialDesc',
-                        link: 'docItemVideoTutorialLink',
+                        text: 'dashboardView.docItemVideoTutorialText',
+                        desc: 'dashboardView.docItemVideoTutorialDesc',
+                        link: 'dashboardView.docItemVideoTutorialLink',
                     },
                     {
-                        text: 'docItemCommunityChatText',
-                        desc: 'docItemCommunityChatDesc',
-                        link: 'docItemCommunityChatLink',
+                        text: 'dashboardView.docItemCommunityChatText',
+                        desc: 'dashboardView.docItemCommunityChatDesc',
+                        link: 'dashboardView.docItemCommunityChatLink',
                     },
                     {
-                        text: 'docItemOfficialKubeflowDocsText',
-                        desc: 'docItemOfficialKubeflowDocsDesc',
-                        link: 'docItemOfficialKubeflowDocsLink',
+                        text: 'dashboardView.docItemOfficialKubeflowDocsText',
+                        desc: 'dashboardView.docItemOfficialKubeflowDocsDesc',
+                        link: 'dashboardView.docItemOfficialKubeflowDocsLink',
                     },
                 ],
             },
@@ -171,28 +101,28 @@ export class DashboardView extends utilitiesMixin( mixinBehaviors([AppLocalizeBe
                 type: Array,
                 value: [
                     {
-                        text: 'quicklinkUploadText',
-                        desc: 'quicklinkUploadDesc',
+                        text: 'dashboardView.quicklinkUploadText',
+                        desc: 'dashboardView.quicklinkUploadDesc',
                         link: `/pipeline/`,
                     },
                     {
-                        text: 'quicklinkViewAllText',
-                        desc: 'quicklinkViewAllDesc',
+                        text: 'dashboardView.quicklinkViewAllText',
+                        desc: 'dashboardView.quicklinkViewAllDesc',
                         link: `/pipeline/#/runs`,
                     },
                     {
-                        text: 'quicklinkCreateNewText',
-                        desc: 'quicklinkCreateNewDesc',
+                        text: 'dashboardView.quicklinkCreateNewText',
+                        desc: 'dashboardView.quicklinkCreateNewDesc',
                         link: `/jupyter/new?namespace=kubeflow`,
                     },
                     {
-                        text: 'quicklinkViewKatibText',
-                        desc: 'quicklinkViewKatibDesc',
+                        text: 'dashboardView.quicklinkViewKatibText',
+                        desc: 'dashboardView.quicklinkViewKatibDesc',
                         link: `/katib/`,
                     },
                     {
-                        text: 'quicklinkMetadataArtifactsText',
-                        desc: 'quicklinkMetadataArtifactsDesc',
+                        text: 'dashboardView.quicklinkMetadataArtifactsText',
+                        desc: 'dashboardView.quicklinkMetadataArtifactsDesc',
                         link: `/metadata/`,
                     },
                 ],
