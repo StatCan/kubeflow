@@ -44,7 +44,9 @@ export class PipelinesCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
         <paper-progress indeterminate class="slow"
             hidden$="[[!loading]]"></paper-progress>
         <paper-card heading="[[heading]]">
-            <header id="message" hidden$="[[!message]]">{{localize(message)}}</header>
+            <header id="message" hidden$="[[!message]]">
+                {{localize(message)}}
+            </header>
             <template is="dom-repeat" items="[[pipelines]]">
                 <iframe-link class="link" href$="[[item.href]]">
                     <paper-icon-item>

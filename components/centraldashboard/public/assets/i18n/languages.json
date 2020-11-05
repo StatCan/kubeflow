@@ -1,7 +1,7 @@
 {
-    "localisation": {
+    "languages": {
         "en": {
-            "dashboardView.dashboardView.headingQuickLinks": "Quick shortcuts",
+            "dashboardView.headingQuickLinks": "Quick shortcuts",
             "dashboardView.quicklinkUploadText": "Upload a pipeline",
             "dashboardView.quicklinkUploadDesc": "Pipelines",
             "dashboardView.quicklinkViewAllText": "View all pipeline runs",
