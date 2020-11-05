@@ -44,7 +44,7 @@ export class PipelinesCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
         <paper-progress indeterminate class="slow"
             hidden$="[[!loading]]"></paper-progress>
         <paper-card heading="[[heading]]">
-            <header id="message" hidden$="[[!message]]">[[message]]</header>
+            <header id="message" hidden$="[[!message]]">{{localize(message)}}</header>
             <template is="dom-repeat" items="[[pipelines]]">
                 <iframe-link class="link" href$="[[item.href]]">
                     <paper-icon-item>
@@ -68,13 +68,22 @@ export class PipelinesCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
 
     constructor() {
         super();
-        this.language = this.getBrowserLang();
+        const currentLanguage = this.getBrowserLang();
+        const lang = currentLanguage.match(/en|fr/) ? currentLanguage : 'en';
+        this.language = lang;
         this.resources = {
             'en': {
                 'txtCreated': 'Created ',
+                'msgNoneFound': 'None Found',
+                'errRetrievingPipelines': 'Error retrieving Pipelines',
+                'errRetrievingPipelineRuns': 'Error retrieving Pipeline Runs',
             },
             'fr': {
                 'txtCreated': 'Créé',
+                'msgNoneFound': 'Aucun trouvé',
+                'errRetrievingPipelines': 'Erreur en récupérant les pipelines',
+                'errRetrievingPipelineRuns': 'Erreur en récupérant les ' +
+                    'exécution de pipelines',
             },
         };
     }
@@ -178,7 +187,7 @@ export class PipelinesCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
             };
         }).slice(0, MAX_PIPELINES);
         this.splice('pipelines', 0, this.pipelines.length, ...pipelines);
-        this.message = this.pipelines.length ? '' : 'None Found';
+        this.message = this.pipelines.length ? '' : 'msgNoneFound';
         this.loading = false;
     }
 
@@ -188,7 +197,7 @@ export class PipelinesCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
     _onError() {
         this.splice('pipelines', 0);
         this.message = this.artifactType === PIPELINES ?
-            'Error retrieving Pipelines' : 'Error retrieving Pipeline Runs';
+            'errRetrievingPipelines' : 'errRetrievingPipelineRuns';
     }
 }
 
