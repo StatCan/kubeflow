@@ -77,7 +77,7 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
     iron-media-query(query='(max-width: 900px)', query-matches='{{sidebarBleed}}')
     iron-media-query(query='(max-width: 1270px)', query-matches='{{thinView}}')
 paper-toast#welcomeUser(duration=5000) Welcome, [[_extractLdap(user)]]!
-paper-toast#ErrorToast(duration=0, opened='[[!empty(errorText)]]', on-click='closeError') [[errorText]]
+paper-toast#ErrorToast(duration=0, opened='[[!empty(errorText)]]', on-click='closeError') {{localize(errorText)}}
     paper-icon-button(icon='close')
 template(is='dom-if', if='[[registrationFlow]]')
     registration-page(user-details='[[_extractLdap(user)]]' on-flowcomplete='resyncApp')

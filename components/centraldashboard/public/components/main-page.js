@@ -164,9 +164,7 @@ export class MainPage extends utilitiesMixin(localizationMixin(PolymerElement)) 
      * @param {Event} ev AJAX-response
      */
     _onHasWorkgroupError(ev) {
-        const error = ((ev.detail.request||{}).response||{}).error ||
-            ev.detail.error;
-        this.showError(error);
+        this.showError("mainPage.errGeneric");
         return;
     }
 
