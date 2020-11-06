@@ -23,9 +23,7 @@ import '@polymer/neon-animation/neon-animatable.js';
 import '@polymer/neon-animation/neon-animated-pages.js';
 import '@polymer/neon-animation/animations/fade-in-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
-// eslint-disable-next-line max-len
-import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-behavior.js';
-import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
+import localizationMixin from './localization-mixin.js';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
@@ -49,79 +47,11 @@ import {IFRAME_LINK_PREFIX} from './iframe-link.js';
  * Entry point for application UI.
  */
 // eslint-disable-next-line max-len
-export class MainPage extends utilitiesMixin(mixinBehaviors([AppLocalizeBehavior], PolymerElement)) {
+export class MainPage extends utilitiesMixin(localizationMixin(PolymerElement)) {
     static get template() {
         const vars = {logo};
         return html([
             `<style>${css.toString()}</style>${template(vars)}`]);
-    }
-
-    constructor() {
-        super();
-        this.resources = {
-            'en': {
-                'menuHome': 'Home',
-                'menuPipelines': 'Pipelines',
-                'menuNotebookServers': 'Notebook Servers',
-                'menuKatib': 'Katib',
-                'menuArtifactStore': 'Artifact Store',
-                'menuManageContributors': 'Manage Contributors',
-                'menuGitHub': 'GitHub',
-                'menuDocumentation': 'Documentation',
-                'menuPrivacy': 'Privacy',
-                'menuPrivacyTitle': 'Kubeflow Privacy Policy',
-                'menuUsageReporting': 'Usage Reporting',
-                'menuUsageReportingTitle': 'Kubeflow Usage Reporting',
-                'tabDashboard': 'Dashboard',
-                'tabActivity': 'Activity',
-                'footerBuildVersion': 'Build: {buildVersion} | Dashboard: ' +
-                    'v {dashVersion} | Isolation-Mode: {isolationMode}',
-            },
-            'fr': {
-                'menuHome': 'Acceuil',
-                'menuPipelines': 'Pipelines',
-                'menuNotebookServers': 'Serveur Bloc-notes',
-                'menuKatib': 'Katib',
-                'menuArtifactStore': 'Magasin d\'artefact',
-                'menuGitHub': 'GitHub',
-                'menuDocumentation': 'Documentation',
-                'menuPrivacy': 'Confidentialité',
-                'menuPrivacyTitle': 'Politique de confidentialié de Kubeflow',
-                'menuUsageReporting': 'Rapport d\'utilisation',
-                'menuUsageReportingTitle': 'Rapport d\'utilisation de Kubeflow',
-                'tabDashboard': 'Tableau de bord',
-                'tabActivity': 'Activité',
-                'footerBuildVersion': 'Version: {buildVersion} | Dashboard: ' +
-                    'v {dashVersion} | Mode d\'isolation: {isolationMode}',
-            },
-        };
-        this.language = this.getBrowserLang();
-    }
-
-    getBrowserLang() {
-        if (typeof window === 'undefined' ||
-            typeof window.navigator === 'undefined') {
-            return undefined;
-        }
-
-        let browserLang = window.navigator.languages ?
-            window.navigator.languages[0] : null;
-        browserLang = browserLang || window.navigator.language ||
-            window.navigator.browserLanguage || window.navigator.userLanguage;
-
-        if (typeof browserLang === 'undefined') {
-            return undefined;
-        }
-
-        if (browserLang.indexOf('-') !== -1) {
-            browserLang = browserLang.split('-')[0];
-        }
-
-        if (browserLang.indexOf('_') !== -1) {
-            browserLang = browserLang.split('_')[0];
-        }
-
-        return browserLang;
     }
 
     static get properties() {
@@ -140,19 +70,19 @@ export class MainPage extends utilitiesMixin(mixinBehaviors([AppLocalizeBehavior
                 value: [
                     {
                         link: '/pipeline/',
-                        text: 'menuPipelines',
+                        text: 'mainPage.menuPipelines',
                     },
                     {
                         link: '/jupyter/',
-                        text: 'menuNotebookServers',
+                        text: 'mainPage.menuNotebookServers',
                     },
                     {
                         link: '/katib/',
-                        text: 'menuKatib',
+                        text: 'mainPage.menuKatib',
                     },
                     {
                         link: '/metadata/',
-                        text: 'menuArtifactStore',
+                        text: 'mainPage.menuArtifactStore',
                     },
                 ],
             },

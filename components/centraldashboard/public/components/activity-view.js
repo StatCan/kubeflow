@@ -3,14 +3,12 @@ import '@polymer/iron-ajax/iron-ajax.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-progress/paper-progress.js';
-// eslint-disable-next-line max-len
-import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-behavior.js';
-import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
+import localizationMixin from './localization-mixin.js';
 import {html, PolymerElement} from '@polymer/polymer';
 import './activities-list.js';
 
 // eslint-disable-next-line max-len
-export class ActivityView extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
+export class ActivityView extends localizationMixin(PolymerElement) {
     static get template() {
         return html`
             <style is="custom-style" include="iron-flex iron-flex-alignment">
@@ -58,54 +56,6 @@ export class ActivityView extends mixinBehaviors([AppLocalizeBehavior], PolymerE
             `;
     }
 
-    constructor() {
-        super();
-        const currentLanguage = this.getBrowserLang();
-        const lang = currentLanguage.match(/en|fr/) ? currentLanguage : 'en';
-        this.language = lang;
-        this.resources = {
-            'en': {
-                'msgSelectNamespace': 'Select a namespace to see recent events',
-                'errNoActivities': 'No activities for namespace {namespace}',
-                'errRetrivingActivities': 'Error retrieving activities ' +
-                    'for namespace {namespace}',
-            },
-            'fr': {
-                'msgSelectNamespace': 'Sélectionner un espace de noms pour ' +
-                    'voir les activitées récentes',
-                'errNoActivities': 'FR No activities for namespace {namespace}',
-                'errRetrivingActivities': 'FR Error retrieving activities ' +
-                    'for namespace {namespace}',
-            },
-        };
-    }
-
-    getBrowserLang() {
-        if (typeof window === 'undefined' ||
-            typeof window.navigator === 'undefined') {
-            return undefined;
-        }
-
-        let browserLang = window.navigator.languages ?
-            window.navigator.languages[0] : null;
-        browserLang = browserLang || window.navigator.language ||
-            window.navigator.browserLanguage || window.navigator.userLanguage;
-
-        if (typeof browserLang === 'undefined') {
-            return undefined;
-        }
-
-        if (browserLang.indexOf('-') !== -1) {
-            browserLang = browserLang.split('-')[0];
-        }
-
-        if (browserLang.indexOf('_') !== -1) {
-            browserLang = browserLang.split('_')[0];
-        }
-
-        return browserLang;
-    }
-
     /**
      * Object describing property-related metadata used by Polymer features
      */
@@ -118,7 +68,7 @@ export class ActivityView extends mixinBehaviors([AppLocalizeBehavior], PolymerE
             },
             message: {
                 type: String,
-                value: 'msgSelectNamespace',
+                value: 'activityView.msgSelectNamespace',
             },
             loading: {
                 type: Boolean,
@@ -149,7 +99,7 @@ export class ActivityView extends mixinBehaviors([AppLocalizeBehavior], PolymerE
         const response = responseEvent.detail.response;
         this.splice('activities', 0);
         if (!response.length) {
-            this.message = 'errNoActivities';
+            this.message = 'activityView.errNoActivities';
         } else {
             this.push('activities', ...response);
         }
@@ -160,7 +110,7 @@ export class ActivityView extends mixinBehaviors([AppLocalizeBehavior], PolymerE
      */
     _onError() {
         this.splice('activities', 0);
-        this.message ='errRetrivingActivities';
+        this.message ='activityView.errRetrivingActivities';
     }
 }
 

@@ -2,10 +2,9 @@
 import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-behavior.js';
 import {languages} from '../assets/i18n/languages.json';
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
-import {PolymerElement} from '@polymer/polymer';
 
 // eslint-disable-next-line max-len
-export default class extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
+export default (superClass) => class extends mixinBehaviors([AppLocalizeBehavior], superClass) {
     constructor() {
         super();
         this.resources = languages;
@@ -41,4 +40,4 @@ export default class extends mixinBehaviors([AppLocalizeBehavior], PolymerElemen
 
         return browserLang;
     }
-}
+};

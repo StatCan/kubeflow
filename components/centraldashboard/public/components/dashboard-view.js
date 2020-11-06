@@ -7,7 +7,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import utilitiesMixin from './utilities-mixin.js';
 import localizationMixin from './localization-mixin.js';
 
-import {html} from '@polymer/polymer';
+import {html, PolymerElement} from '@polymer/polymer';
 
 import css from './dashboard-view.css';
 import template from './dashboard-view.pug';
@@ -19,7 +19,7 @@ import './resource-chart.js';
 import {getGCPData} from './resources/cloud-platform-data.js';
 
 // eslint-disable-next-line max-len
-export class DashboardView extends utilitiesMixin(localizationMixin) {
+export class DashboardView extends utilitiesMixin(localizationMixin(PolymerElement)) {
     static get template() {
         return html([`
             <style include="card-styles">
@@ -38,9 +38,9 @@ export class DashboardView extends utilitiesMixin(localizationMixin) {
                 type: Array,
                 value: [
                     {
-                        text: 'dashboardView.docItemAAWDText',
-                        desc: 'dashboardView.docItemAAWDDesc',
-                        link: 'dashboardView.docItemAAWDLink',
+                        text: 'dashboardView.docItemAawdText',
+                        desc: 'dashboardView.docItemAawdDesc',
+                        link: 'dashboardView.docItemAawdLink',
                     },
                     {
                         text: 'dashboardView.docItemVideoTutorialText',
