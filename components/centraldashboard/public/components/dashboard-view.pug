@@ -9,7 +9,6 @@ div#grid
                             .header {{localize(item.text)}}
                             aside(secondary) {{localize(item.desc)}}
                         paper-ripple
-        //- TODO: Translate platformDetails
         template(is='dom-if', if='[[platformDetails.resourceChartsLink]]')
             resource-chart(header-text='Cluster CPU Utilization', metric='cpu',
                 interval='Last60m',
@@ -24,7 +23,6 @@ div#grid
         notebooks-card(namespace='[[namespace]]')
         pipelines-card(heading="{{localize('dashboardView.headingRecentPipelines')}}", artifact-type='pipelines')
     .column
-        //- TODO: Translate the details
         template(is='dom-if', if='[[platformDetails.links]]')
             paper-card#Platform-Links(class$='[[platformDetails.name]]',
                 heading='[[platformDetails.title]]', image='[[platformDetails.logo]]')

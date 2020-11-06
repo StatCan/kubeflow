@@ -83,10 +83,7 @@ export class RegistrationPage extends utilitiesMixin(localizationMixin(PolymerEl
     validateNamespace() {
         const finalRgx = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
         if (finalRgx.test(this.namespaceName)) return true;
-        this.showError(
-            `Name can only start and end with alpha-num characters, `+
-            `dashes are only permitted between start and end. (minlength >= 1)`,
-        );
+        this.showError('registrationPage.errValidation');
     }
 
     async pollProfile(times, delay) {

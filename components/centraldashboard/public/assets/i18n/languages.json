@@ -66,7 +66,9 @@
             "registrationPage.btnBack": "Go back",
             "registrationPage.linkGitHub": "GitHub",
             "registrationPage.linkDocumentation": "Documentation",
-            "registrationPage.linkPrivacy": "Privacy"
+            "registrationPage.linkPrivacy": "Privacy",
+            "registrationPage.errValidation": "Name can only start and end with alpha-num characters, dashes are only permitted between start and end. (minlength >= 1)",
+            "registrationPage.errTest": "Test Error!"
         },
         "fr": {
             "dashboardView.headingQuickLinks": "Raccourcis",
@@ -98,7 +100,7 @@
             "activityView.msgSelectNamespace": "Sélectionner un espace de noms pour voir les activitées récentes",
             "activityView.errNoActivities": "Aucune activié pour l'espace de nom {namespace}",
             "activityView.errRetrivingActivities": "Erreur en récupérant les activité pour l'espace de nom {namespace}",
-            "mainPage.menuHome": "Acceuil",
+            "mainPage.menuHome": "Accueil",
             "mainPage.menuPipelines": "Pipelines",
             "mainPage.menuNotebookServers": "Serveur Bloc-notes",
             "mainPage.menuKatib": "Katib",
@@ -133,7 +135,9 @@
             "registrationPage.btnBack": "Retour",
             "registrationPage.linkGitHub": "GitHub",
             "registrationPage.linkDocumentation": "Documentation",
-            "registrationPage.linkPrivacy": "Confidentialité"
+            "registrationPage.linkPrivacy": "Confidentialité",
+            "registrationPage.errValidation": "Le nom doit commencer et terminer par des caractères alpha-numérique, les tirets ne sont permis qu'à l'intérieur. (longueur minimale >= 1)",
+            "registrationPage.errTest": "Test Error!"
         }
     }
 }
