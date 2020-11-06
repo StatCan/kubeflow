@@ -7,9 +7,7 @@ import '@polymer/paper-ripple/paper-ripple.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-progress/paper-progress.js';
 import './iframe-link.js';
-// eslint-disable-next-line max-len
-import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-behavior.js';
-import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
+import localizationMixin from './localization-mixin.js';
 
 import {html, PolymerElement} from '@polymer/polymer';
 
@@ -25,7 +23,7 @@ const getListNotebooksUrl = (namespace, server) =>
  * Component to retrieve and display recently modified Jupyter Notebooks.
  */
 // eslint-disable-next-line max-len
-export class NotebooksCard extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
+export class NotebooksCard extends localizationMixin(PolymerElement) {
     static get template() {
         return html`
         <style include="card-styles">
@@ -37,7 +35,7 @@ export class NotebooksCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
             loading="{{loading}}" on-response="_onNotebookServersResponse"
             on-error="_onError">
         </iron-ajax>
-        <paper-card heading="{{localize('headingRecentNotebooks')}}">
+        <paper-card heading="{{localize('notebookCard.headRecentNotebooks')}}">
             <paper-progress indeterminate class="slow"
                 hidden$="[[!loading]]"></paper-progress>
             <header id="message" hidden$="[[!message]]">
@@ -52,7 +50,8 @@ export class NotebooksCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
                         <paper-item-body two-line>
                             <div class="header">[[item.name]]</div>
                             <aside secondary>
-                                {{localize('txtAccessed')}}[[item.lastModified]]
+                                {{localize('notebookCard.txtAccessed')}}
+                                [[item.lastModified]]
                             </aside>
                         </paper-item-body>
                     </paper-icon-item>
@@ -60,57 +59,6 @@ export class NotebooksCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
             </template>
         </paper-card>
         `;
-    }
-
-    constructor() {
-        super();
-        const currentLanguage = this.getBrowserLang();
-        const lang = currentLanguage.match(/en|fr/) ? currentLanguage : 'en';
-        this.language = lang;
-        this.resources = {
-            'en': {
-                'headingRecentNotebooks': 'Recent Notebooks',
-                'msgChooseNamespace': 'Choose a namespace to see Notebooks',
-                'errRetrievingNotebooks': 'Error retrieving Notebooks',
-                'errNoNotebooks': `No Notebooks in namespace {namespace}`,
-                'txtAccessed': 'Accessed ',
-            },
-            'fr': {
-                'headingRecentNotebooks': 'Bloc-notes récents',
-                'msgChooseNamespace': 'Choisisser un espace de noms ' +
-                    'pour voir les bloc-notes {namespace}',
-                'errRetrievingNotebooks': 'Erreur en récupérant les bloc-notes',
-                'errNoNotebooks': 'Pas de bloc-notes dans l\'espace ' +
-                    'de noms {namespace}',
-                'txtAccessed': 'Accédé ',
-            },
-        };
-    }
-
-    getBrowserLang() {
-        if (typeof window === 'undefined' ||
-            typeof window.navigator === 'undefined') {
-            return undefined;
-        }
-
-        let browserLang = window.navigator.languages ?
-            window.navigator.languages[0] : null;
-        browserLang = browserLang || window.navigator.language ||
-            window.navigator.browserLanguage || window.navigator.userLanguage;
-
-        if (typeof browserLang === 'undefined') {
-            return undefined;
-        }
-
-        if (browserLang.indexOf('-') !== -1) {
-            browserLang = browserLang.split('-')[0];
-        }
-
-        if (browserLang.indexOf('_') !== -1) {
-            browserLang = browserLang.split('_')[0];
-        }
-
-        return browserLang;
     }
 
     static get properties() {
@@ -121,7 +69,7 @@ export class NotebooksCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
             },
             message: {
                 type: String,
-                value: 'msgChooseNamespace',
+                value: 'notebookCard.msgChooseNamespace',
             },
             namespace: String,
             listNotebookServersUrl: {
@@ -165,7 +113,7 @@ export class NotebooksCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
             this._onError();
         }
         this.message = this.notebooks.length ?
-            '' : 'errNoNotebooks';
+            '' : 'notebookCard.errNoNotebooks';
         this.loading = false;
     }
 
@@ -202,7 +150,7 @@ export class NotebooksCard extends mixinBehaviors([AppLocalizeBehavior], Polymer
      */
     _onError() {
         this.splice('notebooks', 0);
-        this.message = 'errRetrievingNotebooks';
+        this.message = 'notebookCard.errRetrievingNotebooks';
     }
 }
 
