@@ -4,6 +4,7 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
+import localizationMixin from './localization-mixin.js';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
@@ -11,7 +12,7 @@ import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
  * Component to retrieve and allow namespace selection. Bubbles the selected
  * items up to the query string in the 'ns' parameter.
  */
-export class NamespaceSelector extends PolymerElement {
+export class NamespaceSelector extends localizationMixin(PolymerElement) {
     static get template() {
         return html`
             <style>
@@ -79,6 +80,7 @@ export class NamespaceSelector extends PolymerElement {
                             [[getNamespaceText(selected,
                                 allNamespaces,
                                 namespaces)]]
+                            {{localize(namespaceMessage)}}
                         </span>
                     </article>
                     <iron-icon icon="arrow-drop-down"></iron-icon>
@@ -116,6 +118,10 @@ export class NamespaceSelector extends PolymerElement {
                 notify: true,
                 value: false,
             },
+            namespaceMessage: {
+                type: String,
+                value: '',
+            },
         };
     }
 
@@ -149,9 +155,19 @@ export class NamespaceSelector extends PolymerElement {
      * @return {string} Text that should show in namespace selector
      */
     getNamespaceText(selected, allNamespaces, namespaces) {
-        if (allNamespaces) return 'All Namespaces';
-        if (!namespaces || !namespaces.length) return 'No Namespaces';
-        if (!selected) return 'Select namespace';
+        if (allNamespaces){
+            this.namespaceMessage = 'namespaceSelector.allNamespaces';
+            return '';
+        }
+        if (!namespaces || !namespaces.length) {
+            this.namespaceMessage = 'namespaceSelector.noNamespaces';
+            return '';
+        }
+        if (!selected){
+            this.namespaceMessage = 'namespaceSelector.selectNamespace';
+            return '';
+        } 
+        this.namespaceMessage = '';
         return selected;
     }
 
