@@ -69,7 +69,11 @@
             "registrationPage.linkDocumentation": "Documentation",
             "registrationPage.linkPrivacy": "Privacy",
             "registrationPage.errValidation": "Name can only start and end with alpha-num characters, dashes are only permitted between start and end. (minlength >= 1)",
-            "registrationPage.errTest": "Test Error!"
+            "registrationPage.errTest": "Test Error!",
+            "namespaceSelector.owner": "(Owner)",
+            "namespaceSelector.allNamespaces": "All Namespaces",
+            "namespaceSelector.noNamespaces": "No Namespaces",
+            "namespaceSelector.selectNamespace": "Select namespace"
         },
         "fr": {
             "dashboardView.headingQuickLinks": "Raccourcis",
@@ -106,6 +110,7 @@
             "mainPage.menuNotebookServers": "Serveur Bloc-notes",
             "mainPage.menuKatib": "Katib",
             "mainPage.menuArtifactStore": "Magasin d'artefact",
+            "mainPage.menuManageContributors": "Gérer les contributeurs",
             "mainPage.menuGitHub": "GitHub",
             "mainPage.menuDocumentation": "Documentation",
             "mainPage.menuPrivacy": "Confidentialité",
@@ -139,7 +144,11 @@
             "registrationPage.linkDocumentation": "Documentation",
             "registrationPage.linkPrivacy": "Confidentialité",
             "registrationPage.errValidation": "Le nom doit commencer et terminer par des caractères alpha-numérique, les tirets ne sont permis qu'à l'intérieur. (longueur minimale >= 1)",
-            "registrationPage.errTest": "Test Error!"
+            "registrationPage.errTest": "Test Error!",
+            "namespaceSelector.owner": "(Propriétaire)",
+            "namespaceSelector.allNamespaces": "Tous les espaces de noms",
+            "namespaceSelector.noNamespaces": "Aucun espace de noms",
+            "namespaceSelector.selectNamespace": "Sélectiner un espace de noms"
         }
     }
 }
