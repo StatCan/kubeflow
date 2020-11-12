@@ -79,11 +79,11 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
                                 namespaces)]]
                             {{localize(namespaceMessage)}}
                         </span>
-                        <span hidden$='[[!selectedNamespaceIsOwned]]' class="owner">
-                            <span hidden$='[[allNamespaces]]'>
+                        <template is="dom-if" if="[[selectedNamespaceIsOwned]]">
+                            <span hidden$='[[allNamespaces]]' class="owner">
                                 {{localize('namespaceSelector.owner')}}
                             </span>
-                        </span>
+                        </template>
                     </article>
                     <iron-icon icon="arrow-drop-down"></iron-icon>
                 </paper-button>
@@ -93,7 +93,11 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
                         <paper-item name="[[n.namespace]]" title$='[[n.role]]'
                                 owner$='[[isOwner(n.role)]]'>
                             [[n.namespace]]
-                            <span hidden$='[[!isOwner(n.role)]]' class="owner">{{localize('namespaceSelector.owner')}}</span>
+                            <template is="dom-if" if="[[isOwner(n.role)]]">
+                                <span class="owner">
+                                    {{localize('namespaceSelector.owner')}}
+                                </span>
+                            </template>
                         </paper-item>
                     </template>
                 </paper-listbox>
