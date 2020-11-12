@@ -56,8 +56,7 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
                     display: flex;
                     @apply --layout-center;
                 }
-                [owner]:not([all-namespaces]):after {
-                    content: '(Owner)';
+                .owner{
                     margin-left: .25em;
                     font-size: .8em;
                 }
@@ -74,13 +73,16 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
                 <paper-button id="dropdown-trigger" slot="dropdown-trigger">
                     <iron-icon icon="kubeflow:namespace"></iron-icon>
                     <article id="SelectedNamespace">
-                        <span class='text'
-                            all-namespaces$='[[allNamespaces]]'
-                            owner$='[[selectedNamespaceIsOwned]]'>
+                        <span class='text'>
                             [[getNamespaceText(selected,
                                 allNamespaces,
                                 namespaces)]]
                             {{localize(namespaceMessage)}}
+                        </span>
+                        <span hidden$='[[!selectedNamespaceIsOwned]]' class="owner">
+                            <span hidden$='[[allNamespaces]]'>
+                                {{localize('namespaceSelector.owner')}}
+                            </span>
                         </span>
                     </article>
                     <iron-icon icon="arrow-drop-down"></iron-icon>
@@ -91,6 +93,7 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
                         <paper-item name="[[n.namespace]]" title$='[[n.role]]'
                                 owner$='[[isOwner(n.role)]]'>
                             [[n.namespace]]
+                            <span hidden$='[[!isOwner(n.role)]]' class="owner">{{localize('namespaceSelector.owner')}}</span>
                         </paper-item>
                     </template>
                 </paper-listbox>
