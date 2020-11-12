@@ -16,8 +16,10 @@ import './manage-users-view-contributor.js';
 import css from './manage-users-view.css';
 import template from './manage-users-view.pug';
 import utilitiesMixin from './utilities-mixin.js';
+import localizationMixin from './localization-mixin.js';
 
-export class ManageUsersView extends utilitiesMixin(PolymerElement) {
+// eslint-disable-next-line max-len
+export class ManageUsersView extends utilitiesMixin(localizationMixin(PolymerElement)) {
     static get template() {
         return html([`
             <style>${css.toString()}</style>
@@ -36,14 +38,14 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
             multiOwnedNamespaces: {type: Array, value: []},
         };
     }
-    
+
     /**
      * Main ready method for Polymer Elements.
      */
     ready() {
         super.ready();
     }
-    
+
     /**
      * Returns namespaces and roles
      * @param {[object]} ns Namespaces array.

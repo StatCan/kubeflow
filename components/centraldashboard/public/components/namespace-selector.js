@@ -162,7 +162,7 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
      * @return {string} Text that should show in namespace selector
      */
     getNamespaceText(selected, allNamespaces, namespaces) {
-        if (allNamespaces){
+        if (allNamespaces) {
             this.namespaceMessage = 'namespaceSelector.allNamespaces';
             return '';
         }
@@ -170,10 +170,10 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
             this.namespaceMessage = 'namespaceSelector.noNamespaces';
             return '';
         }
-        if (!selected){
+        if (!selected) {
             this.namespaceMessage = 'namespaceSelector.selectNamespace';
             return '';
-        } 
+        }
         this.namespaceMessage = '';
         return selected;
     }
@@ -213,10 +213,10 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
      */
     _ownedContextChanged(namespaces, selected) {
         const namespace = (namespaces || []).find((i) =>
-            i.namespace == selected
+            i.namespace == selected,
         ) || this.selectedNamespaceIsOwned;
         this._setSelectedNamespaceIsOwned(
-            this.isOwner(namespace.role)
+            this.isOwner(namespace.role),
         );
     }
 
