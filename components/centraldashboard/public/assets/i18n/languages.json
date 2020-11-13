@@ -81,17 +81,19 @@
             "manageUsersView.lblNamespceMemberships": "Namespace memberships",
             "manageUsersView.headerNamespaces":"Namespaces",
             "manageUsersView.headerYouRole":"Your role",
-            "manageUsersViewContributor.ContributorsToYourNamespace": "Contributors to your namespace - {ownedNamespace}",
-            "manageUsersViewContributor.lblEmail": "Email Addresses",
-            "manageUsersViewContributor.phdAddByEmail":"Add by email address",
             "manageUsersView.lblClusterNamespaces":"Cluster namespaces",
             "manageUsersView.headerNamespace": "Namespace",
             "manageUsersView.headerOwner": "Owner",
             "manageUsersView.headerContributors": "Contributors",
-            "manageUsersViewContributor.errorContributor": "Failed to fetch contributor list for {ownedNamespace}, because:",
             "manageUsersView.errorAllNamespaces": "Failed to fetch all namespaces, because:",
             "manageUsersView.lblOwner": "Owner",
-            "manageUsersView.lblContributor": "Contributor"
+            "manageUsersView.lblContributor": "Contributor",
+            "manageUsersViewContributor.ContributorsToYourNamespace": "Contributors to your namespace - {ownedNamespace}",
+            "manageUsersViewContributor.lblEmail": "Email Addresses",
+            "manageUsersViewContributor.phdAddByEmail":"Add by email address",
+            "manageUsersViewContributor.errorContributor": "Failed to fetch contributor list for {ownedNamespace}, because:",
+            "manageUsersViewContributor.errorCreateGeneral": "An error occured while trying to add the email. Please make check the email format and make sure there are no duplicates in this namespace.",
+            "manageUsersViewContributor.errorDeleteGeneral": "An error occured while trying to remove the email. Please try again."
         },
         "fr": {
             "dashboardView.headingQuickLinks": "Raccourcis",
@@ -174,17 +176,19 @@
             "manageUsersView.lblNamespceMemberships": "Adhésions à l'espace de noms",
             "manageUsersView.headerNamespaces":"Espace de noms",
             "manageUsersView.headerYouRole":"Votre rôle",
-            "manageUsersViewContributor.ContributorsToYourNamespace": "Contributeurs à votre espace de noms - {ownedNamespace}",
-            "manageUsersViewContributor.lblEmail": "Adresse courriel",
-            "manageUsersViewContributor.phdAddByEmail":"Ajouter par adresse courriel",
             "manageUsersView.lblClusterNamespaces":"Grappe d'espace de noms",
             "manageUsersView.headerNamespace": "Espace de noms",
             "manageUsersView.headerOwner": "Propriétaire",
             "manageUsersView.headerContributors": "Contributeurs",
-            "manageUsersView.errorContributor": "Échec de la récupération de la liste de contributeurs pour {ownedNamespace}, car:",
             "manageUsersView.errorAllNamespaces": "Échec de la récupération de tous les espaces de noms car:",
             "manageUsersView.lblOwner": "Propriétaire",
-            "manageUsersView.lblContributor": "Contributeur"
+            "manageUsersView.lblContributor": "Contributeur",
+            "manageUsersViewContributor.ContributorsToYourNamespace": "Contributeurs à votre espace de noms - {ownedNamespace}",
+            "manageUsersViewContributor.lblEmail": "Adresse courriel",
+            "manageUsersViewContributor.phdAddByEmail":"Ajouter par adresse courriel",
+            "manageUsersViewContributor.errorContributor": "Échec de la récupération de la liste de contributeurs pour {ownedNamespace}, car:",
+            "manageUsersViewContributor.errorCreateGeneral": "Échec lors de l'ajout d'un courriel. Veuillez vous assurez que le format est valide et qu'il n'y a pas de duplicat dans cet espace de noms.",
+            "manageUsersViewContributor.errorDeleteGeneral": "Échec lors de la supression du courriel. Veuillez réessayer."
         }
     }
 }

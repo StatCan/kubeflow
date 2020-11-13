@@ -80,8 +80,9 @@ export class ManageUsersViewContributor extends utilitiesMixin(localizationMixin
      */
     handleContribCreate(e) {
         if (e.detail.error) {
-            const error = this._isolateErrorFromIronRequest(e);
-            this.contribCreateError = error;
+            // const error = this._isolateErrorFromIronRequest(e);
+            this.contribCreateError =
+                'manageUsersViewContributor.errorCreateGeneral';
             return;
         }
         this.contributorList = e.detail.response;
@@ -93,8 +94,9 @@ export class ManageUsersViewContributor extends utilitiesMixin(localizationMixin
      */
     handleContribDelete(e) {
         if (e.detail.error) {
-            const error = this._isolateErrorFromIronRequest(e);
-            this.contribCreateError = error;
+            // const error = this._isolateErrorFromIronRequest(e);
+            this.contribCreateError =
+                'manageUsersViewContributor.errorDeleteGeneral';
             return;
         }
         this.contributorList = e.detail.response;

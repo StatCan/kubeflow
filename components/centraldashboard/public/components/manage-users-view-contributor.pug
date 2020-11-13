@@ -9,7 +9,7 @@
         iron-icon.icon(icon='kubeflow:namespace')
         span.text {{localize('manageUsersViewContributor.ContributorsToYourNamespace', 'ownedNamespace', ownedNamespace.namespace)}}
     .content.small
-        md2-input(label="{{localize('manageUsersViewContributor.lblEmail')}}", value='{{newContribEmail}}', on-submit='addNewContrib', placeholder="{{localize('manageUsersViewContributor.phdAddByEmail')}}", error$='[[contribCreateError]]')
+        md2-input(label="{{localize('manageUsersViewContributor.lblEmail')}}", value='{{newContribEmail}}', on-submit='addNewContrib', placeholder="{{localize('manageUsersViewContributor.phdAddByEmail')}}", error$='{{localize(contribCreateError)}}')
             .prefix(slot='prefix')
                 template(is='dom-repeat', items='[[contributorList]]')
                     paper-chip(on-remove='removeContributor') [[item]]
