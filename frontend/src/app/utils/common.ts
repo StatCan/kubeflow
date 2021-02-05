@@ -32,6 +32,7 @@ export function getFormDefaults(): FormGroup {
     configurations: [[], []],
     affinityConfig: ['', []],
     tolerationGroup: ['', []],
+    language: ['', [Validators.required]],
   });
 }
 

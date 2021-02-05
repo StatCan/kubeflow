@@ -14,7 +14,7 @@ export function createRokVolumeControl(vol: ConfigVolume) {
 
 export function addRokDataVolume(
   formCtrl: FormGroup,
-  vol: ConfigVolume = null,
+  vol: ConfigVolume = null
 ) {
   // If no vol is provided create one with default values
   if (vol === null) {

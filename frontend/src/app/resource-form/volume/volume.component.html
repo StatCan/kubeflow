@@ -1,49 +1,60 @@
 <div *ngIf="volume" [formGroup]="volume" class="volume-wrapper">
- 
-  <!-- Volume Type Input -->
-    <mat-form-field appearance="outline" id="type">
-      <mat-label>Type</mat-label>
-      <mat-select  (selectionChange)="selectType($event)" formControlName="type">
-        <mat-option *ngFor="let i of types"
-        [disabled]="newTypeIsDisabled()"
-        [matTooltip]="newTypeTooltip()"
-        value="{{i}}">{{i}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  
-    <!-- Volume Name Input -->
-    <mat-form-field *ngIf="typeSelected === 'New'" class="wide" appearance="outline" id="name">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name"/>
-    </mat-form-field>
-    
-    <mat-form-field *ngIf="typeSelected === 'Existing'" class="wide" appearance="outline" id="name">
-      <mat-label>Name</mat-label>
-      <mat-select formControlName="name">
-        <mat-option *ngFor="let i of existingPVCs"
-          value="{{i}}">{{i}}</mat-option>
-      </mat-select>
-    </mat-form-field>
+  <mat-form-field appearance="outline" id="type">
+    <mat-label>{{ "volume.lblType" | translate }}</mat-label>
+    <mat-select formControlName="type">
+      <mat-option *ngIf="defaultStorageClass" value="New">
+        {{ "volume.optNew" | translate }}
+      </mat-option>
+      <mat-option value="Existing">
+        {{ "volume.optExisting" | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 
-    <!-- Size Input -->
-    <mat-form-field *ngIf="typeSelected === 'New'" class="wide" appearance="outline" id="size">
-      <mat-label>Size</mat-label>
-      <input matInput formControlName="size" />
-    </mat-form-field>
-  
-    <!-- Mode Input -->
-    <mat-form-field *ngIf="typeSelected === 'New'" class="wide" appearance="outline" id="mode">
-      <mat-label>Mode</mat-label>
-      <mat-select formControlName="mode">
-        <mat-option value="ReadWriteOnce">ReadWriteOnce</mat-option>
-        <mat-option value="ReadOnlyMany">ReadOnlyMany</mat-option>
-        <mat-option value="ReadWriteMany">ReadWriteMany</mat-option>
+  <!-- Volume Name Input -->
+  <mat-form-field appearance="outline" id="name">
+    <mat-label>{{ "volume.lblName" | translate }}</mat-label>
+    <input
+      matInput
+      formControlName="name"
+      *ngIf="volume.value.type == 'New'; else existingPvcControl"
+      [errorStateMatcher]="matcher"
+    />
+    <ng-template #existingPvcControl>
+      <mat-select formControlName="name" [errorStateMatcher]="matcher">
+        <mat-option *ngFor="let pvc of existingPVCs" [value]="pvc">{{
+          pvc
+        }}</mat-option>
       </mat-select>
-    </mat-form-field>
-  
-    <!-- Mount Input -->
-    <mat-form-field class="wide" appearance="outline" id="path">
-      <mat-label>Mount Point</mat-label>
-      <input matInput formControlName="path" />
-    </mat-form-field>
-  </div>
+    </ng-template>
+    <mat-error>
+      {{ showNameError() }}
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Size Input -->
+  <mat-form-field appearance="outline" id="size">
+    <mat-label>{{ "volume.lblSize" | translate }}</mat-label>
+    <mat-select formControlName="size">
+      <mat-option *ngFor="let sizeOptions of sizes" [value]="sizeOptions">{{
+        sizeOptions
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Mode Input -->
+  <mat-form-field appearance="outline" id="mode">
+    <mat-label>{{ "volume.lblMode" | translate }}</mat-label>
+    <mat-select formControlName="mode">
+      <mat-option value="ReadWriteOnce">
+        {{ "volume.optReadWriteOnce" | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Mount Input -->
+  <mat-form-field appearance="outline" id="path">
+    <mat-label>{{ "volume.lblMountPoint" | translate }}</mat-label>
+    <input matInput formControlName="path" />
+  </mat-form-field>
+</div>

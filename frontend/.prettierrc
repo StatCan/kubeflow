@@ -8,4 +8,7 @@
   bracketSpacing: true,
   arrowParens: 'avoid',
   proseWrap: 'preserve',
+  "arrowParens": "avoid",
+  "bracketSpacing": false,
+  "trailingComma": "none"
 }

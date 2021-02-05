@@ -1,7 +1,7 @@
 export interface Volume {
   name: string;
   size: string;
-  namepsace?: string;
+  namespace?: string;
   class?: string;
   mode: string;
   type?: string;
@@ -114,6 +114,8 @@ export interface Config {
     value: string;
     options: string[];
     readOnly?: boolean;
+    hideRegistry?: boolean;
+    hideVersion?: boolean;
   };
 
   cpu?: {
@@ -171,5 +173,5 @@ export enum SnackType {
   Success,
   Error,
   Warning,
-  Info,
+  Info
 }

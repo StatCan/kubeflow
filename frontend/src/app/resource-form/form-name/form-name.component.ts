@@ -8,6 +8,7 @@ import {
 import { KubernetesService } from "src/app/services/kubernetes.service";
 import { NamespaceService } from "src/app/services/namespace.service";
 import { Subscription } from "rxjs";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-form-name",
@@ -19,14 +20,17 @@ export class FormNameComponent implements OnInit, OnDestroy {
   notebooks: Set<string> = new Set<string>();
   @Input() parentForm: FormGroup;
 
-  constructor(private k8s: KubernetesService, private ns: NamespaceService) {}
+  constructor(
+    private k8s: KubernetesService, 
+    private ns: NamespaceService,
+    private translate: TranslateService) {}
 
   ngOnInit() {
-    // Add the ExistingName validator to the list if it doesn't already exist
+    // Add validator for notebook name (existing name, length, lowercase alphanumeric and '-')
     this.parentForm
       .get("name")
-      .setValidators([Validators.required, this.existingName()]);
-
+      .setValidators([Validators.required, this.existingNameValidator(), Validators.pattern(/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/), Validators.maxLength(52)]);
+    
     // Keep track of the existing Notebooks in the selected Namespace
     // Use these names to check if the input name exists
     const nsSub = this.ns.getSelectedNamespace().subscribe(ns => {
@@ -45,18 +49,26 @@ export class FormNameComponent implements OnInit, OnDestroy {
 
   showNameError() {
     const nameCtrl = this.parentForm.get("name");
-
+    
+    if (nameCtrl.value.length==0) {
+      return this.translate.instant("formName.errorNameRequired");
+    }
     if (nameCtrl.hasError("existingName")) {
-      return `Notebook Server "${nameCtrl.value}" already exists`;
-    } else {
-      return "The Notebook Server's name can't be empty";
+      return this.translate.instant("formName.errorNameExists", {existingName: `${nameCtrl.value}`});
+    }
+    if (nameCtrl.hasError("pattern")) {
+      return this.translate.instant("formName.errorNamePattern");
+    } 
+    if (nameCtrl.hasError("maxlength")) {
+      return this.translate.instant("formName.errorNameMaxLenght");
     }
   }
 
-  private existingName(): ValidatorFn {
+  private existingNameValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
       const exists = this.notebooks.has(control.value);
       return exists ? { existingName: true } : null;
     };
   }
+  
 }
