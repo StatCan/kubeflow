@@ -8,15 +8,19 @@
         [parentForm]="formCtrl"
         [images]="config?.image?.options"
         [readonly]="config?.image?.readOnly"
+        [hideRegistry]="config?.image?.hideRegistry"
+        [hideVersion]="config?.image?.hideVersion"
       ></app-form-image>
 
-      <app-form-specs
+      <app-form-specs 
         [parentForm]="formCtrl"
+        [readonlySpecs]="readonlySpecs"
       ></app-form-specs>
 
       <app-form-gpus
         [parentForm]="formCtrl"
         [vendors]="config?.gpus?.value.vendors"
+        (gpuValueEvent)="checkGPU($event)"
       ></app-form-gpus>
 
       <app-form-workspace-volume
@@ -60,11 +64,13 @@
       type="submit"
       [disabled]="formCtrl.invalid"
     >
-      LAUNCH
+      {{ "resourceForm.btnLaunch" | translate }}
     </button>
 
     <a routerLink="/">
-      <button mat-raised-button class="margin">CANCEL</button>
+      <button mat-raised-button class="margin">
+        {{ "resourceForm.btnCancel" | translate }}
+      </button>
     </a>
   </form>
 </div>

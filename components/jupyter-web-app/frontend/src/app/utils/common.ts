@@ -32,6 +32,7 @@ export function getFormDefaults(): FormGroup {
     configurations: [[], []],
     affinityConfig: ['', []],
     tolerationGroup: ['', []],
+    language: ['', [Validators.required]],
   });
 }
 
@@ -89,7 +90,7 @@ export function addDataVolume(
         value: '{notebook-name}-vol-' + (l + 1),
       },
       size: {
-        value: '10Gi',
+        value: '16Gi',
       },
       mountPath: {
         value: '/home/jovyan/data-vol-' + (l + 1),

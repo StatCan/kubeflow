@@ -1,21 +1,22 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { NamespaceService } from '../services/namespace.service';
-import { KubernetesService } from '../services/kubernetes.service';
-import { Router } from '@angular/router';
-import { catchError } from 'rxjs/operators';
-import { Subscription, of } from 'rxjs';
-import { Volume, Config, SnackType } from '../utils/types';
-import { SnackBarService } from '../services/snack-bar.service';
-import { getFormDefaults, initFormControls } from '../utils/common';
+import { Component, OnInit, AfterContentChecked, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import { FormGroup } from "@angular/forms";
+import { NamespaceService } from "../services/namespace.service";
+import { KubernetesService } from "../services/kubernetes.service";
+import { Router } from "@angular/router";
+import { catchError } from "rxjs/operators";
+import { Subscription, of } from "rxjs";
+import { Volume, Config, SnackType } from "../utils/types";
+import { SnackBarService } from "../services/snack-bar.service";
+import { getFormDefaults, initFormControls } from "../utils/common";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-resource-form',
-  templateUrl: './resource-form.component.html',
-  styleUrls: ['./resource-form.component.scss'],
+  selector: "app-resource-form",
+  templateUrl: "./resource-form.component.html",
+  styleUrls: ["./resource-form.component.scss"]
 })
 export class ResourceFormComponent implements OnInit, OnDestroy {
-  currNamespace = '';
+  currNamespace = "";
   formCtrl: FormGroup;
   config: Config;
 
@@ -26,11 +27,15 @@ export class ResourceFormComponent implements OnInit, OnDestroy {
 
   subscriptions = new Subscription();
 
+  readonlySpecs: boolean;
+
   constructor(
     private namespaceService: NamespaceService,
     private k8s: KubernetesService,
     private router: Router,
     private popup: SnackBarService,
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -58,17 +63,26 @@ export class ResourceFormComponent implements OnInit, OnDestroy {
         this.k8s.getVolumes(namespace).subscribe(pvcs => {
           this.pvcs = pvcs;
         });
-      }),
+      })
     );
 
     // Check if a default StorageClass is set
     this.k8s.getDefaultStorageClass().subscribe(defaultClass => {
       if (defaultClass.length === 0) {
         this.defaultStorageclass = false;
+        this.popup.show(
+          this.translate.instant("resourceForm.msgDefaultStorageClass"),
+          SnackType.Warning,
+          0
+        );
       } else {
         this.defaultStorageclass = true;
       }
     });
+  }
+
+  ngAfterContentChecked() {
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy() {
@@ -90,5 +104,16 @@ export class ResourceFormComponent implements OnInit, OnDestroy {
           });
         }
       });
+  }
+  
+  // Automatically set values of CPU and Memory if GPU is 1
+  checkGPU(gpu: string) {
+    if (gpu == "none") {
+      this.readonlySpecs = false;
+    } else {
+      this.readonlySpecs = true;
+      this.formCtrl.get("cpu").setValue("5");
+      this.formCtrl.get("memory").setValue("96Gi");
+    }
   }
 }
