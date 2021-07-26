@@ -1,9 +1,11 @@
 {
   "jupyter": {
     "formAdvancedOptions": {
-      "miscSettings": "Miscellaneous Settings",
-      "miscSettingsDesc": "Other possible settings to be applied to the Notebook Server.",
-      "enableSharedMemory": "Enable Shared Memory"
+      "h3AdvancedSettings": "Advanced Settings",
+      "toggleSharedMemory": "Enable Shared Memory",
+      "lblSystemLanguage":"System language",
+      "lblEnglish": "English",
+      "lblFrench": "Français"
     },
     "formAffinityTolerations": {
       "affinityTolerations": "Affinity / Tolerations",

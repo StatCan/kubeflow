@@ -57,6 +57,7 @@ export interface NotebookFormObject {
   datavols: Volume[];
   shm: boolean;
   configurations: PodDefault[];
+  language: string;
 }
 
 export interface Volume {

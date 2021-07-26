@@ -12,6 +12,7 @@ SERVER_TYPE_ANNOTATION = "notebooks.kubeflow.org/server-type"
 HEADERS_ANNOTATION = "notebooks.kubeflow.org/http-headers-request-set"
 URI_REWRITE_ANNOTATION = "notebooks.kubeflow.org/http-rewrite-uri"
 
+EnvKfLanguage  = "KF_LANG"
 
 def get_form_value(body, defaults, body_field, defaults_field=None):
     """
@@ -333,3 +334,7 @@ def add_notebook_volume(notebook, vol_name, claim, mnt_path):
     # Container Mounts
     mnt = {"mountPath": mnt_path, "name": vol_name}
     container["volumeMounts"].append(mnt)
+
+def set_lang(notebook, body, defaults):
+    lang = get_form_value(body, defaults, "language")
+    notebook["spec"]["template"]["spec"]["containers"][0]["env"].append({"name": EnvKfLanguage, "value": lang})   
