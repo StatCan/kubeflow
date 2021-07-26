@@ -1,9 +1,11 @@
 {
   "jupyter": {
     "formAdvancedOptions": {
-      "miscSettings": "Paramètres divers",
-      "miscSettingsDesc": "Autres paramètres pouvant être appliqué au serveur bloc-notes.",
-      "enableSharedMemory": "Activer la mémoire partagée"
+      "h3AdvancedSettings": "Paramètres avancés",
+      "toggleSharedMemory": "Activer la mémoire partagée",
+      "lblSystemLanguage":"Langue du système",
+      "lblEnglish": "English",
+      "lblFrench": "Français"
     },
     "formAffinityTolerations": {
       "affinityTolerations": "Affinité / Tolérances",

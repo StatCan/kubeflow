@@ -78,10 +78,14 @@ The translation asset files are set in the `app.module.ts`, which should not be 
 The translation default language is set in the `app.component.ts`.
 
 For each language added, `app.component.ts` will need to be updated.
+KF_LANG sets the LANG environment variables and pre-sets the application's language when launched.
+It can also be written to configuration files before the notebook server is available to the user as it is being created.
+KF_LANG holds the language selected by the user upon notebook creation.
 
 **When a language is added:** 
 - Copy the en.json file and rename is to the language you want to add. As it currently is, the culture should not be included.
 - Change the values to the translated ones
+- Add the language to the dictionary in `form-advanced-options.component.ts` to have it appear in the drop-down langauge list.
 
 **When a translation is added or modified:**
 - Choose an appropriate key

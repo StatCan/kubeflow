@@ -1,9 +1,25 @@
 <lib-form-section
-  title="{{ 'jupyter.formAdvancedOptions.miscSettings' | translate }}"
-  text="{{ 'jupyter.formAdvancedOptions.miscSettingsDesc' | translate }}"
-  icon="fa:fas:cogs"
+title="{{ 'jupyter.formAdvancedOptions.h3AdvancedSettings' | translate }}"
+icon="fa:fas:cogs"
 >
-  <mat-slide-toggle [formControl]="parentForm.get('shm')">
-    {{ 'jupyter.formAdvancedOptions.enableSharedMemory' | translate }}
-  </mat-slide-toggle>
+  <div class="group-wrapper" [formGroup]="parentForm">
+    <input id="collapsible" class="toggle-advanced-options" type="checkbox">
+    <label for="collapsible" class="lbl-toggle-advanced-options">
+    </label>
+    <div class="collapsible-content">
+      <div class="content-inner">
+        <mat-slide-toggle formControlName="shm" class="matSpacing">
+          {{ "jupyter.formAdvancedOptions.toggleSharedMemory" | translate }}
+        </mat-slide-toggle>
+        <mat-form-field class="wide" appearance="outline">
+        <mat-label>{{ "jupyter.formAdvancedOptions.lblSystemLanguage" | translate }}</mat-label>
+        <mat-select matNativeControl  formControlName="language">
+          <mat-option *ngFor="let lang of languageList" [value]="lang.id">
+            {{ lang.label | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  </div>
 </lib-form-section>
