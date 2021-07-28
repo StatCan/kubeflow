@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from "@angular/core";
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import { Component, OnInit, Input, ChangeDetectorRef } from "@angular/core";
+import {FormGroup } from "@angular/forms";
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
@@ -15,24 +15,14 @@ export class FormAdvancedOptionsComponent implements OnInit {
     {'id':'en', 'label':'jupyter.formAdvancedOptions.lblEnglish'},
     {'id':'fr', 'label':'jupyter.formAdvancedOptions.lblFrench'}    
   ];
-  public modeselect = 'English';
 
-  constructor(private translate: TranslateService, private fb: FormBuilder) {}
+  constructor(private translate: TranslateService, private cdr: ChangeDetectorRef) {}
   ngOnInit() { 
-    // this.parentForm.patchValue({
-    //   language: this.parentForm.get('language').setValue(this.translate.defaultLang) 
-    // });
-    console.log (this.parentForm.get('language'))
-    console.log(this.parentForm.get('language').value)
-    console.log("LANG:  " + this.translate.defaultLang)
+
     }
 
-    // ngAfterContentInit(){
-    //   console.log (this.parentForm.get('language'))
-    //   this.parentForm.get('language').setValue(this.translate.defaultLang) 
-    // }
-
-    ngAfterViewInit(){
+    ngAfterViewChecked() {
       this.parentForm.get('language').setValue(this.translate.defaultLang)
+      this.cdr.detectChanges();
     }
-}
+  }

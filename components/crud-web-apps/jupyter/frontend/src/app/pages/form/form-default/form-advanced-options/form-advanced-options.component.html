@@ -12,7 +12,7 @@
         </mat-slide-toggle>
         <mat-form-field class="wide" appearance="outline">
         <mat-label>{{ "jupyter.formAdvancedOptions.lblSystemLanguage" | translate }}</mat-label>
-        <mat-select [(ngModel)]="modeselect" matNativeControl  formControlName="language">
+        <mat-select matNativeControl  formControlName="language">
           <mat-option *ngFor="let v of languageList" [value]="v.id">
             {{ v.label | translate }}
           </mat-option>
