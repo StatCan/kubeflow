@@ -41,6 +41,7 @@ export function getFormDefaults(): FormGroup {
     datavols: fb.array([]),
     shm: [true, []],
     configurations: [[], []],
+    language: ['', []],
   });
 }
 
@@ -222,6 +223,8 @@ export function initFormControls(formCtrl: FormGroup, config: Config) {
   if (config.configurations.readOnly) {
     formCtrl.controls.configurations.disable();
   }
+  //formCtrl.get('language').setValue(config.language.value);
+  formCtrl.controls.language.setValue(config.language.value);
 }
 
 export function configSizeToNumber(size: string | number): number {

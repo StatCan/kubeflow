@@ -155,9 +155,8 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
       notebook.workspace.size = notebook.workspace.size.toString() + 'Gi';
     }
 
-    if (typeof notebook.language === 'string'){
-      notebook.language = notebook.language.toString();
-    }
+    // console.log(notebook.language)
+    notebook.language = notebook.language.toString()
 
     for (const vol of notebook.datavols) {
       if (vol.size) {
@@ -170,6 +169,8 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     const notebook = this.getSubmitNotebook();
+    console.log(notebook.shm)
+    console.log(notebook)
     this.backend.createNotebook(notebook).subscribe(() => {
       this.popup.close();
       this.router.navigate(['/']);

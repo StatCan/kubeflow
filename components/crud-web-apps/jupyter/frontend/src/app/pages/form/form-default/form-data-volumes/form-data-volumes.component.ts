@@ -8,12 +8,15 @@ import { Volume } from 'src/app/types';
   templateUrl: './form-data-volumes.component.html',
   styleUrls: ['./form-data-volumes.component.scss'],
 })
+
+
+
 export class FormDataVolumesComponent implements OnInit {
   @Input() parentForm: FormGroup;
   @Input() readonly: boolean;
   @Input() pvcs: Volume[];
   @Input() defaultStorageClass: boolean;
-
+  modeselect = 'en';
   get datavols() {
     const vols = this.parentForm.get('datavols') as FormArray;
     return vols.controls;

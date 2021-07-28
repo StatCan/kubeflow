@@ -27,6 +27,7 @@ export interface NotebookResponseObject {
   };
   environment: string;
   shortImage: string;
+  language: string;
 }
 
 export interface NotebookProcessedObject extends NotebookResponseObject {
@@ -221,4 +222,8 @@ export interface Config {
     value: string[];
     readOnly?: boolean;
   };
+  language?: {
+    value: string;
+    readOnly?: boolean;
+  }
 }
