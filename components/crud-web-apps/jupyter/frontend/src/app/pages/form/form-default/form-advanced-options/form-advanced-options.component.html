@@ -1,9 +1,10 @@
-<lib-form-section>
+<lib-form-section
+title="{{ 'jupyter.formAdvancedOptions.h3AdvancedSettings' | translate }}"
+icon="fa:fas:cogs"
+>
   <div class="group-wrapper" [formGroup]="parentForm">
     <input id="collapsible" class="toggle-advanced-options" type="checkbox">
     <label for="collapsible" class="lbl-toggle-advanced-options">
-      <!-- <fa-icon [icon]="['fas', 'cogs']" class="check"></fa-icon> -->
-      {{ "jupyter.formAdvancedOptions.h3AdvancedSettings" | translate }}
     </label>
     <div class="collapsible-content">
       <div class="content-inner">

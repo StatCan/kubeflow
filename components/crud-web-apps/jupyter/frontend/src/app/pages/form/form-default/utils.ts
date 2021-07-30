@@ -223,7 +223,6 @@ export function initFormControls(formCtrl: FormGroup, config: Config) {
   if (config.configurations.readOnly) {
     formCtrl.controls.configurations.disable();
   }
-  formCtrl.controls.language.setValue(config.language.value);
 }
 
 export function configSizeToNumber(size: string | number): number {

@@ -213,4 +213,3 @@ spawnerFormDefaults:
     #   - default-editor
     value: []
     readOnly: false
-  language: ""
