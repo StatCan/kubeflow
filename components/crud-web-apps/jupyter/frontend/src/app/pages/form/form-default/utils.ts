@@ -223,7 +223,6 @@ export function initFormControls(formCtrl: FormGroup, config: Config) {
   if (config.configurations.readOnly) {
     formCtrl.controls.configurations.disable();
   }
-  //formCtrl.get('language').setValue(config.language.value);
   formCtrl.controls.language.setValue(config.language.value);
 }
 

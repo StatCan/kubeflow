@@ -335,6 +335,6 @@ def add_notebook_volume(notebook, vol_name, claim, mnt_path):
     mnt = {"mountPath": mnt_path, "name": vol_name}
     container["volumeMounts"].append(mnt)
 
-def set_lang(notebook, body, defaults):
+def set_notebook_language(notebook, body, defaults):
     lang = get_form_value(body, defaults, "language")
     notebook["spec"]["template"]["spec"]["containers"][0]["env"].append({"name": EnvKfLanguage, "value": lang})   
