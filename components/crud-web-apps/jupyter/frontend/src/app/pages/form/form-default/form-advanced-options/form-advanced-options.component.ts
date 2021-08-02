@@ -18,7 +18,7 @@ export class FormAdvancedOptionsComponent implements AfterViewChecked, OnInit{
     this.parentForm = this.fb.group({
       language: new FormControl(),
       shm: new FormControl()
-  });
+    });
   }
 
   ngOnInit(){
