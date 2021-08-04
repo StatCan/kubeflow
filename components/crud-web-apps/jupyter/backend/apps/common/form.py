@@ -338,7 +338,6 @@ def add_notebook_volume(notebook, vol_name, claim, mnt_path):
     container["volumeMounts"].append(mnt)
 
 def set_notebook_language(notebook, body, defaults):
-    lang = get_form_value(body, defaults, "language")
-    if not re.match("^[[:alpha:]]{2}(_[[:alpha:]]{2})?$", lang):
-        raise BadRequest("Error: the value of KF_LANG environment variable ('" + lang + "') is not a valid format (e.g 'en', 'en_US', ...)")
-    notebook["spec"]["template"]["spec"]["containers"][0]["env"].append({"name": EnvKfLanguage, "value": lang})   
+    if not re.match("^[[:alpha:]]{2}(_[[:alpha:]]{2})?$", notebook.language):
+        raise BadRequest("Error: the value of KF_LANG environment variable ('" + notebook.language + "') is not a valid format (e.g 'en', 'en_US', ...)")
+    notebook["spec"]["template"]["spec"]["containers"][0]["env"].append({"name": EnvKfLanguage, "value": notebook.language})   

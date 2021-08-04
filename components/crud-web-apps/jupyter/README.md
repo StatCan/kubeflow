@@ -78,6 +78,7 @@ The translation asset files are set in the `app.module.ts`, which should not be 
 The translation default language is set in the `app.component.ts`.
 
 For each language added, `app.component.ts` will need to be updated.
+The kflang variable which holds the language selected is written to the notebook upon creation.
 
 **When a language is added:** 
 - Copy the en.json file and rename is to the language you want to add. As it currently is, the culture should not be included.
