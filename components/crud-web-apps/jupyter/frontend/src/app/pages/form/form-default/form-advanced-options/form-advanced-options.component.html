@@ -14,8 +14,8 @@ icon="fa:fas:cogs"
         <mat-form-field class="wide" appearance="outline">
         <mat-label>{{ "jupyter.formAdvancedOptions.lblSystemLanguage" | translate }}</mat-label>
         <mat-select matNativeControl  formControlName="language">
-          <mat-option *ngFor="let v of languageList" [value]="v.id">
-            {{ v.label | translate }}
+          <mat-option *ngFor="let lang of languageList" [value]="lang.id">
+            {{ lang.label | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
