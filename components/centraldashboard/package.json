@@ -73,7 +73,7 @@
         "chokidar": "^3.5.2",
         "eventsource": "^1.1.1",
         "express": "^4.17.1",
-        "google-auth-library": "^5.9.2",
+        "google-auth-library": "^8.1.1",
         "json-schema": "^0.4.0",
         "jsprim": "^1.4.2",
         "levenary": "^1.1.1",
@@ -99,7 +99,7 @@
         "babel-loader": "^8.0.6",
         "clean-webpack-plugin": "^1.0.1",
         "concurrently": "^5.3.0",
-        "copy-webpack-plugin": "^5.1.1",
+        "copy-webpack-plugin": "^11.0.0",
         "core-js": "^2.6.9",
         "cross-env": "^7.0.2",
         "css-loader": "^2.1.1",
@@ -110,11 +110,11 @@
         "exports-loader": "^0.7.0",
         "file-loader": "^3.0.1",
         "html-webpack-plugin": "^3.2.0",
-        "istanbul-instrumenter-loader": "^3.0.1",
+        "istanbul-instrumenter-loader": "^2.0.0",
         "jasmine": "^3.5.0",
         "jasmine-ajax": "^3.4.0",
         "jasmine-console-reporter": "^3.1.0",
-        "karma": "^5.1.1",
+        "karma": "^6.4.0",
         "karma-chrome-launcher": "^3.1.0",
         "karma-coverage-istanbul-reporter": "^3.0.3",
         "karma-jasmine": "^4.0.1",
@@ -134,8 +134,8 @@
         "tslint": "^5.20.0",
         "typescript": "^3.6.3",
         "url-loader": "^1.1.2",
-        "webpack": "^4.44.1",
+        "webpack": "^5.73.0",
         "webpack-cli": "^3.3.9",
-        "webpack-dev-server": "^3.11.0"
+        "webpack-dev-server": "^4.9.3"
     }
 }
