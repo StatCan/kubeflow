@@ -13,11 +13,14 @@ RUN apk update && apk upgrade && \
     echo @stable http://nl.alpinelinux.org/alpine/v3.15/community >> /etc/apk/repositories && \
     echo @stable http://nl.alpinelinux.org/alpine/v3.15/main >> /etc/apk/repositories
 
-RUN apk add --no-cache bash chromium@stable nss@stable \
-    freetype@stable \
-    harfbuzz@stable \
-    ttf-freefont@stable \
-    libstdc++@stable
+RUN apk add --no-cache \
+    bash \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ttf-freefont \
+    libstdc++
 
 RUN if [ "$(uname -m)" = "aarch64" ]; then \
         apk update && apk upgrade && \
