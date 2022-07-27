@@ -2,7 +2,7 @@ name: component/centraldashboard
 on:
   push:
     branches:
-      - stc-master
+      - upgrade-alpine
     paths:
       - components/centraldashboard/**
 
@@ -49,8 +49,8 @@ jobs:
     # Comment out for now while https://github.com/Azure/container-scan/issues/122 is still open
     # ALSO should re-order this to actuall have it block the push if there is a critical severity
     # Scan image for vulnerabilities
-    #- uses: Azure/container-scan@v0
-    #  with:
-    #    image-name: ${{ env.REGISTRY_NAME }}.azurecr.io/kubeflow/centraldashboard:${{ github.sha }}
-    #    severity-threshold: CRITICAL
-    #    run-quality-checks: false
+    - uses: Azure/container-scan@v0
+      with:
+       image-name: ${{ env.REGISTRY_NAME }}.azurecr.io/kubeflow/centraldashboard:${{ github.sha }}
+       severity-threshold: CRITICAL
+       run-quality-checks: false
