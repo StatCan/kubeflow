@@ -16,11 +16,11 @@ RUN apk update && apk upgrade && \
 RUN apk add --no-cache \
     bash \
     chromium \
-    nss@stable \
-    freetype@stable \
-    harfbuzz@stable \
-    ttf-freefont@stable \
-    libstdc++@stable
+    nss \
+    freetype \
+    harfbuzz \
+    ttf-freefont \
+    libstdc++
 
 RUN if [ "$(uname -m)" = "aarch64" ]; then \
         apk update && apk upgrade && \
