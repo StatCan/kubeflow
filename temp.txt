@@ -1,0 +1,7 @@
+Hello this is a temporary file just to push
+
+this commit should be the first one (also the last checkmark) after squashing etc
+"feat(sas): Show error message when adding external contributor (#91)"
+https://github.com/StatCan/kubeflow/commit/8de6feb698ceb2bb2d7110f8fbae07ab00b9abed
+
+as everything onwards is Saffa trying to fix the builds
