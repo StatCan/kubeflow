@@ -1,4 +1,5 @@
 # Step 1: Builds and tests
+# This version of node uses npm@8.11.0
 FROM node:16-alpine AS build
 
 ARG kubeflowversion
