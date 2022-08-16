@@ -1,4 +1,6 @@
 # Step 1: Builds and tests
+# This is a long-lived tag, if there is a vulnerability sometimes a 
+# rebuild will set you on your way
 FROM node:16-alpine AS build
 
 ARG kubeflowversion

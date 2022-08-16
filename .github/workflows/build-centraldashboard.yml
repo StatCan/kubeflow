@@ -2,7 +2,7 @@ name: component/centraldashboard
 on:
   push:
     branches:
-      - upgrade-alpine-jose     #temporary change
+      - upgrade-alpine-jose #temporary change
     paths:
       - components/centraldashboard/**
 
