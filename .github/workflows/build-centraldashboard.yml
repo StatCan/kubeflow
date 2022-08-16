@@ -2,7 +2,7 @@ name: component/centraldashboard
 on:
   push:
     branches:
-      - upgrade-alpine-jose #temporary change
+      - stc-master
     paths:
       - components/centraldashboard/**
 
@@ -48,9 +48,7 @@ jobs:
        image-name: ${{ env.REGISTRY_NAME }}.azurecr.io/kubeflow/centraldashboard:${{ github.sha }}
        severity-threshold: CRITICAL
        run-quality-checks: false
-    ## JOSE-testing comment, this should fail the entire build if theres a cve
     - name: Docker push
       run: |
-        echo "hello world"  
-    #docker push ${{ env.REGISTRY_NAME }}.azurecr.io/kubeflow/centraldashboard:${{ github.sha }}
+        docker push ${{ env.REGISTRY_NAME }}.azurecr.io/kubeflow/centraldashboard:${{ github.sha }}
     # Push once, https://github.com/StatCan/kubeflow/pull/87
