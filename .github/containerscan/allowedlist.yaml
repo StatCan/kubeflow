@@ -1,6 +1,0 @@
-general:
-# TESTING THIS IGNORED VULN ISNT A REAL ONE, WANT TO TEST GH ACTIONS TO FAIL
-  vulnerabilities:
-    #- CVE-20XX-7774 # SHOULD BE CVE-2020-7774 
-    - CVE-2021-23334 # for some reason everything passed
-    #See https://github.com/StatCan/daaas/issues/1284
