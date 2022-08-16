@@ -52,6 +52,4 @@ jobs:
     - name: Docker push
       run: |
         docker push ${{ env.REGISTRY_NAME }}.azurecr.io/kubeflow/centraldashboard:${{ github.sha }}
-        docker tag ${{ env.REGISTRY_NAME }}.azurecr.io/kubeflow/centraldashboard:${{ github.sha }} \
-          ${{ env.REGISTRY_NAME }}.azurecr.io/kubeflow/centraldashboard:${GITHUB_REF#refs/*/}
-        docker push ${{ env.REGISTRY_NAME }}.azurecr.io/kubeflow/centraldashboard:${GITHUB_REF#refs/*/}
+    # Push once, https://github.com/StatCan/kubeflow/pull/87
