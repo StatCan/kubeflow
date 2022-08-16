@@ -1,5 +1,4 @@
 # Step 1: Builds and tests
-# This version of node uses npm@8.11.0
 FROM node:16-alpine AS build
 
 ARG kubeflowversion
@@ -40,9 +39,10 @@ RUN npm rebuild && \
         npm install; \
     fi && \
     npm test && \
-    npm run build && \
-    npm prune --production
-
+    # --legacy-peer-deps is required in the update to node16
+    # https://github.com/pugjs/pug-loader/issues/126#issuecomment-796517327
+    npm run build --legacy-peer-deps && \
+    npm prune --production --legacy-peer-deps && \
 # Step 2: Packages assets for serving
 FROM node:16-alpine AS serve
 
