@@ -51,5 +51,6 @@ jobs:
     ## JOSE-testing comment, this should fail the entire build if theres a cve
     - name: Docker push
       run: |
-        docker push ${{ env.REGISTRY_NAME }}.azurecr.io/kubeflow/centraldashboard:${{ github.sha }}
+        echo "hello world"  
+    #docker push ${{ env.REGISTRY_NAME }}.azurecr.io/kubeflow/centraldashboard:${{ github.sha }}
     # Push once, https://github.com/StatCan/kubeflow/pull/87
