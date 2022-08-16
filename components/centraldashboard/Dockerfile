@@ -1,6 +1,6 @@
 # Step 1: Builds and tests
-# This is a long-lived tag, if there is a vulnerability sometimes a 
-# rebuild will set you on your way
+# This is a long-lived tag, if there is a vulnerability
+# sometimes a rebuild will set you on your way.
 FROM node:16-alpine AS build
 
 ARG kubeflowversion
@@ -42,7 +42,7 @@ RUN npm rebuild && \
     fi && \
     npm test && \
     # --legacy-peer-deps is required in the update to node16
-    # https://github.com/pugjs/pug-loader/issues/126#issuecomment-796517327 
+    # https://github.com/pugjs/pug-loader/issues/126#issuecomment-796517327
     npm run build --legacy-peer-deps && \
     npm prune --production --legacy-peer-deps
 # Step 2: Packages assets for serving
