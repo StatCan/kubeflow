@@ -41,7 +41,7 @@ RUN npm rebuild && \
         npm install --legacy-peer-deps; \
     fi && \
     npm test && \
-    # --legacy-peer-deps is required in the update to node16
+    # --legacy-peer-deps is required in the update to node16 
     # https://github.com/pugjs/pug-loader/issues/126#issuecomment-796517327
     npm run build --legacy-peer-deps && \
     npm prune --production --legacy-peer-deps
