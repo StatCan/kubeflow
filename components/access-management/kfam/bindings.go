@@ -191,7 +191,7 @@ func (c *BindingClient) List(user string, namespaces []string, role string) (*Bi
 			if !ok {
 				continue
 			}
-			if user != "" && user != userVal {
+			if user != "" && !strings.EqualFold(user, userVal) {
 				continue
 			}
 			roleVal, ok := roleBinding.Annotations[ROLE]
