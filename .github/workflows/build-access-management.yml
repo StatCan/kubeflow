@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - stc-master
-      # TEMPORARY, remove case-sensitivity-emails after testing b4 merging
-      - case-sensitivity-emails
   pull_request:
     types:
       - "opened"
