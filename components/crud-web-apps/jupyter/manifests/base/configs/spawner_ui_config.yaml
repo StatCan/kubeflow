@@ -62,6 +62,9 @@ spawnerFormDefaults:
     # Factor by with to multiply request to calculate limit
     # if no limit is set, to disable set "none"
     limitFactor: "1.2"
+    # Factor by with to multiply request to calculate limit
+    # if no limit is set, to disable set "none"
+    limitFactor: "1.2"
     readOnly: false
   memory:
     # Memory for user's Notebook

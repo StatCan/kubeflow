@@ -18,7 +18,9 @@ export function getFormDefaults(): FormGroup {
     serverType: ['jupyter', [Validators.required]],
     cpu: [1, [Validators.required]],
     cpuLimit: ['', []],
+    cpuLimit: ['', []],
     memory: [1, [Validators.required]],
+    memoryLimit: ['', []],
     memoryLimit: ['', []],
     gpus: fb.group({
       vendor: ['', []],
@@ -160,6 +162,7 @@ export function initCpuFormControls(formCtrl: FormGroup, config: Config) {
   if (config.cpu.readOnly) {
     formCtrl.controls.cpu.disable();
     formCtrl.controls.cpuLimit.disable();
+    formCtrl.controls.cpuLimit.disable();
   }
 
   formCtrl.controls.cpuLimit.setValue(
@@ -175,6 +178,7 @@ export function initMemoryFormControls(formCtrl: FormGroup, config: Config) {
 
   if (config.memory.readOnly) {
     formCtrl.controls.memory.disable();
+    formCtrl.controls.memoryLimit.disable();
     formCtrl.controls.memoryLimit.disable();
   }
 

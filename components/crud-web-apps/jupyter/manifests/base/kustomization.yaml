@@ -15,6 +15,7 @@ resources:
 - service-account.yaml
 - service.yaml
 - configs/logos-configmap.yaml
+- configs/logos-configmap.yaml
 namePrefix: jupyter-web-app-
 namespace: kubeflow
 commonLabels:
