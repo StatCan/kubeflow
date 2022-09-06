@@ -52,7 +52,7 @@ export class ManageUsersViewContributor extends utilitiesMixin(localizationMixin
     addNewContrib() {
         // Need to call the api directly here.
         const api = this.$.AddContribAjax;
-        api.body = {contributor: this.newContribEmail.toLowerCase()};
+        api.body = {contributor: this.newContribEmail};
         api.generateRequest();
     }
     /**
