@@ -52,7 +52,7 @@ export class ManageUsersViewContributor extends utilitiesMixin(localizationMixin
     addNewContrib() {
         // Need to call the api directly here.
         const api = this.$.AddContribAjax;
-        api.body = {contributor: this.newContribEmail};
+        api.body = {contributor: this.newContribEmail.toLowerCase()};
         api.generateRequest();
     }
     /**
@@ -82,11 +82,10 @@ export class ManageUsersViewContributor extends utilitiesMixin(localizationMixin
         if (e.detail.error) {
             const error = this._isolateErrorFromIronRequest(e);
             // Employee-only namespaces
-            if (error.includes("denyexternalusers")) {
-                this.contribCreateError = 
+            if (error.includes('denyexternalusers')) {
+                this.contribCreateError =
                     'manageUsersViewContributor.errorExternalUser';
-            }
-            else {
+            } else {
                 this.contribCreateError =
                     'manageUsersViewContributor.errorCreateGeneral';
             }
