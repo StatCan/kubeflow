@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - stc-master
+      - case-sensitivity-emails
     paths:
       - components/centraldashboard/**
 
