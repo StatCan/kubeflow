@@ -22,6 +22,9 @@ import (
 	"regexp"
 	"strings"
 
+	"k8s.io/apimachinery/pkg/labels"
+	v1 "k8s.io/client-go/listers/rbac/v1"
+
 	istioSecurity "istio.io/api/security/v1beta1"
 	istioSecurityClient "istio.io/client-go/pkg/apis/security/v1beta1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -190,7 +193,7 @@ func (c *BindingClient) List(user string, namespaces []string, role string) (*Bi
 			if !ok {
 				continue
 			}
-			if user != "" && !strings.EqualFold(user, userVal) {
+			if user != "" && user != userVal {
 				continue
 			}
 			roleVal, ok := roleBinding.Annotations[ROLE]
