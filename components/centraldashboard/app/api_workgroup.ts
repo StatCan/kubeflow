@@ -209,6 +209,7 @@ export class WorkgroupApi {
         }
         let errIndex = 0;
         try {
+            //lowercasing user value
             const binding = mapSimpleBindingToWorkgroupBinding({
                 user: contributor.toLowerCase(),
                 namespace,
