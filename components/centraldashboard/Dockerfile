@@ -31,14 +31,15 @@ RUN npm rebuild && \
     if [ "$(uname -m)" = "aarch64" ]; then \
         export CFLAGS=-Wno-error && \
         export CXXFLAGS=-Wno-error && \
-        npm install; \
+        npm install --legacy-peer-deps; \
     else \
-        npm install; \
+        npm install --legacy-peer-deps; \
     fi && \
     npm test && \
-    npm run build && \
-    npm prune --production
-
+    # --legacy-peer-deps is required in the update to node16
+    # https://github.com/pugjs/pug-loader/issues/126#issuecomment-796517327
+    npm run build --legacy-peer-deps && \
+    npm prune --production --legacy-peer-deps
 # Step 2: Packages assets for serving
 FROM node:12.22.8-alpine AS serve
 
