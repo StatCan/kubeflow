@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - stc-master
+      - bryan-rebase-1.4-to-1.6-take-3-patch!
     paths:
       - components/centraldashboard/**
 
