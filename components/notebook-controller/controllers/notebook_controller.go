@@ -465,7 +465,7 @@ func generateStatefulSet(instance *v1beta1.Notebook) *appsv1.StatefulSet {
 	// Begin AAW Addition
 	// Add readiness probe
 	if container.ReadinessProbe == nil {
-		container.ReadinessProbe = &corev1.Probe{
+		container.ReadinessProbe = &io.k8s.kubernetes.pkg.api.v1.Probe{
 			Handler: io.k8s.kubernetes.pkg.api.v1.Handler{
 				HTTPGet: &corev1.HTTPGetAction{
 					Path: "/notebook/" + instance.Namespace + "/" + instance.Name,
