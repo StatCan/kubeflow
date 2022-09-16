@@ -461,6 +461,20 @@ func generateStatefulSet(instance *v1beta1.Notebook) *appsv1.StatefulSet {
 			},
 		}
 	}
+	
+	// Add readiness probe
+	// IMPORTANT! This is an AAW addition, please keep during upgrades!
+	if container.ReadinessProbe == nil {
+		container.ReadinessProbe = &corev1.Probe{
+			Handler: corev1.Handler{
+				HTTPGet: &corev1.HTTPGetAction{
+					Path: "/notebook/" + instance.Namespace + "/" + instance.Name,
+					Port: intstr.FromInt(DefaultContainerPort),
+				},
+			},
+		}
+	}
+	// End AAW addition.
 
 	setPrefixEnvVar(instance, container)
 
