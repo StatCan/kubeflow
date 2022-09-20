@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - stc-master
-      - feature-1.6-upgrade
     paths:
       - components/notebook-controller/**
   pull_request:
