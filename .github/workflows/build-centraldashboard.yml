@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - stc-master
+      - feat-1.6-package-lock-update
     paths:
       - components/centraldashboard/**
 
