@@ -50,7 +50,7 @@ const APP_API_NAME = 'applications';
 export class KubernetesService {
   private namespace = 'kubeflow';
   private coreAPI: k8s.Core_v1Api;
-  private Custom_objectsApi: k8s.Custom_objectsApi;
+  private customObjectsAPI: k8s.Custom_objectsApi;
   private dashboardConfigMap = DASHBOARD_CONFIGMAP;
 
   constructor(private kubeConfig: k8s.KubeConfig) {

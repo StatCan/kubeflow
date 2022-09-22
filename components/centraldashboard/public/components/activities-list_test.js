@@ -58,5 +58,4 @@ describe('Activities List', () => {
         expect(shadowRoot.querySelectorAll('h2')[0].innerText).toBe('Today');
         expect(shadowRoot.querySelectorAll('iron-icon.error').length).toBe(1);
     });
-
 });
