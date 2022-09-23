@@ -57,7 +57,7 @@
      "tags": [
       "core_v1"
      ],
-     "operationId": "getCore_v1ApiResources",
+     "operationId": "getCoreV1APIResources",
      "responses": {
       "200": {
        "description": "OK",

@@ -59,44 +59,4 @@ describe('Activities List', () => {
         expect(shadowRoot.querySelectorAll('iron-icon.error').length).toBe(1);
     });
 
-    it('Shows Activities in descending by lastTimestamp', () => {
-        const eventDate = new Date();
-        eventDate.setHours(20, 0, 0);
-        const activities = [];
-
-        for (let i = 10; i > 0; i--) {
-            // Add i hours to each activities
-            activities.push({
-                lastTimestamp: new Date(eventDate - (i * 60 * 60 * 1000))
-                    .toISOString(),
-                message: `Something happened ${i}`,
-                type: 'Normal',
-                involvedObject: {
-                    name: 'some-pod',
-                },
-            });
-        }
-
-        activitiesList.activities = activities;
-        flush();
-
-        const shadowRoot = activitiesList.shadowRoot;
-        expect(shadowRoot.querySelectorAll('.activity-row').length).toBe(10);
-        expect(shadowRoot.querySelectorAll('h2').length).toBe(1);
-        const times = [];
-        shadowRoot.querySelectorAll('.time').forEach((t) => {
-            times.push(t.innerText);
-        });
-        expect(times).toEqual([
-            '19:00:00',
-            '18:00:00',
-            '17:00:00',
-            '16:00:00',
-            '15:00:00',
-            '14:00:00',
-            '13:00:00',
-            '12:00:00',
-            '11:00:00',
-            '10:00:00']);
-    });
 });
