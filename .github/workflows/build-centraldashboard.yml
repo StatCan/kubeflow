@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - stc-master
+      - feature-1.6
     paths:
       - components/centraldashboard/**
 
