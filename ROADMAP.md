@@ -1,5 +1,7 @@
 # Kubeflow Roadmap
 
+:-)
+
 ## Kubeflow 1.7 Release - planning now in process 
 * Please join the Kubeflow Community Meetings on Tuesdays for updates and for opportunities to contribute.  
 
