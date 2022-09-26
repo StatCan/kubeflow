@@ -33,19 +33,27 @@ RUN if [ "$(uname -m)" = "aarch64" ]; then \
 COPY . /centraldashboard
 WORKDIR /centraldashboard
 
-RUN npm rebuild && \
-    if [ "$(uname -m)" = "aarch64" ]; then \
-        export CFLAGS=-Wno-error && \
-        export CXXFLAGS=-Wno-error && \
-        npm install --legacy-peer-deps; \
-    else \
-        npm install --legacy-peer-deps; \
-    fi && \
-    npm test && \
-    # --legacy-peer-deps is required in the update to node16
-    # https://github.com/pugjs/pug-loader/issues/126#issuecomment-796517327
-    npm run build --legacy-peer-deps && \
-    npm prune --production --legacy-peer-deps
+# --legacy-peer-deps is required in the update to node16
+# https://github.com/pugjs/pug-loader/issues/126#issuecomment-796517327
+
+RUN npm rebuild
+RUN npm install -g npm@latest
+RUN npm install --save ng2-charts --legacy-peer-deps
+RUN npm install --save chart.js --legacy-peer-deps
+RUN npm install --save pug@latest --legacy-peer-deps
+RUN npm install --save pug-loader@latest --legacy-peer-deps
+RUN npm install --save caniuse-lite@latest --legacy-peer-deps
+
+RUN if [ "$(uname -m)" = "aarch64" ]; then \
+        export CFLAGS=-Wno-error; \
+        export CXXFLAGS=-Wno-error; \
+    fi
+
+RUN npm --save install recursive-install --legacy-peer-deps
+RUN npm test
+RUN npm run build
+RUN npm prune --production --legacy-peer-deps
+
 # Step 2: Packages assets for serving
 FROM node:16-alpine AS serve
 
