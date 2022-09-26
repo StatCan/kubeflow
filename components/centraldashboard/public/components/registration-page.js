@@ -107,10 +107,8 @@ export class RegistrationPage extends utilitiesMixin(localizationMixin(PolymerEl
         if (this.error && this.error.response) {
             return this.waitForRedirect = false;
         }
-        /*
-         * Poll for profile over a span of 20 seconds (every 300ms)
-         * if still not there, let the user click next again!
-         */
+        // Poll for profile over a span of 20 seconds (every 300ms)
+        // if still not there, let the user click next again!
         const success = await this.pollProfile(66, 300);
         if (success) this._successSetup();
         this.waitForRedirect = false;

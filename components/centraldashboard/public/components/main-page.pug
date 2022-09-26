@@ -16,7 +16,7 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
     app-drawer#MainDrawer(slot='drawer')
         figure.logo
             |!{logo}
-        div.flex.scrollable.scrollable
+        div.flex.scrollable
             a(href$='[[_buildHref("/", queryParams.*)]]', tabindex='-1')
                 paper-item.menu-item#home
                     iron-icon(icon='home')
@@ -103,6 +103,8 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                         src='[[iframeSrc]]', page="{{iframePage}}")
                 neon-animatable(page='not_found')
                     not-found-view(path="[[route.path]]")
+                neon-animatable(page='namespace_needed')
+                    namespace-needed-view()
     iron-media-query(query='(max-width: 900px)', query-matches='{{sidebarBleed}}')
     iron-media-query(query='(max-width: 1270px)', query-matches='{{thinView}}')
 paper-toast#welcomeUser(duration=5000) Welcome, [[_extractLdap(user)]]!

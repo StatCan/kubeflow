@@ -49,7 +49,7 @@ const MENU_LINKS = [
     {
         link: '/myapp/{ns}',
         text: 'MyApp',
-    },
+    }
 ];
 
 describe('Main Page', () => {
@@ -242,10 +242,8 @@ describe('Main Page', () => {
 
         const buildVersion = mainPage.shadowRoot.querySelector(
             'section.build span');
-        /*
-         * textContent is used because innerText would be empty if sidebar is
-         * hidden
-         */
+        // textContent is used because innerText would be empty if sidebar is
+        // hidden
         expect(buildVersion.textContent).toEqual('1.0.0');
         const namespaceSelector = mainPage.shadowRoot
             .getElementById('NamespaceSelector');
@@ -358,7 +356,7 @@ describe('Main Page', () => {
             mainPage.set('queryParams.ns', 'test');
             expect(mainPage._buildHref('/myapp/{ns}', {ns: 'test'})).toBe(
                 '/myapp/test?ns=test');
-        });
+	});
 
     it('Sets active menu item from namespaced URL',
         () => {
@@ -371,7 +369,7 @@ describe('Main Page', () => {
             expect(activeMenuItem.length).toBe(1);
             expect(activeMenuItem[0].parentElement.href).toBe(
                 '/myapp/test?ns=test');
-        });
+	});
 
     it('Update namespaced item along with namespace selection',
         () => {

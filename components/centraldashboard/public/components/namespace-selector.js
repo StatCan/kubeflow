@@ -56,7 +56,8 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
                     display: flex;
                     @apply --layout-center;
                 }
-                .owner{
+                [owner]:not([all-namespaces]):after {
+                    content: '(Owner)';
                     margin-left: .25em;
                     font-size: .8em;
                 }
@@ -73,7 +74,9 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
                 <paper-button id="dropdown-trigger" slot="dropdown-trigger">
                     <iron-icon icon="kubeflow:namespace"></iron-icon>
                     <article id="SelectedNamespace">
-                        <span class='text'>
+                        <span class='text'
+                            all-namespaces$='[[allNamespaces]]'
+                            owner$='[[selectedNamespaceIsOwned]]'>
                             [[getNamespaceText(selected,
                                 allNamespaces,
                                 namespaces)]]
@@ -213,10 +216,10 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
      */
     _ownedContextChanged(namespaces, selected) {
         const namespace = (namespaces || []).find((i) =>
-            i.namespace == selected,
+            i.namespace == selected
         ) || this.selectedNamespaceIsOwned;
         this._setSelectedNamespaceIsOwned(
-            this.isOwner(namespace.role),
+            this.isOwner(namespace.role)
         );
     }
 

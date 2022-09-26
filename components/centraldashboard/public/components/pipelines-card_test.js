@@ -53,6 +53,7 @@ describe('Pipelines Card', () => {
             responseText: JSON.stringify({pipelines}),
         }, false, '/pipeline/apis/v1beta1/pipelines?' +
                 'page_size=5&sort_by=created_at%20desc');
+
         pipelinesCard.artifactType = 'pipelines';
         pipelinesCard.namespace = 'kubeflow-user';
         await requestPromise;

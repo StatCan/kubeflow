@@ -12,7 +12,8 @@ import '@vaadin/vaadin-grid/vaadin-grid-sort-column.js';
 
 import {html, PolymerElement} from '@polymer/polymer';
 
-import './manage-users-view-contributor.js';
+import './resources/paper-chip.js';
+import './resources/md2-input/md2-input.js';
 import css from './manage-users-view.css';
 import template from './manage-users-view.pug';
 import utilitiesMixin from './utilities-mixin.js';
@@ -36,6 +37,9 @@ export class ManageUsersView extends utilitiesMixin(localizationMixin(PolymerEle
             isClusterAdmin: {type: Boolean, value: false},
             namespaces: Array,
             multiOwnedNamespaces: {type: Array, value: []},
+            newContribEmail: String,
+            contribError: Object,
+            contributorInputEl: Object,
         };
     }
 
@@ -44,6 +48,7 @@ export class ManageUsersView extends utilitiesMixin(localizationMixin(PolymerEle
      */
     ready() {
         super.ready();
+        this.contributorInputEl = this.$.ContribEmail;
     }
 
     /**

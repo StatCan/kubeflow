@@ -1,7 +1,5 @@
 # Step 1: Builds and tests
-# This is a long-lived tag, if there is a vulnerability
-# sometimes a rebuild will set you on your way.
-FROM node:16-alpine AS build
+FROM node:12.22.8-alpine AS build
 
 ARG kubeflowversion
 ARG commit
@@ -15,15 +13,11 @@ RUN apk update && apk upgrade && \
     echo @stable http://nl.alpinelinux.org/alpine/v3.15/community >> /etc/apk/repositories && \
     echo @stable http://nl.alpinelinux.org/alpine/v3.15/main >> /etc/apk/repositories
 
-RUN apk add --no-cache \
-    bash \
-    chromium \
-    nss \
-    freetype \
-    harfbuzz \
-    ttf-freefont \
-    libstdc++ \
-    git
+RUN apk add --no-cache bash chromium@stable nss@stable \
+    freetype@stable \
+    harfbuzz@stable \
+    ttf-freefont@stable \
+    libstdc++@stable
 
 RUN if [ "$(uname -m)" = "aarch64" ]; then \
         apk update && apk upgrade && \
@@ -33,29 +27,20 @@ RUN if [ "$(uname -m)" = "aarch64" ]; then \
 COPY . /centraldashboard
 WORKDIR /centraldashboard
 
-# --legacy-peer-deps is required in the update to node16
-# https://github.com/pugjs/pug-loader/issues/126#issuecomment-796517327
-
-RUN npm rebuild
-RUN npm install -g npm@latest
-RUN npm install --save ng2-charts --legacy-peer-deps
-RUN npm install --save chart.js --legacy-peer-deps
-RUN npm install --save pug@latest --legacy-peer-deps
-RUN npm install --save pug-loader@latest --legacy-peer-deps
-RUN npm install --save caniuse-lite@latest --legacy-peer-deps
-
-RUN if [ "$(uname -m)" = "aarch64" ]; then \
-        export CFLAGS=-Wno-error; \
-        export CXXFLAGS=-Wno-error; \
-    fi
-
-RUN npm --save install recursive-install --legacy-peer-deps
-RUN npm test
-RUN npm run build
-RUN npm prune --production --legacy-peer-deps
+RUN npm rebuild && \
+    if [ "$(uname -m)" = "aarch64" ]; then \
+        export CFLAGS=-Wno-error && \
+        export CXXFLAGS=-Wno-error && \
+        npm install; \
+    else \
+        npm install; \
+    fi && \
+    npm test && \
+    npm run build && \
+    npm prune --production
 
 # Step 2: Packages assets for serving
-FROM node:16-alpine AS serve
+FROM node:12.22.8-alpine AS serve
 
 ENV NODE_ENV=production
 WORKDIR /app

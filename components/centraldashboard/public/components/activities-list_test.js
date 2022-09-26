@@ -36,14 +36,14 @@ describe('Activities List', () => {
         const today = new Date();
         const yesterday = new Date(today - ONE_DAY);
         activitiesList.activities = [{
-            lastTimestamp: today.toISOString(),
+            lastTimestamp: today.toLocaleString(),
             message: 'Something happened',
             type: 'Normal',
             involvedObject: {
                 name: 'some-pod',
             },
         }, {
-            lastTimestamp: yesterday.toISOString(),
+            lastTimestamp: yesterday.toLocaleString(),
             message: 'Something bad happened',
             type: 'Error',
             involvedObject: {
@@ -59,4 +59,44 @@ describe('Activities List', () => {
         expect(shadowRoot.querySelectorAll('iron-icon.error').length).toBe(1);
     });
 
+    it('Shows Activities in descending by lastTimestamp', () => {
+        const eventDate = new Date();
+        eventDate.setHours(20, 0, 0);
+        const activities = [];
+
+        for (let i = 10; i > 0; i--) {
+            // Add i hours to each activities
+            activities.push({
+                lastTimestamp: new Date(eventDate - (i * 60 * 60 * 1000))
+                    .toLocaleString(),
+                message: `Something happened ${i}`,
+                type: 'Normal',
+                involvedObject: {
+                    name: 'some-pod',
+                },
+            });
+        }
+
+        activitiesList.activities = activities;
+        flush();
+
+        const shadowRoot = activitiesList.shadowRoot;
+        expect(shadowRoot.querySelectorAll('.activity-row').length).toBe(10);
+        expect(shadowRoot.querySelectorAll('h2').length).toBe(1);
+        const times = [];
+        shadowRoot.querySelectorAll('.time').forEach((t) => {
+            times.push(t.innerText);
+        });
+        expect(times).toEqual([
+            '7:00:00 PM',
+            '6:00:00 PM',
+            '5:00:00 PM',
+            '4:00:00 PM',
+            '3:00:00 PM',
+            '2:00:00 PM',
+            '1:00:00 PM',
+            '12:00:00 PM',
+            '11:00:00 AM',
+            '10:00:00 AM']);
+    });
 });
