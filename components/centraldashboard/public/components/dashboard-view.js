@@ -4,7 +4,6 @@ import '@polymer/paper-card/paper-card.js';
 import '@polymer/paper-ripple/paper-ripple.js';
 import '@polymer/paper-item/paper-icon-item.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import localizationMixin from './localization-mixin.js';
 
 import {html, PolymerElement} from '@polymer/polymer';
 
@@ -18,8 +17,8 @@ import './resource-chart.js';
 import {getGCPData} from './resources/cloud-platform-data.js';
 import utilitiesMixin from './utilities-mixin.js';
 
-// eslint-disable-next-line max-len
-export class DashboardView extends utilitiesMixin(localizationMixin(PolymerElement)) {
+
+export class DashboardView extends utilitiesMixin(PolymerElement) {
     static get template() {
         return html([`
             <style include="card-styles">

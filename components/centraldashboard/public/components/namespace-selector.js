@@ -4,7 +4,6 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
-import localizationMixin from './localization-mixin.js';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
@@ -12,7 +11,7 @@ import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
  * Component to retrieve and allow namespace selection. Bubbles the selected
  * items up to the query string in the 'ns' parameter.
  */
-export class NamespaceSelector extends localizationMixin(PolymerElement) {
+export class NamespaceSelector extends PolymerElement {
     static get template() {
         return html`
             <style>
@@ -80,13 +79,7 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
                             [[getNamespaceText(selected,
                                 allNamespaces,
                                 namespaces)]]
-                            {{localize(namespaceMessage)}}
                         </span>
-                        <template is="dom-if" if="[[selectedNamespaceIsOwned]]">
-                            <span hidden$='[[allNamespaces]]' class="owner">
-                                {{localize('namespaceSelector.owner')}}
-                            </span>
-                        </template>
                     </article>
                     <iron-icon icon="arrow-drop-down"></iron-icon>
                 </paper-button>
@@ -96,11 +89,6 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
                         <paper-item name="[[n.namespace]]" title$='[[n.role]]'
                                 owner$='[[isOwner(n.role)]]'>
                             [[n.namespace]]
-                            <template is="dom-if" if="[[isOwner(n.role)]]">
-                                <span class="owner">
-                                    {{localize('namespaceSelector.owner')}}
-                                </span>
-                            </template>
                         </paper-item>
                     </template>
                 </paper-listbox>
@@ -127,10 +115,6 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
                 readOnly: true,
                 notify: true,
                 value: false,
-            },
-            namespaceMessage: {
-                type: String,
-                value: '',
             },
         };
     }
@@ -165,19 +149,9 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
      * @return {string} Text that should show in namespace selector
      */
     getNamespaceText(selected, allNamespaces, namespaces) {
-        if (allNamespaces) {
-            this.namespaceMessage = 'namespaceSelector.allNamespaces';
-            return '';
-        }
-        if (!namespaces || !namespaces.length) {
-            this.namespaceMessage = 'namespaceSelector.noNamespaces';
-            return '';
-        }
-        if (!selected) {
-            this.namespaceMessage = 'namespaceSelector.selectNamespace';
-            return '';
-        }
-        this.namespaceMessage = '';
+        if (allNamespaces) return 'All Namespaces';
+        if (!namespaces || !namespaces.length) return 'No Namespaces';
+        if (!selected) return 'Select namespace';
         return selected;
     }
 

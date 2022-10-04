@@ -1,0 +1,35 @@
+h1 {{localize('manageUsersView.lblManageContributors')}}
+iron-ajax#GetAllNamespacesAjax(auto='[[shouldFetchAllNamespaces(multiOwnedNamespaces, isClusterAdmin)]]', url='/api/workgroup/get-all-namespaces',
+    last-response='{{allNamespaces}}', on-error='onAllNamespaceFetchError', handle-as='json')
+section#Main-Content
+    article.Acct-Info
+        h2
+            iron-icon.icon(icon='social:person-outline')
+            span.text {{localize('manageUsersView.lblAccountInfo')}}
+            span(hidden$='[[!isClusterAdmin]]') &nbsp; {{localize('manageUsersView.lblClusterAdmin')}}
+        .content
+            span [[user]]
+    h2#NoNamespaceError(hidden$='[[!empty(multiOwnedNamespaces)]]') {{localize('manageUsersView.lblNoOwnedNamespaces')}}
+    article.Namespaces(hidden$='[[empty(multiOwnedNamespaces)]]')
+        h2
+            iron-icon.icon(icon='kubeflow:namespace')
+            span.text {{localize('manageUsersView.lblNamespaceMemberships')}}
+        .content.small
+            vaadin-grid(items='[[nsBreakdown(namespaces)]]', theme="no-border", height-by-rows, multi-sort)
+                vaadin-grid-column(width='15em', path='0', flex-grow='2', header="{{localize('manageUsersView.headerNamespaces')}}")
+                vaadin-grid-column(width='9em', path='1', header="{{localize('manageUsersView.headerYouRole')}}")
+    article.Contributors(hidden$='[[empty(multiOwnedNamespaces)]]')     
+        template(is='dom-repeat', items='[[multiOwnedNamespaces]]' as='multiOwnedNamespace')
+            manage-users-view-contributor(owned-namespace='[[multiOwnedNamespace]]')
+    article.Cluster-Namespaces(hidden$='[[empty(isClusterAdmin)]]')
+        h2
+            iron-icon.icon(icon='kubeflow:namespace')
+            span.text {{localize('manageUsersView.lblClusterNamespaces')}}
+        .content
+            vaadin-grid(items='[[allNamespaces]]', theme="no-border", height-by-rows, multi-sort)
+                vaadin-grid-column(width='9em', path='0', header="{{localize('manageUsersView.headerNamespace')}}")
+                vaadin-grid-column(width='10em', path='1', header="{{localize('manageUsersView.headerOwner')}}")
+                vaadin-grid-column(width='15em', path='2', flex-grow='2', header="{{localize('manageUsersView.headerContributors')}}")
+paper-toast#AllNamespaceError(duration=5000)
+    | {{localize('manageUsersView.errorAllNamespaces')}}
+    strong [[allNamespaceError]]

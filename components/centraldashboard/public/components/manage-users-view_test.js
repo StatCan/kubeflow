@@ -17,7 +17,6 @@ const TEMPLATE = `
 `;
 const user = 'test@kubeflow.org';
 const oNs = {namespace: 'ns1', role: 'owner'};
-const multiONs= [oNs];
 const generalNs = [oNs, {namespace: 'ns2', role: 'contributor', user}, {namespace: 'ns3', role: 'contributor', user}];
 
 describe('Manage Users View', () => {
@@ -62,7 +61,7 @@ describe('Manage Users View', () => {
         );
 
         manageUsersView.user = user;
-        manageUsersView.multiOwnedNamespaces = multiONs;
+        manageUsersView.ownedNamespace = oNs;
         manageUsersView.namespaces = generalNs;
 
         flush();
@@ -108,7 +107,7 @@ describe('Manage Users View', () => {
 
         manageUsersView.user = user;
         manageUsersView.isClusterAdmin = true;
-        manageUsersView.multiOwnedNamespaces = multiONs;
+        manageUsersView.ownedNamespace = oNs;
         manageUsersView.namespaces = [oNs];
 
         flush();

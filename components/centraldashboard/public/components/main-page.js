@@ -23,7 +23,6 @@ import '@polymer/neon-animation/neon-animatable.js';
 import '@polymer/neon-animation/neon-animated-pages.js';
 import '@polymer/neon-animation/animations/fade-in-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
-import localizationMixin from './localization-mixin.js';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
@@ -46,9 +45,7 @@ import {IFRAME_LINK_PREFIX} from './iframe-link.js';
 /**
  * Entry point for application UI.
  */
-// eslint-disable-next-line max-len
-// eslint-disable-next-line max-len
-export class MainPage extends utilitiesMixin(localizationMixin(localizationMixin(PolymerElement))) {
+export class MainPage extends utilitiesMixin(PolymerElement) {
     static get template() {
         const vars = {logo};
         return html([
@@ -162,7 +159,7 @@ export class MainPage extends utilitiesMixin(localizationMixin(localizationMixin
      */
     _onHasDashboardLinksError(ev) {
         const error = ((ev.detail.request||{}).response||{}).error ||
-           ev.detail.error;
+            ev.detail.error;
         this.showError(error);
         return;
     }
@@ -189,7 +186,8 @@ export class MainPage extends utilitiesMixin(localizationMixin(localizationMixin
      * @param {Event} ev AJAX-response
      */
     _onHasWorkgroupError(ev) {
-        this.showError('mainPage.errGeneric');
+        const error = ((ev.detail.request||{}).response||{}).error ||
+            ev.detail.error;
         this.showError(error);
         return;
     }
@@ -274,7 +272,7 @@ export class MainPage extends utilitiesMixin(localizationMixin(localizationMixin
                 hideSidebar = true;
             }
             if (path && path.includes('{ns}')) {
-                this.page = 'namespace_needed';
+                this.page = 'namespace_needed'
             } else {
                 this.page = 'not_found';
             }
@@ -450,20 +448,7 @@ export class MainPage extends utilitiesMixin(localizationMixin(localizationMixin
             platform, user, namespaces, isClusterAdmin,
         } = responseEvent.detail.response;
         Object.assign(this, {user, isClusterAdmin});
-        const ownerRoleNamespaces = [];
-        const otherRoleNamespaces = [];
-        for (let i = 0; i < namespaces.length; i++) {
-            if (namespaces[i].role == 'owner') {
-                ownerRoleNamespaces.push(
-                    namespaces[i],
-                );
-            } else {
-                otherRoleNamespaces.push(
-                    namespaces[i],
-                );
-            }
-        }
-        this.namespaces = ownerRoleNamespaces.concat(otherRoleNamespaces);
+        this.namespaces = namespaces;
         if (this.namespaces.length) {
             this._setRegistrationFlow(false);
         } else if (this.isolationMode == 'single-user') {
@@ -471,8 +456,6 @@ export class MainPage extends utilitiesMixin(localizationMixin(localizationMixin
             this._setRegistrationFlow(true);
         }
         this.ownedNamespace = namespaces.find((n) => n.role == 'owner');
-        this.multiOwnedNamespaces = ownerRoleNamespaces;
-        this.multiOwnedNamespaces = ownerRoleNamespaces;
         this.platformInfo = platform;
         const kVer = this.platformInfo.kubeflowVersion;
         if (kVer && kVer != 'unknown') {

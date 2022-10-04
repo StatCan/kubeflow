@@ -71,25 +71,18 @@ export class Api {
             })
         .get(
           '/dashboard-links',
-          async (req: Request, res: Response) => {
-            const acceptlanguage = req.header('accept-language');
+          async (_: Request, res: Response) => {
             const cm = await this.k8sService.getConfigMap();
-            let langLinks = {};
+            let links = {};
             try {
-              const links = JSON.parse(cm.data["links"]);
-              const lang = this.resolveLanguage (
-                this.getBrowserLanguages(acceptlanguage), 
-                Object.getOwnPropertyNames(links), 
-                cm.data["defaultLanguage"]
-              );
-              langLinks = links[lang];
+              links=JSON.parse(cm.data["links"]);
             }catch(e){
               return apiError({
                 res, code: 500,
                 error: ERRORS.invalid_links_config,
               });
             }
-            res.json(langLinks);
+            res.json(links);
           })
         .get(
           '/dashboard-settings',
@@ -106,20 +99,5 @@ export class Api {
             }
             res.json(settings);
           });
-  }
-
-  resolveLanguage(requested: string[], supported: string[], defaultLang: string) {
-    return requested.find(lang => supported.indexOf(lang) > -1) || defaultLang;
-  }
-
-  getBrowserLanguages(acceptlanguage: string) {
-    if (!acceptlanguage) {
-      return [];
-    }
-    const languages = acceptlanguage.split(',');
-    // Append fallbacks not explicit in browser languages.
-    // Non-destructive: string keys will be reported back in order of insertion.
-    const languagelist = Array.from(new Set(languages.map(lang => lang.split(/-|;/)[0])));
-    return languagelist;
   }
 }
