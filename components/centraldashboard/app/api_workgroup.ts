@@ -211,7 +211,7 @@ export class WorkgroupApi {
         let errIndex = 0;
         try {
             const binding = mapSimpleBindingToWorkgroupBinding({
-                user: contributor,
+                user: contributor.toLowerCase(),
                 namespace,
                 role: 'contributor',
             });
@@ -282,6 +282,7 @@ export class WorkgroupApi {
             const profile = req.body as CreateProfileRequest;
             try {
                 const namespace = profile.namespace || req.user.username;
+                const owerName = profile.user || req.user.email;
                 // Use the request body if provided, fallback to auth headers
                 await this.profilesService.createProfile({
                     metadata: {
@@ -290,7 +291,7 @@ export class WorkgroupApi {
                     spec: {
                         owner: {
                             kind: 'User',
-                            name: profile.user || req.user.email,
+                            name: owerName.toLowerCase(),
                         }
                     },
                 });
