@@ -7,7 +7,6 @@ import '@polymer/paper-ripple/paper-ripple.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-progress/paper-progress.js';
 import './iframe-link.js';
-import localizationMixin from './localization-mixin.js';
 
 import {html, PolymerElement} from '@polymer/polymer';
 
@@ -23,7 +22,7 @@ const getListNotebooksUrl = (namespace, server) =>
  * Component to retrieve and display recently modified Jupyter Notebooks.
  */
 // eslint-disable-next-line max-len
-export class NotebooksCard extends localizationMixin(PolymerElement) {
+export class NotebooksCard extends PolymerElement {
     static get template() {
         return html`
         <style include="card-styles">

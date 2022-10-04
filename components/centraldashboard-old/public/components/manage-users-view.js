@@ -17,10 +17,9 @@ import './resources/md2-input/md2-input.js';
 import css from './manage-users-view.css';
 import template from './manage-users-view.pug';
 import utilitiesMixin from './utilities-mixin.js';
-import localizationMixin from './localization-mixin.js';
 
 // eslint-disable-next-line max-len
-export class ManageUsersView extends utilitiesMixin(localizationMixin(PolymerElement)) {
+export class ManageUsersView extends utilitiesMixin(PolymerElement) {
     static get template() {
         return html([`
             <style>${css.toString()}</style>

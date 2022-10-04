@@ -1,7 +1,6 @@
 import {html, PolymerElement} from '@polymer/polymer';
-import localizationMixin from './localization-mixin.js';
 
-export class NotFoundView extends localizationMixin(PolymerElement) {
+export class NotFoundView extends PolymerElement {
     static get template() {
         return html`
             <style>
