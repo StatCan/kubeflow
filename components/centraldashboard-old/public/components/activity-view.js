@@ -3,11 +3,12 @@ import '@polymer/iron-ajax/iron-ajax.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-progress/paper-progress.js';
+import localizationMixin from './localization-mixin.js';
 import {html, PolymerElement} from '@polymer/polymer';
 import './activities-list.js';
 
 // eslint-disable-next-line max-len
-export class ActivityView extends PolymerElement {
+export class ActivityView extends localizationMixin(PolymerElement) {
     static get template() {
         return html`
             <style is="custom-style" include="iron-flex iron-flex-alignment">

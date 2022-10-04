@@ -8,6 +8,7 @@ import '@polymer/neon-animation/neon-animatable.js';
 import '@polymer/neon-animation/neon-animated-pages.js';
 import '@polymer/neon-animation/animations/fade-in-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
+import localizationMixin from './localization-mixin.js';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
@@ -24,7 +25,7 @@ import utilitiesMixin from './utilities-mixin.js';
  * Entry point for application UI.
  */
 // eslint-disable-next-line max-len
-export class RegistrationPage extends utilitiesMixin(PolymerElement) {
+export class RegistrationPage extends utilitiesMixin(localizationMixin(PolymerElement)) {
     static get template() {
         const vars = {logo};
         return html([

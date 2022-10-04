@@ -23,6 +23,7 @@ import '@polymer/neon-animation/neon-animatable.js';
 import '@polymer/neon-animation/neon-animated-pages.js';
 import '@polymer/neon-animation/animations/fade-in-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
+import localizationMixin from './localization-mixin.js';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
@@ -47,7 +48,7 @@ import {IFRAME_LINK_PREFIX} from './iframe-link.js';
  */
 // eslint-disable-next-line max-len
 // eslint-disable-next-line max-len
-export class MainPage extends utilitiesMixin(PolymerElement) {
+export class MainPage extends utilitiesMixin(localizationMixin(localizationMixin(PolymerElement))) {
     static get template() {
         const vars = {logo};
         return html([

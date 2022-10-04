@@ -9,6 +9,7 @@ import '@polymer/paper-progress/paper-progress.js';
 import './iframe-link.js';
 
 import {html, PolymerElement} from '@polymer/polymer';
+import localizationMixin from './localization-mixin.js';
 
 import './card-styles.js';
 import utilitiesMixin from './utilities-mixin.js';
@@ -22,7 +23,7 @@ const VALID_ARTIFACT_TYPES = new Set([PIPELINES, RUNS]);
  * Component to retrieve and display Pipelines or Pipeline Runs
  */
 export class PipelinesCard
-    extends utilitiesMixin(PolymerElement) {
+    extends utilitiesMixin(localizationMixin(PolymerElement)) {
     static get template() {
         return html`
         <style include="card-styles">
