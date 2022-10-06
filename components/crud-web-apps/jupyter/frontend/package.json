@@ -13,6 +13,7 @@
     "format:check": "prettier --check 'src/**/*.{js,ts,html,scss,css}' || node scripts/check-format-error.js",
     "format:write": "prettier --write 'src/**/*.{js,ts,html,scss,css}'",
     "i18n:extract": "ng extract-i18n --output-path i18n",
+    "preinstall": "npx npm-force-resolutions",
     "test": "ng test",
     "e2e": "cypress open .",
     "e2e-ci": "cypress run .",

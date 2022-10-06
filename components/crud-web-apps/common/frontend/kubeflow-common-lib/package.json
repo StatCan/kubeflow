@@ -10,6 +10,7 @@
     "test-docker": "docker run -v $(pwd):/usr/src/app browserless/chrome:1.44-chrome-stable npm run test-ci",
     "lint": "ng lint --fix",
     "e2e": "ng e2e",
+    "preinstall": "npx npm-force-resolutions",
     "copyCSS": "cp ./projects/kubeflow/src/kubeflow.css ./dist/kubeflow && cp ./projects/kubeflow/src/styles.scss ./dist/kubeflow && cp ./projects/kubeflow/src/lib/variables.scss ./dist/kubeflow/lib && cp ./projects/kubeflow/src/lib/fonts.scss ./dist/kubeflow/lib",
     "copyAssets": "cp -r ./projects/kubeflow/src/assets ./dist/kubeflow/assets",
     "postinstall": "ngcc"
