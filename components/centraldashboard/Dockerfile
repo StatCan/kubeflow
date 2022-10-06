@@ -83,4 +83,4 @@ ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/v$NODE_VERSION/bin:$PATH
 
 EXPOSE 8082
-ENTRYPOINT ["/usr/local/nvm/v12/bin/npm", "start"]
+ENTRYPOINT ["/usr/local/nvm/versions/node/v12.22.12/bin/npm", "start"]
