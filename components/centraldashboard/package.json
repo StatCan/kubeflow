@@ -67,10 +67,10 @@
         "@types/dotenv": "^6.1.1",
         "@vaadin/vaadin-grid": "^5.4.9",
         "@webcomponents/webcomponentsjs": "^2.3.0",
+        "chart.js": "^2.8.0",
         "chartjs-plugin-crosshair": "^1.1.4",
         "express": "^4.17.1",
         "node-fetch": "^2.6.7",
-        "recursive-install": "^1.4.0",
         "web-animations-js": "^2.3.2"
     },
     "devDependencies": {
@@ -85,7 +85,6 @@
         "@types/node-fetch": "^2.5.2",
         "@types/puppeteer": "^2.0.0",
         "babel-loader": "^8.0.6",
-        "chart.js": "^2.9.4",
         "clean-webpack-plugin": "^1.0.1",
         "concurrently": "^4.1.2",
         "copy-webpack-plugin": "^5.1.1",
@@ -129,8 +128,8 @@
         "webpack-dev-server": "^3.8.2"
     },
     "resolutions": {
-        "minimist": "^1.2.6",
-        "shelljs": "^0.8.5",
-	"xmlhttprequest-ssl": "1.6.1"
+	    "minimist": "1.2.6",
+	    "json-schema": "0.4.0",
+	    "underscore": "1.13.1"
     }
 }
