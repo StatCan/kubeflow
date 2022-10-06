@@ -1,5 +1,5 @@
 # Step 1: Builds and tests
-FROM node:12.22.8-alpine AS build
+FROM node:12.22.12-alpine3.15 AS build
 
 ARG kubeflowversion
 ARG commit
