@@ -11,6 +11,7 @@
     "format:check": "prettier --check 'src/**/*.{js,ts,html,scss,css}' || node scripts/check-format-error.js",
     "format:write": "prettier --write 'src/**/*.{js,ts,html,scss,css}'",
     "i18n:extract": "ng extract-i18n --output-path i18n",
+    "preinstall": "npx npm-force-resolutions",
     "test": "ng test",
     "lint": "ng lint --fix",
     "e2e": "ng e2e"
@@ -73,5 +74,10 @@
     "protractor": "~7.0.0",
     "ts-node": "^10.4.0",
     "typescript": "~4.2.4"
+  },
+  "resolutions": {
+    "minimist": "1.2.6",
+    "json-schema": "0.4.0",
+    "underscore": "1.13.1"
   }
 }

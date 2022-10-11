@@ -9,6 +9,7 @@
     "copyLibAssets": "cp -r ./node_modules/kubeflow/assets/* ./src/assets/",
     "i18n:extract": "ng extract-i18n --output-path i18n",
     "test": "ng test",
+    "preinstall": "npx npm-force-resolutions",
     "lint": "ng lint --fix",
     "e2e": "ng e2e"
   },
@@ -69,5 +70,11 @@
     "protractor": "~7.0.0",
     "ts-node": "^10.4.0",
     "typescript": "~4.2.4"
+  },
+  "resolutions": {
+    "minimist": "1.2.6",
+    "json-schema": "0.4.0",
+    "underscore": "1.13.1"
   }
+
 }
