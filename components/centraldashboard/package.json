@@ -3,6 +3,7 @@
     "version": "0.0.2",
     "description": "Kubeflow Central Dashboard",
     "scripts": {
+        "preinstall": "npm install --package-lock-only --ignore-scripts && npx force-resolutions",
         "build": "cross-env NODE_ENV=production webpack && npm run tslint && npm run build-ts",
         "build-ts": "tsc",
         "build-webpack": "webpack",
@@ -10,7 +11,6 @@
         "dev": "concurrently -k -p \"[{name}]\" -n \"Webpack,TypeScript,Express\" -c \"green.bold,yellow.bold,cyan.bold\" \"webpack-dev-server\" \"npm run watch-ts\" \"npm run watch-node\"",
         "dev-debug": "concurrently -k -p \"[{name}]\" -n \"Webpack,TypeScript,Express\" -c \"green.bold,yellow.bold,cyan.bold\" \"webpack-dev-server\" \"npm run watch-ts\" \"npm run serve-debug\"",
         "dev-server-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Express\" -c \"yellow.bold,cyan.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
-	"preinstall": "npx npm-force-resolutions",
         "serve": "node dist/server.js",
         "serve-debug": "nodemon --inspect dist/server.js",
         "start": "npm run serve",
@@ -130,7 +130,7 @@
         "webpack-dev-server": "^3.8.2"
     },
     "resolutions": {
-        "minimist": "1.2.6",
+        "minimist": "^1.2.6",
         "json-schema": "0.4.0",
         "underscore": "1.13.1"
     }
