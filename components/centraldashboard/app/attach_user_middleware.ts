@@ -13,7 +13,6 @@ export function attachUser(
       email = req.header(userIdHeader).slice(userIdPrefix.length);
       auth = {[userIdHeader]: req.header(userIdHeader)};
     }
-    email = email;
     req.user = {
       email,
       username: email.split('@')[0],
