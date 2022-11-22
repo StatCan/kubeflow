@@ -320,6 +320,19 @@ export class MainPage extends utilitiesMixin(localizationMixin(PolymerElement)) 
     }
 
     /**
+     * Returns the URL for the grafana dashboard
+     * @param {string} namespace
+     * @return {string}
+     */
+    _getGrafanaUrl(namespace) {
+        let nsParam = '';
+        if (namespace) {
+            nsParam = '&var-namespace='+namespace;
+        }
+        return 'https://grafana.aaw-dev.cloud.statcan.ca/d/ZLp774O4z/namespace-metrics?orgId=1'+nsParam;
+    }
+
+    /**
      * Builds the new iframeSrc string based on the subroute path, current
      * hash fragment, and the query string parameters other than ns.
      */
