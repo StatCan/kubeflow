@@ -329,7 +329,7 @@ export class MainPage extends utilitiesMixin(localizationMixin(PolymerElement)) 
         if (namespace) {
             nsParam = '&var-namespace='+namespace;
         }
-        return 'https://grafana.aaw-dev.cloud.statcan.ca/d/ZLp774O4z/namespace-metrics?orgId=1'+nsParam;
+        return 'https://grafana.aaw.cloud.statcan.ca/d/Nx0z30DVk/namespace-metrics?orgId=1'+nsParam;
     }
 
     /**
