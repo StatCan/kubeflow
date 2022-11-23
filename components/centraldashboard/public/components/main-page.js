@@ -327,7 +327,7 @@ export class MainPage extends utilitiesMixin(localizationMixin(PolymerElement)) 
     _getGrafanaUrl(namespace) {
         let env = 'aaw-dev';
         let key = 'ZLp774O4z';
-        if (window.location.href.includes('.aaw-dev.cloud.statcan.ca')) {
+        if (window.location.href.includes('.aaw.cloud.statcan.ca')) {
             env='aaw';
             key='Nx0z30DVk';
         }
