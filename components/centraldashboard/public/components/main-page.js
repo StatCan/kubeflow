@@ -325,11 +325,19 @@ export class MainPage extends utilitiesMixin(localizationMixin(PolymerElement)) 
      * @return {string}
      */
     _getGrafanaUrl(namespace) {
+        let env = 'aaw-dev';
+        let key = 'ZLp774O4z';
+        if (window.location.href.includes('.aaw-dev.cloud.statcan.ca')) {
+            env='aaw';
+            key='Nx0z30DVk';
+        }
+
         let nsParam = '';
         if (namespace) {
             nsParam = '&var-namespace='+namespace;
         }
-        return 'https://grafana.aaw.cloud.statcan.ca/d/Nx0z30DVk/namespace-metrics?orgId=1'+nsParam;
+
+        return `https://grafana.${env}.cloud.statcan.ca/d/${key}/namespace-metrics?orgId=1${nsParam}&kiosk=tv`;
     }
 
     /**
