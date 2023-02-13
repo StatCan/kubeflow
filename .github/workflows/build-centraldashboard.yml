@@ -26,7 +26,7 @@ jobs:
     # Determine if pushing to ACR or DEV ACR
     - name: Set ENV variables for a PR containing the auto-deploy tag
       if: github.event_name == 'pull_request' && contains( github.event.pull_request.labels.*.name, 'auto-deploy')
-      run: echo "REGISTRY=${{env.REGISTRY_NAME}}.azurecr.io" >> "$GITHUB_ENV"
+      run: echo "REGISTRY=${{env.DEV_REGISTRY_NAME}}.azurecr.io" >> "$GITHUB_ENV"
    
     - name: Set ENV variable for pushes to master
       if: github.event_name == 'push' && github.ref == 'refs/heads/stc-master'
