@@ -58,7 +58,7 @@ jobs:
     - name: Docker build
       run: |
         docker build \
-          -t ${{ env.REGISTRY }}.azurecr.io/kubeflow/centraldashboard:${{ github.sha }} \
+          -t ${{ env.REGISTRY }}/kubeflow/centraldashboard:${{ github.sha }} \
           --build-arg kubeflowversion=$(git describe --abbrev=0 --tags) \
           --build-arg commit=$(git rev-parse HEAD) \
           components/centraldashboard/
