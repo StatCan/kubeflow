@@ -160,7 +160,13 @@ export class WorkgroupApi {
      * Retrieves all namespaces in case of basic auth.
      */
     async getAllWorkgroups(fakeUser: string): Promise<SimpleBinding[]> {
-        const bindings = await this.profilesService.readBindings();
+        let bindings;
+        try{
+            //try catch is for a retry when it fails
+            bindings = await this.profilesService.readBindings();
+        }catch(e){
+            bindings = await this.profilesService.readBindings();
+        }
         const namespaces = mapWorkgroupBindingToSimpleBinding(
             bindings.body.bindings || []
         );
@@ -175,10 +181,19 @@ export class WorkgroupApi {
      * Retrieves WorkgroupInfo from Profile Controller for the given user.
      */
     async getWorkgroupInfo(user: User.User): Promise<WorkgroupInfo> {
-        const [adminResponse, bindings] = await Promise.all([
-            this.profilesService.v1RoleClusteradminGet(user.email),
-            this.profilesService.readBindings(user.email),
-        ]);
+        let adminResponse, bindings;
+        try{
+            //try catch is for a retry when it fails
+            [adminResponse, bindings] = await Promise.all([
+                this.profilesService.v1RoleClusteradminGet(user.email),
+                this.profilesService.readBindings(user.email),
+            ]);
+        }catch(e){
+            [adminResponse, bindings] = await Promise.all([
+                this.profilesService.v1RoleClusteradminGet(user.email),
+                this.profilesService.readBindings(user.email),
+            ]);
+        }
         const namespaces = mapWorkgroupBindingToSimpleBinding(
             bindings.body.bindings || []
         );
@@ -263,8 +278,7 @@ export class WorkgroupApi {
                     const workgroup = await this.getWorkgroupInfo(
                         req.user,
                     );
-                    response.hasWorkgroup = !!(workgroup.namespaces || [])
-                        .find((w) => w.role === 'owner');
+                    response.hasWorkgroup = !!(workgroup.namespaces && workgroup.namespaces.length);
                 } else {
                     // Basic auth workgroup condition
                     response.hasWorkgroup = !!(await this.getAllWorkgroups(req.user.username)).length;
@@ -282,6 +296,7 @@ export class WorkgroupApi {
             const profile = req.body as CreateProfileRequest;
             try {
                 const namespace = profile.namespace || req.user.username;
+                const owerName = profile.user || req.user.email;
                 // Use the request body if provided, fallback to auth headers
                 await this.profilesService.createProfile({
                     metadata: {
@@ -290,7 +305,7 @@ export class WorkgroupApi {
                     spec: {
                         owner: {
                             kind: 'User',
-                            name: profile.user || req.user.email,
+                            name: owerName,
                         }
                     },
                 });

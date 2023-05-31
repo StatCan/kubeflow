@@ -52,7 +52,7 @@ import { isEqual } from 'lodash-es';
 export class TableComponent
   implements AfterViewInit, OnInit, OnDestroy, OnChanges
 {
-  private nsSub = new Subscription();
+  private nsSub = new Subscription(); 
   private innerData: any[] = [];
   public dataSource = new MatTableDataSource();
   public get displayedColumns(): string[] {
@@ -83,6 +83,9 @@ export class TableComponent
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild('chipInput') chipInput: ElementRef<HTMLInputElement>;
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
+
+  @HostBinding('class.lib-table') selfClass = true;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   TABLE_THEME = TABLE_THEME;
 

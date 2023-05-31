@@ -23,6 +23,7 @@ import '@polymer/neon-animation/neon-animatable.js';
 import '@polymer/neon-animation/neon-animated-pages.js';
 import '@polymer/neon-animation/animations/fade-in-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
+import localizationMixin from './localization-mixin.js';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
@@ -30,10 +31,11 @@ import css from './main-page.css';
 import template from './main-page.pug';
 import logo from '../assets/logo.svg';
 
-import './registration-page.js';
+import './landing-page.js';
 import './namespace-selector.js';
 import './dashboard-view.js';
 import './activity-view.js';
+import './s3proxy-view.js';
 import './not-found-view.js';
 import './namespace-needed-view.js';
 import './manage-users-view.js';
@@ -50,7 +52,8 @@ import {
 /**
  * Entry point for application UI.
  */
-export class MainPage extends utilitiesMixin(PolymerElement) {
+// eslint-disable-next-line max-len
+export class MainPage extends utilitiesMixin(localizationMixin(PolymerElement)) {
     static get template() {
         const vars = {logo};
         return html([
@@ -192,9 +195,7 @@ export class MainPage extends utilitiesMixin(PolymerElement) {
      * @param {Event} ev AJAX-response
      */
     _onHasWorkgroupError(ev) {
-        const error = ((ev.detail.request||{}).response||{}).error ||
-            ev.detail.error;
-        this.showError(error);
+        this.showError('mainPage.errGeneric');
         return;
     }
 
@@ -279,6 +280,10 @@ export class MainPage extends utilitiesMixin(PolymerElement) {
             }
             if (path && path.includes('{ns}')) {
                 this.page = 'namespace_needed';
+            } else if (newPage === 's3') { // AAW Customization
+                // eslint-disable-next-line no-console
+                console.log(this.namespace);
+                this.page = 's3proxy';
             } else {
                 this.page = 'not_found';
             }
@@ -333,6 +338,27 @@ export class MainPage extends utilitiesMixin(PolymerElement) {
         }
         return this.buildHref(href.replace('{ns}', queryParams['ns']),
             queryParams);
+    }
+
+    /**
+     * Returns the URL for the grafana dashboard
+     * @param {string} namespace
+     * @return {string}
+     */
+    _getGrafanaUrl(namespace) {
+        let env = 'aaw-dev';
+        let key = 'ZLp774O4z';
+        if (window.location.href.includes('.aaw.cloud.statcan.ca')) {
+            env='aaw';
+            key='Nx0z30DVk';
+        }
+
+        let nsParam = '';
+        if (namespace) {
+            nsParam = '&var-namespace='+namespace;
+        }
+
+        return `https://grafana.${env}.cloud.statcan.ca/d/${key}/namespace-metrics?orgId=1${nsParam}&kiosk=tv`;
     }
 
     /**
@@ -464,7 +490,20 @@ export class MainPage extends utilitiesMixin(PolymerElement) {
             platform, user, namespaces, isClusterAdmin,
         } = responseEvent.detail.response;
         Object.assign(this, {user, isClusterAdmin});
-        this.namespaces = namespaces;
+        const ownerRoleNamespaces = [];
+        const otherRoleNamespaces = [];
+        for (let i = 0; i < namespaces.length; i++) {
+            if (namespaces[i].role == 'owner') {
+                ownerRoleNamespaces.push(
+                    namespaces[i],
+                );
+            } else {
+                otherRoleNamespaces.push(
+                    namespaces[i],
+                );
+            }
+        }
+        this.namespaces = ownerRoleNamespaces.concat(otherRoleNamespaces);
         if (this.namespaces.length) {
             this._setRegistrationFlow(false);
         } else if (this.isolationMode == 'single-user') {
@@ -472,6 +511,7 @@ export class MainPage extends utilitiesMixin(PolymerElement) {
             this._setRegistrationFlow(true);
         }
         this.ownedNamespace = namespaces.find((n) => n.role == 'owner');
+        this.multiOwnedNamespaces = ownerRoleNamespaces;
         this.platformInfo = platform;
         const kVer = this.platformInfo.kubeflowVersion;
         if (kVer && kVer != 'unknown') {
@@ -510,6 +550,11 @@ export class MainPage extends utilitiesMixin(PolymerElement) {
         }
 
         this.namespaces = [allNamespaces, ...namespaces];
+    }
+
+    _showManageUsers(isolationMode, ownedNamespace) {
+        return isolationMode==='multi-user'
+            && ownedNamespace!==undefined;
     }
 }
 
