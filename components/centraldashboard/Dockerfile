@@ -1,7 +1,5 @@
 # Step 1: Builds and tests
-# This is a long-lived tag, if there is a vulnerability
-# sometimes a rebuild will set you on your way.
-FROM node:16-alpine AS build
+FROM node:16.20.0-bullseye AS build
 
 ARG kubeflowversion
 ARG commit
@@ -21,12 +19,12 @@ RUN BUILDARCH="$(dpkg --print-architecture)" &&  npm rebuild && \
     export CFLAGS=-Wno-error && \
     export CXXFLAGS=-Wno-error;  \
     fi && \
-    npm install && \
+    npm install --legacy-peer-deps && \
     npm run build && \
-    npm prune --production
+    npm prune --production --legacy-peer-deps
 
 # Step 2: Packages assets for serving
-FROM node:16-alpine AS serve
+FROM node:16.20.0-alpine AS serve
 
 ENV NODE_ENV=production
 WORKDIR /app
