@@ -46,17 +46,6 @@ export class IndexDefaultComponent implements OnInit, OnDestroy {
 
   buttons: ToolbarButton[] = [this.newNotebookButton];
 
-  buttons: ToolbarButton[] = [
-    new ToolbarButton({
-      text: `New Notebook`,
-      icon: 'add',
-      stroked: true,
-      fn: () => {
-        this.router.navigate(['/new']);
-      },
-    }),
-  ];
-
   constructor(
     public ns: NamespaceService,
     public backend: JWABackendService,

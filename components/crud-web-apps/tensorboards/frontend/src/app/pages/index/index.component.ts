@@ -51,17 +51,6 @@ export class IndexComponent implements OnInit, OnDestroy {
 
   buttons: ToolbarButton[] = [this.newTensorBoardButton];
 
-  buttons: ToolbarButton[] = [
-    new ToolbarButton({
-      text: `New TensorBoard`,
-      icon: 'add',
-      stroked: true,
-      fn: () => {
-        this.newResourceClicked();
-      },
-    }),
-  ];
-
   constructor(
     public ns: NamespaceService,
     public confirmDialog: ConfirmDialogService,

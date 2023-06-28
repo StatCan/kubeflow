@@ -78,6 +78,7 @@ make -C backend run-dev
 ```
 
 ### Internationalization
+
 Support for non-English languages is only supported in a best effort way.
 
 Internationalization(i18n) was implemented using [Angular's i18n](https://angular.io/guide/i18n)

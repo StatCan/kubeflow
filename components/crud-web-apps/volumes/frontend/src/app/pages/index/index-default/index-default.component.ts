@@ -48,17 +48,6 @@ export class IndexDefaultComponent implements OnInit, OnDestroy {
 
   buttons: ToolbarButton[] = [this.newVolumeButton];
 
-  buttons: ToolbarButton[] = [
-    new ToolbarButton({
-      text: `New Volume`,
-      icon: 'add',
-      stroked: true,
-      fn: () => {
-        this.newResourceClicked();
-      },
-    }),
-  ];
-
   constructor(
     public ns: NamespaceService,
     public confirmDialog: ConfirmDialogService,

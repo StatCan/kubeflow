@@ -23,8 +23,6 @@ import { FormComponent } from './pages/form/form.component';
 import { FormConfigurationsModule } from './pages/form/form-configurations/form-configurations.module';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-
 @NgModule({
   declarations: [AppComponent, IndexComponent, FormComponent],
   imports: [

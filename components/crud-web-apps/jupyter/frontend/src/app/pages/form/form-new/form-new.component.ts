@@ -19,10 +19,6 @@ export class FormNewComponent implements OnInit, OnDestroy {
 
   defaultStorageclass = false;
 
-  blockSubmit = false;
-  formReady = false;
-  existingNotebooks = new Set<string>();
-
   subscriptions = new Subscription();
 
   constructor(

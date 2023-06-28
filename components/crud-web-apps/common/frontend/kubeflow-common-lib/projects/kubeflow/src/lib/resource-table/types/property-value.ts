@@ -15,6 +15,10 @@ export class PropertyValue {
   valueFn?: (row: any) => any;
   popoverField: string;
   truncate: boolean;
+  style: { [prop: string]: string };
+
+  private defaultValues: PropertyConfig = {
+    field: '',
     tooltipField: '',
     popoverField: '',
     truncate: false,
