@@ -300,6 +300,7 @@ func (c *KfamV1Alpha1Client) QueryClusterAdmin(w http.ResponseWriter, r *http.Re
 	const action = "read"
 	queries, err := url.ParseQuery(r.URL.RawQuery)
 	if err != nil {
+		log.Printf("Failed to parse Query %s", err.Error())
 		IncRequestErrorCounter(err.Error(), "", action, r.URL.Path,
 			SEVERITY_MAJOR)
 		w.WriteHeader(http.StatusForbidden)
@@ -311,6 +312,7 @@ func (c *KfamV1Alpha1Client) QueryClusterAdmin(w http.ResponseWriter, r *http.Re
 		IncRequestCounter("", "", action, r.URL.Path)
 		w.WriteHeader(http.StatusOK)
 	} else {
+		log.Printf("Failed to write response %s", err.Error())
 		IncRequestErrorCounter(err.Error(), "", action, r.URL.Path,
 			SEVERITY_MAJOR)
 		w.WriteHeader(http.StatusInternalServerError)
