@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - stc-master
+      - kfam-logging
     paths:
       - components/access-management/**
   pull_request:
