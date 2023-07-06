@@ -248,6 +248,7 @@ func (c *KfamV1Alpha1Client) ReadBinding(w http.ResponseWriter, r *http.Request)
 	const action = "read"
 	queries, err := url.ParseQuery(r.URL.RawQuery)
 	if err != nil {
+		log.Printf("Failed to parse Query %s", err.Error())
 		IncRequestErrorCounter(err.Error(), "", action, r.URL.Path,
 			SEVERITY_MAJOR)
 		w.WriteHeader(http.StatusForbidden)
@@ -259,6 +260,7 @@ func (c *KfamV1Alpha1Client) ReadBinding(w http.ResponseWriter, r *http.Request)
 	if queries.Get("namespace") == "" {
 		profList, err := c.profileClient.List(metav1.ListOptions{})
 		if err != nil {
+			log.Printf("Failed to list profiles via profileClient %s", err.Error())
 			w.WriteHeader(http.StatusForbidden)
 			writeResponse(w, []byte(err.Error()))
 		}
@@ -270,6 +272,7 @@ func (c *KfamV1Alpha1Client) ReadBinding(w http.ResponseWriter, r *http.Request)
 	}
 	bindingList, err := c.bindingClient.List(queries.Get("user"), namespaces, queries.Get("role"))
 	if err != nil {
+		log.Printf("Failed to list bindings via bindingClient %s", err.Error())
 		IncRequestErrorCounter(err.Error(), "", action, r.URL.Path,
 			SEVERITY_MAJOR)
 		w.WriteHeader(http.StatusUnauthorized)
@@ -278,6 +281,7 @@ func (c *KfamV1Alpha1Client) ReadBinding(w http.ResponseWriter, r *http.Request)
 	}
 	result, err := json.Marshal(*bindingList)
 	if err != nil {
+		log.Printf("Failed to marshal response %s", err.Error())
 		IncRequestErrorCounter(err.Error(), "", action, r.URL.Path,
 			SEVERITY_MAJOR)
 		w.WriteHeader(http.StatusInternalServerError)
