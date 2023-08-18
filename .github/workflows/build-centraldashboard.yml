@@ -75,9 +75,8 @@ jobs:
       with:
         image: localhost:5000/kubeflow/centraldashboard:${{ github.sha }}
         format: 'list'
-        exit-code: '0'
-        # Must determine when / how we want to exit
-        #exit-level: 'fatal'
+        exit-code: '1'
+        exit-level: 'fatal'
         ignore: 'DKL-DI-0006'
 
     # Pushes if this is a push to master or an update to a PR that has auto-deploy label
