@@ -54,11 +54,6 @@ export class NamespaceSelectComponent implements OnInit, OnDestroy {
   }
 
   namespaceChanged(namespace: string) {
-    if (namespace === '{all}') {
-      this.namespaceService.selectedNamespace2$.next(this.namespaces);
-      return;
-    }
-
     this.namespaceService.updateSelectedNamespace(namespace);
   }
 }
