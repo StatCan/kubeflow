@@ -35,3 +35,21 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add('mockWorkgroupRequest', () => {
+  cy.intercept('GET', `/api/workgroup/exists`, {
+    fixture: 'workgroup',
+  }).as('mockWorkgroupRequest');
+});
+
+Cypress.Commands.add('mockDashboardLinksRequest', () => {
+  cy.intercept('GET', `/api/dashboard-links`, {
+    fixture: 'dashboard-links',
+  }).as('mockDashboardLinksRequest');
+});
+
+Cypress.Commands.add('mockEnvInfoRequest', () => {
+  cy.intercept('GET', `/api/workgroup/env-info`, {
+    fixture: 'env-info',
+  }).as('mockEnvInfoRequest');
+});

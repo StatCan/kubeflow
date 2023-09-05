@@ -16,5 +16,26 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Custom command to mock request at '/api/workgroup/exists'
+       * and returns object with mock workgroup
+       */
+      mockWorkgroupRequest(): Chainable<void>;
+
+      /**
+       * Custom command to mock request at '/api/workgroup/dashboard-links'
+       * and returns object with mock dashboard-links
+       */
+      mockDashboardLinksRequest(): Chainable<void>;
+
+      /**
+       * Custom command to mock request at '/api/workgroup/env-info'
+       * and returns object with mock env-info
+       */
+      mockEnvInfoRequest(): Chainable<void>;
+    }
+  }
+}
