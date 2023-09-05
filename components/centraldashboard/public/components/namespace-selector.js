@@ -171,8 +171,8 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
             return '';
         }
         if (!selected) {
-            this.namespaceMessage = 'namespaceSelector.selectNamespace';
-            return '';
+            // If none are selected, select the first namespace
+            selected = namespaces[0].namespace;
         }
         this.namespaceMessage = '';
         return selected;
