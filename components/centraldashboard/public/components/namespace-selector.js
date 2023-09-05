@@ -173,7 +173,9 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
         if (!selected) {
             // If none are selected, select the first namespace
             selected = namespaces[0].namespace;
-            this.validate();
+            this._queryParamChanged(selected);
+            this._ownedContextChanged(namespaces, selected);
+            this.validate(selected, namespaces);
         }
         this.namespaceMessage = '';
         return selected;
