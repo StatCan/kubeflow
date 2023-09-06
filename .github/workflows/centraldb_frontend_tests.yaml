@@ -29,21 +29,20 @@ jobs:
       - name: Run frontend tests
         run: |
           cd components/centraldashboard
-          npm install
+          npm i --legacy-peer-deps
           CHROMIUM_BIN=$(which chrome) npm run test
   cypress-run:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Move to central dashboard component
-        run: |
-          cd components/centraldashboard
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
+          working-directory: components/centraldashboard
+          install-command: npm i --legacy-peer-deps
           build: npm run build
           start: npm start
   # run-ui-tests:
