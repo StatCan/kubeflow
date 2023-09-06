@@ -3,9 +3,10 @@ on:
   pull_request:
     paths:
       - components/centraldashboard/**
-    branches:
-      - master
-      - v*-branch
+    types:
+      - 'opened'
+      - 'synchronize'
+      - 'reopened'
 
 jobs:
   frontend-tests:
@@ -15,10 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup node version to 12
+      - name: Setup node version to 16
         uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 16
 
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
@@ -30,3 +31,34 @@ jobs:
           cd components/centraldashboard
           npm install
           CHROMIUM_BIN=$(which chrome) npm run test
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm start
+  # run-ui-tests:
+  #   name: UI tests with Cypress
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #     - name: Setup node version to 16
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 16
+
+  #     - name: Install Central Dashboard
+  #       run: |
+  #         cd components/centraldashboard
+  #         npm i
+  #     - name: Serve UI & run Cypress in Chrome and Firefox
+  #       run: |
+  #         cd components/centraldashboard
+  #         npm
