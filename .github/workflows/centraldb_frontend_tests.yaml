@@ -32,20 +32,20 @@ jobs:
           npm i --legacy-peer-deps
           CHROMIUM_BIN=$(which chrome) npm run test
   cypress-run:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
+      - name: Setup node version to 16
+        uses: actions/setup-node@v3
         with:
-          working-directory: components/centraldashboard
-          install-command: npm i --legacy-peer-deps
-          build: npm run build
-          start: npm start
-          wait-on: http://localhost:8080
+          node-version: 16
+      - name: Serve UI & run Cypress tests in Chrome and Firefox
+        run: |
+          cd components/centraldashboard
+          npm i --legacy-peer-deps
+          npm run serve & npx wait-on http://localhost:8080
+          npm run ui-test-ci-all
   # run-ui-tests:
   #   name: UI tests with Cypress
   #   runs-on: ubuntu-latest
