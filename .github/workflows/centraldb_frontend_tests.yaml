@@ -40,10 +40,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Serve UI & run Cypress tests in Chrome and Firefox
+      - name: Run UI & run Cypress tests in Chrome and Firefox
         run: |
           cd components/centraldashboard
           npm i --legacy-peer-deps
-          npm run build
           npm run dev & npx wait-on http://localhost:8080
           npm run ui-test-ci-all
