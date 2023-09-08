@@ -46,22 +46,3 @@ jobs:
           npm i --legacy-peer-deps
           npm run serve & npx wait-on http://localhost:8080
           npm run ui-test-ci-all
-  # run-ui-tests:
-  #   name: UI tests with Cypress
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #     - name: Setup node version to 16
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 16
-
-  #     - name: Install Central Dashboard
-  #       run: |
-  #         cd components/centraldashboard
-  #         npm i
-  #     - name: Serve UI & run Cypress in Chrome and Firefox
-  #       run: |
-  #         cd components/centraldashboard
-  #         npm
