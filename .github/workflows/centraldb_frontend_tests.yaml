@@ -44,5 +44,6 @@ jobs:
         run: |
           cd components/centraldashboard
           npm i --legacy-peer-deps
-          npm run dev & npx wait-on http://localhost:8082
+          npm run build
+          npm run dev & npx wait-on http://localhost:8080
           npm run ui-test-ci-all
