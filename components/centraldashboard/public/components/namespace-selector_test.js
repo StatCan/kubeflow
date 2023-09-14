@@ -16,14 +16,14 @@ const TEMPLATE = `
 describe('Namespace Selector', () => {
     const namespaces = [
         {
+            user: 'testuser',
             namespace: 'default',
             role: 'contributor',
-            user: 'testuser',
         },
         {
+            user: 'testuser',
             namespace: 'other-namespace',
             role: 'contributor',
-            user: 'testuser',
         },
     ];
     let namespaceSelector;
