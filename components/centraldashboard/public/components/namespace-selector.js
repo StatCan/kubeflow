@@ -190,8 +190,8 @@ export class NamespaceSelector extends localizationMixin(PolymerElement) {
 
         let owned = namespaces.find((n) => n.role == 'owner');
         // If no owner, select the first namespace
-        if (owned == undefined) {
-            owned = namespaces.at(0);
+        if (owned === undefined && namespaces.length>0) {
+            owned = namespaces[0];
         }
 
         this.selected = (owned && owned.namespace)

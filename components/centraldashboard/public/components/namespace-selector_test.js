@@ -16,14 +16,14 @@ const TEMPLATE = `
 describe('Namespace Selector', () => {
     const namespaces = [
         {
-            user: 'testuser',
             namespace: 'default',
             role: 'contributor',
+            user: 'testuser',
         },
         {
-            user: 'testuser',
             namespace: 'other-namespace',
             role: 'contributor',
+            user: 'testuser',
         },
     ];
     let namespaceSelector;
@@ -54,10 +54,11 @@ describe('Namespace Selector', () => {
         });
 
         namespaceSelector.shadowRoot.querySelector('paper-listbox')
-            .select('default');
+            .select('other-namespace');
+
         const eventDetail = await queryParamsChangedPromise;
         expect(eventDetail.path).toBe('queryParams.ns');
-        expect(eventDetail.value).toBe('default');
+        expect(eventDetail.value).toBe('other-namespace');
     });
 
     it('Sets selected based on queryParams', async () => {
