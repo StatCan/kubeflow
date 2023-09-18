@@ -318,7 +318,7 @@ export class MainPage extends utilitiesMixin(localizationMixin(PolymerElement)) 
                 (this.user && '.' + this.user || '');
             localStorage.setItem(localStorageKey, namespace);
         }
-
+        
         if (this.namespacedItemTemplete &&
             this.namespacedItemTemplete.includes('{ns}')) {
             this.set('subRouteData.path',
@@ -388,6 +388,8 @@ export class MainPage extends utilitiesMixin(localizationMixin(PolymerElement)) 
         }
         window.history.replaceState(null, null, l.toString());
         this.set('routeHash.path', window.location.hash.substr(1));
+        const newIframeURL = new URL(newPage, window.location.origin);
+        this.iframeSrc = newIframeURL.toString();
     }
 
     /**
