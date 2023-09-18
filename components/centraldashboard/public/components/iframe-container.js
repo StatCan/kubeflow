@@ -90,6 +90,8 @@ export class IframeContainer extends PolymerElement {
      * load event as well as when the namespace changes.
      */
     _sendNamespaceMessage() {
+        // eslint-disable-next-line
+        console.log("origin", this._iframeOrigin, "ns", this.namespace)
         if (!(this._iframeOrigin && this.namespace)) return;
 
         this.$.iframe.contentWindow.postMessage({
