@@ -31,10 +31,71 @@ import utilitiesMixin from './utilities-mixin.js';
 export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMixin(PolymerElement)) {
     static get template() {
         const vars = {logo};
-
         return html([
             `<style>${css.toString()}</style>${template(vars)}`]);
     }
+
+    static get properties() {
+        return {
+            userDetails: {type: Object, observer: '_onUserDetails'},
+            namespaceInput: {type: Object},
+            namespaceName: String,
+            error: Object,
+            flowComplete: {type: Boolean, value: false},
+            waitForRedirect: {type: Boolean, value: false},
+            showAPIText: {type: Boolean, value: false},
+        };
+    }
+
+    ready() {
+        super.ready();
+        this.namespaceInput = this.$.Namespace;
+    }
+
+    _onUserDetails(d) {
+        this.namespaceName = this.userDetails
+            // eslint-disable-next-line no-useless-escape
+            .replace(/[^\w]|\./g, '-')
+            .replace(/^-+|-+$|_/g, '')
+            .toLowerCase();
+    }
+
+
+    clearInvalidation() {
+        this.namespaceInput.invalid = false;
+    }
+
+    generateNamespace(email) {
+        // Since email includes an @ , we split to the left side of it'
+        const meow = email.split('@', 1);
+        let nmeow = meow[0];
+        nmeow = nmeow
+            .replace(/[^\w]|\./g, '-')
+            .replace(/^-+|-+$|_/g, '')
+            .toLowerCase();
+
+        let counter = 0;
+        // Verify is namespace exists, if so add, check if contains number.
+        if (this.ifNamespaceExists(nmeow)) {
+            counter++;
+            nmeow = nmeow + counter;
+        }
+
+        return nmeow;
+    }
+
+    async ifNamespaceExists(ns) {
+        const profileAPI = this.$.GetMyNamespace;
+        const req = profileAPI.generateRequest();
+        await req.completes.catch(() => 0);
+        if (req.response && req.response.hasWorkgroup) return true;
+        return false;
+    }
+
+    getEmail() {
+        return 'your-email';
+    }
 }
+
 
 window.customElements.define('landing-page', LandingPage);
