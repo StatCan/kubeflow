@@ -40,10 +40,9 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
             userDetails: {type: Object, observer: '_onUserDetails'},
             namespaceInput: {type: Object},
             namespaceName: String,
+            emailAddress: String,
             error: Object,
             flowComplete: {type: Boolean, value: false},
-            waitForRedirect: {type: Boolean, value: false},
-            showAPIText: {type: Boolean, value: false},
         };
     }
 
@@ -53,35 +52,27 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     }
 
     _onUserDetails(d) {
-        this.namespaceName = this.userDetails
-            // eslint-disable-next-line no-useless-escape
-            .replace(/[^\w]|\./g, '-')
-            .replace(/^-+|-+$|_/g, '')
-            .toLowerCase();
-    }
-
-
-    clearInvalidation() {
-        this.namespaceInput.invalid = false;
+        this.emailAddress = this.userDetails;
+        this.namespaceName = this.generateNamespace(this.emailAddress);
     }
 
     generateNamespace(email) {
         // Since email includes an @ , we split to the left side of it'
-        const meow = email.split('@', 1);
-        let nmeow = meow[0];
-        nmeow = nmeow
+        const name = email.split('@', 1);
+        let ns = name[0];
+        ns = ns
             .replace(/[^\w]|\./g, '-')
             .replace(/^-+|-+$|_/g, '')
             .toLowerCase();
 
         let counter = 0;
         // Verify is namespace exists, if so add, check if contains number.
-        if (this.ifNamespaceExists(nmeow)) {
+        if (this.ifNamespaceExists(ns)) {
             counter++;
-            nmeow = nmeow + counter;
+            ns = ns + counter;
         }
 
-        return nmeow;
+        return ns;
     }
 
     async ifNamespaceExists(ns) {
@@ -90,10 +81,6 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         await req.completes.catch(() => 0);
         if (req.response && req.response.hasWorkgroup) return true;
         return false;
-    }
-
-    getEmail() {
-        return 'your-email';
     }
 }
 

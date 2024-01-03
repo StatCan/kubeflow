@@ -1,5 +1,5 @@
 iron-ajax#MakeNamespace(method='POST', url='/api/workgroup/create', handle-as='json', last-error='{{error}}', last-response='{{resp}}',
-    content-type='application/json', loading='{{submittingWorkgroup}}', on-input='clearInvalidation')
+    content-type='application/json', loading='{{submittingWorkgroup}}')
 iron-ajax#GetMyNamespace(url='/api/workgroup/exists', handle-as='json')
 paper-card#MainCard
     figure#Logo !{logo}
@@ -9,8 +9,8 @@ paper-card#MainCard
             p {{localize('landingPage.firstTime')}}
             p {{localize('landingPage.autoNamespace')}}
 
-            md2-input#Email(label="{{localize('landingPage.email')}}", value='{{namespaceName}}', disabled="true")
-            md2-input#Namespace(label="{{localize('landingPage.yourNamespace')}}", value='{{generateNamespace("wendy.gaultier@canada.ca")}}', disabled='true')
+            md2-input#Email(label="{{localize('landingPage.email')}}", value='{{emailAddress}}', disabled="true")
+            md2-input#Namespace(label="{{localize('landingPage.yourNamespace')}}", value='{{namespaceName)}}', disabled='true')
             aside {{localize('landingPage.landingDesc')}} 
                 a(href='https://statcan-aaw.slack.com', tabindex='-1', target="_blank") {{localize('landingPage.slackLink')}}
 
