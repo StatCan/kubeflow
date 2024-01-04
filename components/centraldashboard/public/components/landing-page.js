@@ -38,22 +38,22 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     static get properties() {
         return {
             userDetails: {type: Object, observer: '_onUserDetails'},
-            namespaceInput: {type: Object},
             namespaceName: String,
             emailAddress: String,
             error: Object,
             flowComplete: {type: Boolean, value: false},
+            waitForRedirect: {type: Boolean, value: false},
+            showAPIText: {type: Boolean, value: false},
         };
     }
 
     ready() {
         super.ready();
-        this.namespaceInput = this.$.Namespace;
     }
 
     _onUserDetails(d) {
         this.emailAddress = this.userDetails;
-        this.namespaceName = this.generateNamespace(this.emailAddress);
+        this.namespaceName = this.generateNamespace(this.userDetails);
     }
 
     generateNamespace(email) {
@@ -81,6 +81,33 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         await req.completes.catch(() => 0);
         if (req.response && req.response.hasWorkgroup) return true;
         return false;
+    }
+
+    async nextPage() {
+        const API = this.$.MakeNamespace;
+        API.body = {namespace: this.namespaceName};
+        this.waitForRedirect = true;
+        await API.generateRequest().completes.catch((e) => e);
+        await this.sleep(1); // So the errors and callbacks can schedule
+        if (this.error && this.error.response) {
+            if (this.error.response.error) {
+                this.duplicateNamespace(this.error.response.error);
+            }
+            return this.waitForRedirect = false;
+        }
+        /*
+         * Poll for profile over a span of 20 seconds (every 300ms)
+         * if still not there, let the user click next again!
+         */
+        const success = await this.pollProfile(66, 300);
+        if (success) this._successSetup();
+        this.waitForRedirect = false;
+    }
+
+    _successSetup() {
+        this.flowComplete = true;
+        this.set('error', {});
+        this.fireEvent('flowcomplete');
     }
 }
 
