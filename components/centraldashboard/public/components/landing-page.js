@@ -76,36 +76,31 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     }
 
     ifNamespaceExists(ns) {
-        const data = this.getNamespace(ns);
-        // eslint-disable-next-line no-console
-        console.log('The data ' + data);
-        // TODO check on answer to know if exists
-        return false;
+        const promise = this.getNamespaces();
+        promise.then((data) => {
+            // Data is an array of metadata
+            const namespaceNames = [];
+            data.forEach((element) => {
+                namespaceNames.push(element.metadata.name);
+            });
+            return namespaceNames.includes(ns);
+        });
     }
 
-    /**
-     * Returns the metadata of the namespace
-     * @param {string} namespace
-     */
-    getNamespace(namespace) {
-        fetch(
-            // eslint-disable-next-line max-len
-            `jupyter/api/namespaces/${namespace}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-        )
-            .then((response)=>{
-                if (!response.ok) {
-                    // eslint-disable-next-line no-console
-                    console.log('Response not ok' + response);
-                    throw new Error('Failed to retrieve information');
-                } else {
-                    return response;
+    getNamespaces() {
+        return new Promise(async function(resolve, reject) {
+            // do async fetch
+            const res = await fetch(
+                `/api/namespaces/`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                 }
-            });
+            );
+            // resolve
+            resolve(res.json()); // see note below!
+        });
     }
 
     async nextPage() {
@@ -131,7 +126,6 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         if (success) this._successSetup();
         this.waitForRedirect = false;
     }
-
 
     async pollProfile(times, delay) {
         const profileAPI = this.$.GetMyNamespace;
