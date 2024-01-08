@@ -67,7 +67,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
 
         let counter = 0;
         // Verify is namespace exists, if so add, check if contains number.
-        if (this.ifNamespaceExists(ns)) {
+        while (this.ifNamespaceExists(ns)) {
             counter++;
             ns = ns + counter;
         }
@@ -75,12 +75,38 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         return ns;
     }
 
-    async ifNamespaceExists(ns) {
-        const profileAPI = this.$.GetMyNamespace;
-        const req = profileAPI.generateRequest();
-        await req.completes.catch(() => 0);
-        if (req.response && req.response.hasWorkgroup) return true;
+    ifNamespaceExists(ns) {
+        const data = this.getNamespace(ns);
+        // eslint-disable-next-line no-console
+        console.log('The data ' + data);
+        // TODO check on answer to know if exists
         return false;
+    }
+
+    /**
+     * Returns the metadata of the namespace
+     * @param {string} namespace
+     */
+    getNamespace(namespace) {
+        namespace ='wendy-gaultier'; // test to bypass anon
+        fetch(
+            // eslint-disable-next-line max-len
+            `jupyter/api/namespaces/${namespace}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
+            .then((response)=>{
+                if (!response.ok) {
+                    // eslint-disable-next-line no-console
+                    console.log('Respons not ok' + response);
+                    throw new Error('Failed to retrieve information');
+                } else {
+                    return response;
+                }
+            });
     }
 
     async nextPage() {
@@ -91,7 +117,10 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         await this.sleep(1); // So the errors and callbacks can schedule
         if (this.error && this.error.response) {
             if (this.error.response.error) {
-                this.duplicateNamespace(this.error.response.error);
+                this.set('error', {response: {
+                    error: 'registrationPage.errDuplicate',
+                    namespace: this.namespaceName,
+                }});
             }
             return this.waitForRedirect = false;
         }
@@ -102,6 +131,18 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         const success = await this.pollProfile(66, 300);
         if (success) this._successSetup();
         this.waitForRedirect = false;
+    }
+
+
+    async pollProfile(times, delay) {
+        const profileAPI = this.$.GetMyNamespace;
+        if (times < 1) throw Error('Cannot poll profile < 1 times!');
+        for (let i = 0; i < times; i++) {
+            const req = profileAPI.generateRequest();
+            await req.completes.catch(() => 0);
+            if (req.response && req.response.hasWorkgroup) return true;
+            await this.sleep(delay);
+        }
     }
 
     _successSetup() {
