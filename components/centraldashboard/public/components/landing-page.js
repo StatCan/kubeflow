@@ -88,7 +88,6 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
      * @param {string} namespace
      */
     getNamespace(namespace) {
-        namespace ='wendy-gaultier'; // test to bypass anon
         fetch(
             // eslint-disable-next-line max-len
             `jupyter/api/namespaces/${namespace}`, {
@@ -101,7 +100,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
             .then((response)=>{
                 if (!response.ok) {
                     // eslint-disable-next-line no-console
-                    console.log('Respons not ok' + response);
+                    console.log('Response not ok' + response);
                     throw new Error('Failed to retrieve information');
                 } else {
                     return response;
