@@ -53,10 +53,10 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
 
     _onUserDetails(d) {
         this.emailAddress = this.userDetails;
-        this.namespaceName = this.generateNamespace(this.userDetails);
+        this.generateNamespace(this.userDetails);
     }
 
-    generateNamespace(email) {
+    async generateNamespace(email) {
         // Since email includes an @ , we split to the left side of it'
         const name = email.split('@', 1);
         let ns = name[0];
@@ -65,42 +65,31 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
             .replace(/^-+|-+$|_/g, '')
             .toLowerCase();
 
-        let counter = 0;
-        // Verify is namespace exists, if so add, check if contains number.
-        while (this.ifNamespaceExists(ns)) {
-            counter++;
-            ns = ns + counter;
-        }
-
-        return ns;
+        this.getNamespaces(ns);
     }
 
-    ifNamespaceExists(ns) {
-        const promise = this.getNamespaces();
-        promise.then((data) => {
-            // Data is an array of metadata
-            const namespaceNames = [];
-            data.forEach((element) => {
-                namespaceNames.push(element.metadata.name);
-            });
-            return namespaceNames.includes(ns);
-        });
-    }
-
-    getNamespaces() {
-        return new Promise(async function(resolve, reject) {
-            // do async fetch
-            const res = await fetch(
-                `/api/namespaces/`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+    async getNamespaces(ns) {
+        await fetch(
+            `/api/namespaces/`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
+            .then((res) => res.json())
+            .then((data) => {
+                const namespaceNames = [];
+                data.forEach((element) => {
+                    namespaceNames.push(element.metadata.name);
+                });
+                let counter = 0;
+                while (namespaceNames.includes(ns)) {
+                    counter++;
+                    ns = ns + counter;
                 }
-            );
-            // resolve
-            resolve(res.json()); // see note below!
-        });
+                this.namespaceName = ns;
+            }).catch((e)=> console.error(e));
     }
 
     async nextPage() {
