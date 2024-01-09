@@ -89,7 +89,12 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
                     ns = ns + counter;
                 }
                 this.namespaceName = ns;
-            }).catch((e)=> console.error(e));
+            }).catch((e)=> {
+                this.set('error', {response: {
+                    error: e,
+                    namespace: this.namespaceName,
+                }});
+            });
     }
 
     async nextPage() {
