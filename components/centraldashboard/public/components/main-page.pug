@@ -122,5 +122,5 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
 paper-toast#welcomeUser(duration=5000) Welcome, [[_extractLdap(user)]]!
 paper-toast#ErrorToast(duration=0, opened='[[!empty(errorText)]]', on-click='closeError') {{localize(errorText)}}
     paper-icon-button(icon='close')
-template(is='dom-if', if='[[!registrationFlow]]')
+template(is='dom-if', if='[[registrationFlow]]')
     landing-page(user-details='[[user]]' on-flowcomplete='resyncApp', language='[[language]]', resources='[[resources]]')
