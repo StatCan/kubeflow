@@ -83,10 +83,13 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
                 data.forEach((element) => {
                     namespaceNames.push(element.metadata.name);
                 });
-                let counter = 0;
-                while (namespaceNames.includes(ns)) {
-                    counter++;
-                    ns = ns + counter;
+                let counter = 1;
+                const originalNs = ns;
+                if (namespaceNames.includes(originalNs)) {
+                    while (namespaceNames.includes(originalNs + counter)) {
+                        counter++;
+                    }
+                    ns = originalNs + counter;
                 }
                 this.namespaceName = ns;
             }).catch((e)=> {
