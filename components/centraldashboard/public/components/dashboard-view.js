@@ -15,6 +15,7 @@ import template from './dashboard-view.pug';
 import './card-styles.js';
 import './iframe-link.js';
 import './notebooks-card.js';
+import './default-notebooks-card.js';
 import './security-messages-card.js';
 import './pipelines-card.js';
 import './resource-chart.js';
