@@ -6,6 +6,7 @@ iron-ajax#envInfo(auto='[[_shouldFetchEnv]]', url='/api/workgroup/env-info', han
     on-response='_onEnvInfoResponse')
 iron-ajax(auto, url="[[getNotebookServersUrl]]", handle-as="json",
     loading="{{loading}}", on-response="_onNotebookServersResponse", on-error="_onNotebookServersError")
+iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespace]]/notebooks/default')
 aside#PageLoader(hidden='{{!pageLoading}}')
 app-drawer-layout.flex(narrow='{{narrowMode}}',
         force-narrow='[[or(thinView, hideSidebar)]]',
@@ -104,6 +105,8 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                     dashboard-view(namespace='[[queryParams.ns]]',
                         platform-info='[[platformInfo]]', quick-links='[[quickLinks]]', documentation-items='[[documentationItems]]', 
                         security-messages='[[securityMessages]]', language='[[language]]', resources='[[resources]]')
+                    .actions
+                        paper-button(on-click='nextPage') {{localize('registrationPage.btnNext')}}
                 neon-animatable(page='activity')
                     activity-view(namespace='[[queryParams.ns]]', language='[[language]]', resources='[[resources]]')
                 neon-animatable(page='manage-users')
