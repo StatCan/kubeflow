@@ -6,7 +6,7 @@ iron-ajax#envInfo(auto='[[_shouldFetchEnv]]', url='/api/workgroup/env-info', han
     on-response='_onEnvInfoResponse')
 iron-ajax(auto, url="[[getNotebookServersUrl]]", handle-as="json",
     loading="{{loading}}", on-response="_onNotebookServersResponse", on-error="_onNotebookServersError")
-iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespace]]/createdefault', handle-as="json")
+iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespace]]/notebooks/default', handle-as='json')
 aside#PageLoader(hidden='{{!pageLoading}}')
 app-drawer-layout.flex(narrow='{{narrowMode}}',
         force-narrow='[[or(thinView, hideSidebar)]]',
