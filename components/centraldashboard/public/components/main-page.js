@@ -660,6 +660,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
 
     async nextPage() {
         const APICreateDefault = this.$.CreateDefaultNotebook;
+        APICreateDefault.body = {test: 'bla'};
 
         await APICreateDefault.generateRequest().completes.catch((e) => e);
         await this.sleep(1); // So the errors and callbacks can schedule
@@ -675,7 +676,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
 
     async nextPage2() {
         const APICreateDefault = this.$.CreateDefaultNotebook2;
-
+        APICreateDefault.body = {test: 'bla'};
         await APICreateDefault.generateRequest().completes.catch((e) => e);
         await this.sleep(1); // So the errors and callbacks can schedule
         if (this.error && this.error.response) {
