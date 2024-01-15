@@ -106,7 +106,7 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                         platform-info='[[platformInfo]]', quick-links='[[quickLinks]]', documentation-items='[[documentationItems]]', 
                         security-messages='[[securityMessages]]', language='[[language]]', resources='[[resources]]')
                     .actions
-                        paper-button(on-click='nextPage') {{localize('registrationPage.btnNext')}}
+                        paper-button#me(on-click='nextPage') {{localize('registrationPage.btnNext')}}
                 neon-animatable(page='activity')
                     activity-view(namespace='[[queryParams.ns]]', language='[[language]]', resources='[[resources]]')
                 neon-animatable(page='manage-users')
