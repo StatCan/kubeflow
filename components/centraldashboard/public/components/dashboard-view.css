@@ -29,7 +29,6 @@
 }
 
 .column {
-    grid-row: 2;
     min-width: 320px;
     max-width: 400px;
 }
@@ -42,9 +41,7 @@
 }
 
 .defaultNotebook {
-    grid-row: 1;
-    grid-column-start: 1;
-    grid-column-end: 4;
+
 }
 
 

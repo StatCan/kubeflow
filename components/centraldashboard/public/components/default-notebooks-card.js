@@ -15,12 +15,6 @@ import {html, PolymerElement} from '@polymer/polymer';
 
 import './card-styles.js';
 
-const MAX_NOTEBOOKS = 5;
-
-// Formatting function to return the list Notebooks URL for a Notebooks server
-const getListNotebooksUrl = (namespace, server) =>
-    `/notebook/${namespace}/${server}/api/contents`;
-
 /**
  * Component to retrieve and display recently modified Jupyter Notebooks.
  */
@@ -33,118 +27,70 @@ export class FirstNotebookCard extends mixinBehaviors([AppLocalizeBehavior], Pol
                 @apply --layout-vertical;
             }
         </style>
-        <iron-ajax auto url="[[listNotebookServersUrl]]" handle-as="json"
-            loading="{{loading}}" on-response="_onDefaultNotebookResponse"
+        <iron-ajax auto url="[[defaultNotebookUrl]]" handle-as="json"
+            loading="{{loading}}" on-response="_onNotebookServersResponse"
             on-error="_onError">
         </iron-ajax>
-        <paper-card heading="{{localize('notebookCard.headRecentNotebooks')}}">
-            <paper-progress indeterminate class="slow"
-                hidden$="[[!loading]]"></paper-progress>
-            <header id="message" hidden$="[[!message]]">
-                {{localize(message, 'namespace', namespace)}}
-            </header>
-            <template is="dom-repeat" items="[[notebooks]]">
-                <iframe-link class="link" href$="[[item.href]]">
-                    <paper-icon-item>
-                        <paper-ripple></paper-ripple>
-                        <iron-icon icon="chrome-reader-mode" slot="item-icon">
-                        </iron-icon>
-                        <paper-item-body two-line>
-                            <div class="header">[[item.name]]</div>
-                            <aside secondary>
-                                {{localize('notebookCard.txtAccessed')}}
-                                [[item.lastModified]]
-                            </aside>
-                        </paper-item-body>
-                    </paper-icon-item>
-                </iframe-link>
-            </template>
+            <paper-card heading="Default Notebook">
+            <table>
+                <tr>
+                    <td>Name</td>
+                    <td>[[defaultNotebook.name]]</td>
+                </tr>
+                <tr>
+                    <td>Type</td>
+                    <td>[[defaultNotebook.shortImage]]</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button on-click="_connectNotebook">Connect</button>
+                    </td>
+                </tr>
+            </table>
         </paper-card>
         `;
     }
 
     static get properties() {
         return {
-            loading: {
-                type: Boolean,
-                value: false,
-            },
-            message: {
-                type: String,
-                value: 'notebookCard.msgChooseNamespace',
-            },
             namespace: String,
-            listNotebookServersUrl: {
-                type: String,
-                computed: '_getListNotebookServersUrl(namespace)',
+            defaultNotebookUrl: {
+                type: Object,
+                computed: '_getNotebookUrl(namespace)',
             },
-            notebooks: {
-                type: Array,
-                value: () => [],
-            },
+            defaultNotebook: {Object},
         };
     }
-
     /**
      * Returns the URL to list the available Jupyter servers for the namespace.
      * @param {string} namespace
      * @return {string}
      */
-    _getListNotebookServersUrl(namespace) {
+    _getNotebookUrl(namespace) {
         if (!namespace) return null;
-        return `/jupyter/api/namespaces/${namespace}/notebooks`;
+        return `/jupyter/api/namespaces/${namespace}/defaultnotebook`;
+    }
+
+    _connectNotebook() {
+        // eslint-disable-next-line max-len
+        window.open(`/notebook/${this.namespace}/${this.defaultNotebook.name}/`);
     }
 
     /**
      * Handles the list Notebooks Servers response to set date format and icon.
      * @param {Event} responseEvent
      */
-    async _onDefaultNotebookResponse(responseEvent) {
+    async _onNotebookServersResponse(responseEvent) {
         const response = responseEvent.detail.response;
         this.loading = true;
         try {
-            const listNotebooksResults = await Promise.all(
-                response.notebooks.map((n) =>
-                    this._getDefaultNotebookFromServer(n.namespace, n.name)));
-            const notebooks = [];
-            listNotebooksResults.map((r) => notebooks.push(...r));
-            notebooks.sort((n1, n2) => n2.sortTime - n1.sortTime);
-            this.splice('notebooks', 0,
-                this.notebooks.length, ...notebooks.slice(0, MAX_NOTEBOOKS));
+            this.defaultNotebook = await response.notebook;
         } catch (err) {
             this._onError();
         }
-        this.message = this.notebooks.length ?
+        this.message = this.defaultNotebook.name ?
             '' : 'notebookCard.errNoNotebooks';
         this.loading = false;
-    }
-
-    /**
-     * Retrieves the Notebook instances found in the Jupyter server specified
-     * by the namespace and server name.
-     * @param {string} namespace
-     * @param {string} server
-     * @return {Array} list of objects to be displayed in the card.
-     */
-    async _getDefaultNotebookFromServer(namespace, server) {
-        try {
-            const response = await fetch(
-                getListNotebooksUrl(namespace, server));
-            const notebooks = await response.json();
-            return notebooks.content.map((n) => {
-                const date = new Date(n.last_modified);
-                return {
-                    href:
-                        `/notebook/${namespace}/${server}/notebooks/${n.name}`,
-                    name: n.name,
-                    lastModified: date.toLocaleString(),
-                    server: server,
-                    sortTime: date.getTime(),
-                };
-            });
-        } catch (err) {
-            return [];
-        }
     }
 
     /**
