@@ -97,7 +97,6 @@ export class FirstNotebookCard extends mixinBehaviors([AppLocalizeBehavior], Pol
      * Handles an Notebooks error response.
      */
     _onError() {
-        this.splice('notebooks', 0);
         this.message = 'notebookCard.errRetrievingNotebooks';
     }
 }
