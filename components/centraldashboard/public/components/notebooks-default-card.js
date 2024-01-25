@@ -97,4 +97,4 @@ export class DefaultNotebookCard extends mixinBehaviors([AppLocalizeBehavior], P
     }
 }
 
-customElements.define('default-notebook-card', DefaultNotebookCard);
+customElements.define('notebook-default-card', DefaultNotebookCard);
