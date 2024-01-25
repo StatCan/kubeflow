@@ -40,11 +40,6 @@
     margin-bottom: .75em; /* 12px */
 }
 
-.defaultNotebook {
-
-}
-
-
 #Platform-Links {
     --paper-card-header-color: #2c6acb;
     --paper-card-header-image-text: {

@@ -16,10 +16,10 @@ import {html, PolymerElement} from '@polymer/polymer';
 import './card-styles.js';
 
 /**
- * Component to retrieve and display recently modified Jupyter Notebooks.
+ * Component to retrieve and display the default notebook
  */
 // eslint-disable-next-line max-len
-export class FirstNotebookCard extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
+export class DefaultNotebookCard extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
     static get template() {
         return html`
         <style include="card-styles">
@@ -61,11 +61,7 @@ export class FirstNotebookCard extends mixinBehaviors([AppLocalizeBehavior], Pol
             defaultNotebook: {Object},
         };
     }
-    /**
-     * Returns the URL to list the available Jupyter servers for the namespace.
-     * @param {string} namespace
-     * @return {string}
-     */
+
     _getNotebookUrl(namespace) {
         if (!namespace) return null;
         return `/jupyter/api/namespaces/${namespace}/defaultnotebook`;
@@ -77,7 +73,7 @@ export class FirstNotebookCard extends mixinBehaviors([AppLocalizeBehavior], Pol
     }
 
     /**
-     * Handles the list Notebooks Servers response to set date format and icon.
+     * Handles the response to set the default notebook
      * @param {Event} responseEvent
      */
     async _onNotebookServersResponse(responseEvent) {
@@ -101,4 +97,4 @@ export class FirstNotebookCard extends mixinBehaviors([AppLocalizeBehavior], Pol
     }
 }
 
-customElements.define('first-notebook-card', FirstNotebookCard);
+customElements.define('default-notebook-card', DefaultNotebookCard);
