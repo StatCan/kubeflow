@@ -1,23 +1,13 @@
-iron-ajax#MakeNamespace(method='POST', url='/api/workgroup/create', handle-as='json', last-error='{{error}}', last-response='{{resp}}',
-    content-type='application/json', loading='{{submittingWorkgroup}}')
-iron-ajax#GetMyNamespace(url='/api/workgroup/exists', handle-as='json')
-iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespaceName]]/createdefault', headers='{"Content-Type": "application/json"}')
-paper-card#MainCard
-    figure#Logo !{logo}
+iron-ajax#GetDefaultNotebook(url='/jupyter/api/namespaces/[[namespace]]/createdefault', handle-as='json', loading='{{loadingDefault}}')
+iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespace]]/createdefault', headers='{"Content-Type": "application/json"}')
+paper-card#DefaultNotebookCard
     neon-animatable.Main-Content
-            h2 {{localize('registrationPage.lblWelcome')}}
-
-            p {{localize('landingPage.firstTime')}}
-            p {{localize('landingPage.autoNamespace')}}
-
-            md2-input#Email(label="{{localize('landingPage.email')}}", value='{{emailAddress}}', disabled="true")
-            md2-input#Namespace(label="{{localize('landingPage.yourNamespace')}}", value='{{namespaceName}}', disabled='true')
-            aside {{localize('landingPage.landingDesc')}} 
-                a(href='https://statcan-aaw.slack.com', tabindex='-1', target="_blank") {{localize('landingPage.slackLink')}}
-            .actions
-            paper-button(on-click='nextPage') {{localize('registrationPage.btnNext')}}
-
-nav#Links
-    a(href='https://github.com/kubeflow/kubeflow', tabindex='-1', target="_blank") {{localize('registrationPage.linkGitHub')}}
-    a(href='https://www.kubeflow.org/docs/about/kubeflow/', tabindex='-1', target="_blank") {{localize('registrationPage.linkDocumentation')}}
-    a(href='https://policies.google.com/privacy', tabindex='-1', target="_blank") {{localize('registrationPage.linkPrivacy')}}
+        paper-card#DefaultNotebook(
+                heading='Default Notebook')
+                    p {{localize('landingPage.landingDesc')}
+                    paper-icon-button.button(icon='open-in-new',
+                        slot='item-icon', alt='[[item.text]]', tabindex=-1)
+                    aside {{localize('landingPage.landingDesc')}} 
+                        a(href='https://statcan-aaw.slack.com', tabindex='-1', target="_blank") {{localize('landingPage.landingDesc')}
+                    .actions
+                    paper-button(on-click='_createDefaultNotebook') {{localize('landingPage.landingDesc')}

@@ -19,7 +19,7 @@ import './card-styles.js';
  * Component to retrieve and display the default notebook
  */
 // eslint-disable-next-line max-len
-export class NotebookDefaultCard extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
+export class NotebookDefaultCard2 extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
     static get template() {
         if (this.defaultNotebookExists) {
             return html`
@@ -166,4 +166,4 @@ export class NotebookDefaultCard extends mixinBehaviors([AppLocalizeBehavior], P
     //   }
 }
 
-customElements.define('notebook-default-card', NotebookDefaultCard);
+customElements.define('notebook-default-card2', NotebookDefaultCard2);
