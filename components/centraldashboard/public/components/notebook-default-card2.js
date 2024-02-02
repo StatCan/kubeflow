@@ -21,63 +21,82 @@ import './card-styles.js';
 // eslint-disable-next-line max-len
 export class NotebookDefaultCard2 extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
     static get template() {
-        if (this.defaultNotebookExists) {
-            return html`
+        return html`
             <style include="card-styles">
                 :host {
                     @apply --layout-vertical;
                 }
             </style>
-            <iron-ajax auto url="[[defaultNotebookUrl]]" handle-as="json"
-                loading="{{loading}}" on-response="_onNotebookServersResponse"
-                on-error="_onError">
+            <iron-ajax
+                id='gDef'
+                auto
+                url$='{{defaultNotebookUrl}}'
+                method='get'
+                handle-as='json'
+                headers='{"Content-Type": "application/json"}'
+                on-response='_onNotebookServersResponse'>
             </iron-ajax>
-                <paper-card heading="Default Notebook">
-                    <table>
-                        <tr>
-                            <td>Name</td>
-                            <td>[[defaultNotebook.name]]</td>
-                        </tr>
-                        <tr>
-                            <td>Type</td>
-                            <td>[[defaultNotebook.shortImage]]</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <button on-click="_connectNotebook">
-                                    Connect
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
+            <paper-card id="refreshingDetail" heading="Default Notebook">
+                <template is="dom-if" if="[[isNotebookUndefined()]]">
+                    <p> Data not here yet</p>
+                </template>
+                <template is="dom-if" if="[[!isNotebookUndefined()]]">
+                    <template is="dom-if" if="[[isNotebookCreated()]]">
+                        <p> Data came back, no default notebook  </p>
+                    </template>
+                    <template is="dom-if" if="[[!isNotebookCreated()]]">
+                        <template is="dom-if" if="!isNotebookReady()]]">
+                            <p> Data came back, NDefault notebook exists, 
+                            not ready</p>
+                        </template>
+                        <template is="dom-if" if="[[isNotebookReady()]]">
+                            <p> Data came back, 
+                            Default notebook exists, Ready</p>
+                        </template>
+                    </template>
+                </template>
+                <template is="dom-if" if="[[isLoading()]]">
+                    <p> Loaded?</p>
+                </template>
             </paper-card>
-            `;
-        } else {
-            return html`
-            <style include="card-styles">
-                :host {
-                    @apply --layout-vertical;
-                }
-            </style>
-            <iron-ajax auto url="[[createDefaultNotebookUrl]]" handle-as="json"
-                method="POST" headers='{"Content-Type": "application/json"}'
-                on-response="_onNotebookServersResponse"
-                on-error="_onError">
-            </iron-ajax>
-                <paper-card heading="Default Notebook">
-                    <p> 
-                        The default notebook is one that will 
-                        start automatically upon login into Kubeflow.
+        `;
+    }
+    test() {
+        // eslint-disable-next-line max-len
+        const container = document.querySelector('main-page').shadowRoot.querySelector('main neon-animated-pages neon-animatable dashboard-view').shadowRoot.querySelector('notebook-default-card2').shadowRoot.querySelector('paper-card');
+        // eslint-disable-next-line max-len
+        const x = html`
+    <paper-card id="refreshingDetail" heading="Default Notebook">
+        <template is="dom-if" if="[[isNotebookUndefined()]]">
+            <p> Data not here yet</p>
+        </template>
+        <template is="dom-if" if="[[!isNotebookUndefined()]]">
+            <template is="dom-if" if="[[isNotebookCreated()]]">
+                <p> Data came back, no default notebook  </p>
+            </template>
+            <template is="dom-if" if="[[!isNotebookCreated()]]">
+                <template is="dom-if" if="!isNotebookReady()]]">
+                    <p> Data came back, NDefault notebook exists, 
+                    not ready</p>
+                </template>
+                <template is="dom-if" if="[[isNotebookReady()]]">
+                    <p> Data came back, 
+                    Default notebook exists, Ready</p>
+                </template>
+            </template>
+        </template>
+        <template is="dom-if" if="[[isLoading()]]">
+            <p> Loaded?</p>
+        </template>
+    </paper-card>`;
+        container.parentNode.replaceChild(x.content, container);
 
-                        If you can see this note, the system has not detected
-                        a default notebook. You may click on "Create" 
-                        below to generate one. 
-                    </p>
-                    <button on-click="_createDefaultNotebook">
-                        Create
-                    </button>
-            </paper-card>`;
-        }
+        // eslint-disable-next-line no-console
+        console.log('Refreshed');
+    }
+
+    _postLogout(event) {
+        alert('Hi');
     }
 
     static get properties() {
@@ -92,8 +111,33 @@ export class NotebookDefaultCard2 extends mixinBehaviors([AppLocalizeBehavior], 
                 computed: '_getNotebookUrl(namespace)',
             },
             defaultNotebook: {Object},
-            defaultNotebookExists: Boolean,
+            loading: Boolean,
+            loaded: {
+                type: Boolean,
+                computed: '_forcePageLoad()',
+            },
         };
+    }
+
+
+    // Functions to render the HTML correctly
+    isNotebookUndefined() {
+        const x = this.defaultNotebook === undefined;
+        return x;
+    }
+
+    isNotebookCreated() {
+        const y = this.defaultNotebook.name != '';
+        return y;
+    }
+
+    isNotebookReady() {
+        const z = this.defaultNotebook.status == 'ready';
+        return z;
+    }
+
+    isLoading() {
+        return this.loading;
     }
 
     _getNotebookUrl(namespace) {
@@ -104,6 +148,20 @@ export class NotebookDefaultCard2 extends mixinBehaviors([AppLocalizeBehavior], 
     _getCreateNotebookUrl(namespace) {
         if (!namespace) return null;
         return `/jupyter/api/namespaces/${namespace}/createdefault`;
+    }
+
+    _forcePageLoad() {
+        window.addEventListener('load', function() {
+            alert('It\'s loaded!');
+            // eslint-disable-next-line max-len
+            const container = document.querySelector('main-page').shadowRoot.querySelector('main neon-animated-pages neon-animatable dashboard-view').shadowRoot.querySelector('notebook-default-card2').shadowRoot.querySelector('#refreshingDetail');
+            const content = container.innerHTML;
+            container.innerHTML= content;
+
+            // eslint-disable-next-line no-console
+            console.log('Refreshed');
+        });
+        // document.addEventListener('load', this.test());
     }
 
     _connectNotebook() {
@@ -140,13 +198,10 @@ export class NotebookDefaultCard2 extends mixinBehaviors([AppLocalizeBehavior], 
         this.loading = true;
         try {
             this.defaultNotebook = await response.notebook;
-            this.defaultNotebookExists = this.defaultNotebook.name?
-                true : false;
+            this.test();
         } catch (err) {
             this._onError();
         }
-        this.message = this.defaultNotebook.name ?
-            '' : 'notebookCard.errNoNotebooks';
         this.loading = false;
     }
 
@@ -155,6 +210,7 @@ export class NotebookDefaultCard2 extends mixinBehaviors([AppLocalizeBehavior], 
      */
     _onError() {
         this.message = 'notebookCard.errRetrievingNotebooks';
+        alert(this.message);
     }
 
     // _pollUntilAnswer(namespace) {

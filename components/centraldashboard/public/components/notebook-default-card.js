@@ -29,7 +29,7 @@ export class NotebookDefaultCard extends mixinBehaviors([AppLocalizeBehavior], u
     static get template() {
         return html([`
             <style>${css.toString()}</style>
-            ${template.toString()}
+            ${template}
         `]);
     }
 
