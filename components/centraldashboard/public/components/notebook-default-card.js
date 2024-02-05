@@ -32,20 +32,47 @@ export class NotebookDefaultCard
      */
     static get properties() {
         return {
-            user: {type: String, value: 'Loading...'},
-            namespaces: Array,
-            ownedNamespace: {type: Object, value: () => ({})},
-            newContribEmail: String,
+            namespaces: String,
             contribError: Object,
-            contributorInputEl: Object,
+            namespace: String,
+            defaultNotebook: {type: Object, value: undefined},
+            loading: Boolean,
+            loaded: {
+                type: Boolean,
+                computed: '_forcePageLoad()',
+            },
         };
     }
+
+    // Functions to render the HTML correctly
+    _isNotebookUndefined(t) {
+        this.defaultNotebook = t;
+        const x = this.defaultNotebook === undefined;
+        return x;
+    }
+
+    isNotebookEmpty(t) {
+        this.defaultNotebook = t;
+        const y = this.defaultNotebook.name == '';
+        return y;
+    }
+
+    isNotebookReady(t) {
+        this.defaultNotebook = t;
+        const z = this.defaultNotebook.status.phase == 'ready';
+        return z;
+    }
+
+    isLoading() {
+        return this.loading;
+    }
+
     /**
      * Main ready method for Polymer Elements.
      */
     ready() {
         super.ready();
-        this.contributorInputEl = this.$.ContribEmail;
+        // this.contributorInputEl = this.$.ContribEmail;
     }
 
     /**
@@ -87,6 +114,14 @@ export class NotebookDefaultCard
         this.contributorList = e.detail.response;
         this.newContribEmail = this.contribCreateError = '';
     }
+    handlechFetNotebook(e) {
+        if (e.detail.error) {
+            const error = this._isolateErrorFromIronRequest(e);
+            alert(error);
+        }
+        this.defaultNotebook = e.detail.response.notebook;
+    }
+
     /**
      * Iron-Ajax response / error handler for removeContributor
      * @param {IronAjaxEvent} e
@@ -105,10 +140,21 @@ export class NotebookDefaultCard
      * Iron-Ajax error handler for getContributors
      * @param {IronAjaxEvent} e
      */
+    handleNotebookFetchErrpr(e) {
+        const error = this._isolateErrorFromIronRequest(e);
+        this.contribError = error;
+        alert(error);
+        this.$.ContribError.show();
+    }
+
+    /**
+     * Iron-Ajax error handler for getContributors
+     * @param {IronAjaxEvent} e
+     */
     onContribFetchError(e) {
         const error = this._isolateErrorFromIronRequest(e);
         this.contribError = error;
-        this.$.ContribError.show();
+        alert(error);
     }
 }
 /* eslint-disable max-len */
