@@ -3,7 +3,8 @@ template(is='dom-if', if='[[securityMessages.length]]')
         security-messages-card(messages='[[securityMessages]]')
 div#grid
     .defaultNotebook
-        notebook-default-card2(namespace='[[namespace]]')
+        paper-card#DefaultNotebookCard(heading="{{localize('dashboardView.headingQuickLinks')}}")
+            notebook-default-card(namespace='[[namespace]]', language='[[language]]', resources='[[resources]]')
     .column
         paper-card#Quick-Links(heading="{{localize('dashboardView.headingQuickLinks')}}")
             template(is='dom-repeat', items='[[quickLinks]]')

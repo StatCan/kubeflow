@@ -1,13 +1,8 @@
-iron-ajax#GetDefaultNotebook(url='/jupyter/api/namespaces/[[namespace]]/createdefault', handle-as='json', loading='{{loadingDefault}}')
-iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespace]]/createdefault', headers='{"Content-Type": "application/json"}')
-paper-card#DefaultNotebookCard
-    neon-animatable.Main-Content
-        paper-card#DefaultNotebook(
-                heading='Default Notebook')
-                    p {{localize('landingPage.landingDesc')}
-                    paper-icon-button.button(icon='open-in-new',
-                        slot='item-icon', alt='[[item.text]]', tabindex=-1)
-                    aside {{localize('landingPage.landingDesc')}} 
-                        a(href='https://statcan-aaw.slack.com', tabindex='-1', target="_blank") {{localize('landingPage.landingDesc')}
-                    .actions
-                    paper-button(on-click='_createDefaultNotebook') {{localize('landingPage.landingDesc')}
+iron-ajax#AddContribAjax(method='POST', url='/api/workgroup/add-contributor/[[ownedNamespace.namespace]]',
+    on-response='handleContribCreate', on-error='handleContribCreate', handle-as='json', content-type='application/json')
+iron-ajax#GetContribsAjax(auto='[[!empty(ownedNamespace)]]', url='/api/workgroup/get-contributors/[[ownedNamespace.namespace]]',
+    last-response='{{contributorList}}', on-error='onContribFetchError', handle-as='json')   
+p {{localize('dashboardView.headingQuickLinks')}}
+    paper-toast#ContribError(duration=5000)
+        | {{localize('manageUsersViewContributor.errorContributor', 'ownedNamespace', ownedNamespace.namespace)}}
+        strong [[contribError]]
