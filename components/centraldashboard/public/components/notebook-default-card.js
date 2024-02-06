@@ -33,10 +33,10 @@ export class NotebookDefaultCard
     static get properties() {
         return {
             namespaces: String,
-            contribError: Object,
+            notebookError: Object,
             namespace: String,
             defaultNotebook: {type: Object, value: undefined},
-            loading: Boolean,
+            loading: {type: Boolean, value: false},
             loaded: {
                 type: Boolean,
                 computed: '_forcePageLoad()',
@@ -57,14 +57,15 @@ export class NotebookDefaultCard
         return y;
     }
 
+    isNotebookPvcExist(t) {
+        this.defaultNotebook = t;
+        return true;
+    }
+
     isNotebookReady(t) {
         this.defaultNotebook = t;
         const z = this.defaultNotebook.status.phase == 'ready';
         return z;
-    }
-
-    isLoading() {
-        return this.loading;
     }
 
     /**
@@ -75,15 +76,36 @@ export class NotebookDefaultCard
         // this.contributorInputEl = this.$.ContribEmail;
     }
 
-    /**
-     * Triggers an API call to create a new Contributor
-     */
-    addNewContrib() {
-        // Need to call the api directly here.
-        const api = this.$.AddContribAjax;
-        api.body = {contributor: this.newContribEmail};
-        api.generateRequest();
+    _connectNotebook() {
+        // eslint-disable-next-line max-len
+        window.open(`/notebook/${this.namespace}/${this.defaultNotebook.name}/`);
     }
+
+    _detailNotebook() {
+        // Possibly need the language flag beforehand and or the jupyter
+        // eslint-disable-next-line max-len
+        window.open(`/notebook/details/${this.namespace}/${this.defaultNotebook.name}/`);
+    }
+
+    async _createDefaultNotebook() {
+        // Disable the create button
+        this.loading = true;
+        // Create the default notebook
+        const APICreateDefault = this.$.CreateDefaultNotebook;
+
+        await APICreateDefault.generateRequest().completes.catch((e) => e);
+        setInterval(() => { }, 1000);
+        // So the errors and callbacks can schedule
+        if (this.error && this.error.response) {
+            if (this.error.response.error) {
+                this.set('error', {response: {
+                    error: 'registrationPage.errCreateNotebook',
+                    namespace: this.namespace,
+                }});
+            }
+        }
+    }
+
     /**
      * Takes an event from iron-ajax and isolates the error from a request that
      * failed
@@ -98,23 +120,16 @@ export class NotebookDefaultCard
      * Iron-Ajax response / error handler for addNewContributor
      * @param {IronAjaxEvent} e
      */
-    handleContribCreate(e) {
+    handleNotebookCreate(e) {
         if (e.detail.error) {
-            const error = this._isolateErrorFromIronRequest(e);
-            if (error.search('fdi') === -1) {
-                this.contribCreateError =
-                    'NotebookDefaultCard.errorCreateGeneral';
-                return;
-            } else {
-                this.contribCreateError =
-                    'NotebookDefaultCard.errorCreateFDI';
-                return;
-            }
+            this.contribCreateError = e;
         }
-        this.contributorList = e.detail.response;
-        this.newContribEmail = this.contribCreateError = '';
+        this.defaultNotebook = e.detail.response.notebook;
+        this.contribCreateError = '';
+        this.loading = false;
     }
-    handlechFetNotebook(e) {
+
+    handlechFechtNotebook(e) {
         if (e.detail.error) {
             const error = this._isolateErrorFromIronRequest(e);
             alert(error);
@@ -123,38 +138,39 @@ export class NotebookDefaultCard
     }
 
     /**
-     * Iron-Ajax response / error handler for removeContributor
-     * @param {IronAjaxEvent} e
-     */
-    handleContribDelete(e) {
-        if (e.detail.error) {
-            // const error = this._isolateErrorFromIronRequest(e);
-            this.contribCreateError =
-                'NotebookDefaultCard.errorDeleteGeneral';
-            return;
-        }
-        this.contributorList = e.detail.response;
-        this.newContribEmail = this.contribCreateError = '';
-    }
-    /**
      * Iron-Ajax error handler for getContributors
      * @param {IronAjaxEvent} e
      */
-    handleNotebookFetchErrpr(e) {
+    handleNotebookFetchError(e) {
         const error = this._isolateErrorFromIronRequest(e);
-        this.contribError = error;
+        this.notebookError = error;
         alert(error);
-        this.$.ContribError.show();
     }
 
     /**
      * Iron-Ajax error handler for getContributors
      * @param {IronAjaxEvent} e
      */
-    onContribFetchError(e) {
+    handleNotebookCreateError(e) {
         const error = this._isolateErrorFromIronRequest(e);
-        this.contribError = error;
+        this.notebookError = error;
         alert(error);
+    }
+
+    _forcePageLoad() {
+        setInterval(() => {
+            this._reload();
+        }, 5000);
+    }
+
+    _reload() {
+        // eslint-disable-next-line max-len
+        const container = document.querySelector('main-page').shadowRoot.querySelector('main neon-animated-pages neon-animatable dashboard-view').shadowRoot.querySelector('#DefaultNotebookCard');
+        const content = container.innerHTML;
+        container.innerHTML= content;
+        // this line is to watch the result in console , you can remove it later
+        // eslint-disable-next-line no-console
+        console.log('Refreshed');
     }
 }
 /* eslint-disable max-len */

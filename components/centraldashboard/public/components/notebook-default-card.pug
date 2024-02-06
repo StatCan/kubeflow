@@ -1,18 +1,22 @@
-iron-ajax#AddContribAjax(method='POST', url='/jupyter/api/namespaces/[[namespace]]/createdefault',
-    on-response='handleContribCreate', on-error='handleContribCreate', handle-as='json', content-type='application/json')  
+iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespace]]/createdefault',
+    on-response='handleNotebookCreate', on-error='handleNotebookCreateError', handle-as='json', content-type='application/json')  
 iron-ajax#GetDefaultNotebook(auto, method='GET', url='/jupyter/api/namespaces/[[namespace]]/defaultnotebook',
-    on-response='handlechFetNotebook', on-error='handleNotebookFetch', handle-as='json', content-type='application/json')
-p {{localize('dashboardView.headingQuickLinks')}}
+    on-response='handlechFechtNotebook', on-error='handleNotebookFetchError', handle-as='json', content-type='application/json')
 template(is='dom-if', if='[[_isNotebookUndefined(defaultNotebook)]]')
-    p {{'Data Not here'}}
+    p {{localize('notebookDefaultCard.txtDataLoading')}}
 template(is='dom-if', if='[[!_isNotebookUndefined(defaultNotebook)]]')
     template(is='dom-if', if='[[isNotebookEmpty(defaultNotebook)]]')
-        p {{'Data came back, no default notebook'}}
+        p {{localize('notebookDefaultCard.txtNoDefaultNotebook')}}
+        paper-button(on-click='_createDefaultNotebook') {{localize('notebookDefaultCard.create')}}
     template(is='dom-if', if='[[!isNotebookEmpty(defaultNotebook)]]')
         template(is='dom-if', if='[[!isNotebookReady(defaultNotebook)]]')
-            p {{'Data came back, NDefault notebook exists, not ready'}}
+            p {{localize('notebookDefaultCard.txtDefaultNotReady')}}
         template(is='dom-if', if='[[isNotebookReady(defaultNotebook)]]')
             p {{'Data came back, NDefault notebook exists,  ready'}}
+            p {{defaultNotebook.serverType}}
+            p {{defaultNotebook.name}}
+            paper-button(on-click='_detailNotebook') {{localize('notebookDefaultCard.details')}}
+            paper-button(on-click='_connectNotebook') {{localize('notebookDefaultCard.connect')}}
     paper-toast#ContribError(duration=5000)
-        | {{localize('manageUsersViewContributor.errorContributor', 'ownedNamespace', ownedNamespace.namespace)}}
+        | {{localize('notebookDefaultCard.errorDefaultNotebookFetch')}}
         strong [[contribError]]
