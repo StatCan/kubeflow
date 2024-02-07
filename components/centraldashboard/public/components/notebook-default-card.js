@@ -1,6 +1,7 @@
 import '@polymer/iron-ajax/iron-ajax.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/paper-card/paper-card.js';
 import '@polymer/iron-icons/social-icons.js';
 import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/paper-ripple/paper-ripple.js';
@@ -32,40 +33,23 @@ export class NotebookDefaultCard
      */
     static get properties() {
         return {
-            namespaces: String,
             notebookError: Object,
             namespace: String,
-            defaultNotebook: {type: Object, value: undefined},
             loading: {type: Boolean, value: false},
-            loaded: {
-                type: Boolean,
-                computed: '_forcePageLoad()',
-            },
         };
     }
 
     // Functions to render the HTML correctly
     _isNotebookUndefined(t) {
-        this.defaultNotebook = t;
-        const x = this.defaultNotebook === undefined;
-        return x;
+        return t.notebook === undefined;
     }
 
-    isNotebookEmpty(t) {
-        this.defaultNotebook = t;
-        const y = this.defaultNotebook.name == '';
-        return y;
+    _isNotebookEmpty(t) {
+        return t.notebook.name == '';
     }
 
-    isNotebookPvcExist(t) {
-        this.defaultNotebook = t;
-        return true;
-    }
-
-    isNotebookReady(t) {
-        this.defaultNotebook = t;
-        const z = this.defaultNotebook.status.phase == 'ready';
-        return z;
+    _isNotebookReady(t) {
+        return t.notebook.status.phase == 'ready';
     }
 
     /**
@@ -73,7 +57,6 @@ export class NotebookDefaultCard
      */
     ready() {
         super.ready();
-        // this.contributorInputEl = this.$.ContribEmail;
     }
 
     _connectNotebook() {
@@ -104,6 +87,8 @@ export class NotebookDefaultCard
                 }});
             }
         }
+        // Temp fix for refreshing data
+        window.location.reload();
     }
 
     /**
@@ -116,25 +101,18 @@ export class NotebookDefaultCard
         const bd = e.detail.request.response||{};
         return bd.error || e.detail.error || e.detail;
     }
+
     /**
      * Iron-Ajax response / error handler for addNewContributor
      * @param {IronAjaxEvent} e
      */
     handleNotebookCreate(e) {
         if (e.detail.error) {
-            this.contribCreateError = e;
+            this.notebookCreate = e;
         }
         this.defaultNotebook = e.detail.response.notebook;
-        this.contribCreateError = '';
+        this.notebookCreate = '';
         this.loading = false;
-    }
-
-    handlechFechtNotebook(e) {
-        if (e.detail.error) {
-            const error = this._isolateErrorFromIronRequest(e);
-            alert(error);
-        }
-        this.defaultNotebook = e.detail.response.notebook;
     }
 
     /**
@@ -144,7 +122,8 @@ export class NotebookDefaultCard
     handleNotebookFetchError(e) {
         const error = this._isolateErrorFromIronRequest(e);
         this.notebookError = error;
-        alert(error);
+        // eslint-disable-next-line no-console
+        console.log(error);
     }
 
     /**
@@ -154,25 +133,10 @@ export class NotebookDefaultCard
     handleNotebookCreateError(e) {
         const error = this._isolateErrorFromIronRequest(e);
         this.notebookError = error;
-        alert(error);
-    }
-
-    _forcePageLoad() {
-        setInterval(() => {
-            this._reload();
-        }, 5000);
-    }
-
-    _reload() {
-        // eslint-disable-next-line max-len
-        const container = document.querySelector('main-page').shadowRoot.querySelector('main neon-animated-pages neon-animatable dashboard-view').shadowRoot.querySelector('#DefaultNotebookCard');
-        const content = container.innerHTML;
-        container.innerHTML= content;
-        // this line is to watch the result in console , you can remove it later
         // eslint-disable-next-line no-console
-        console.log('Refreshed');
+        console.log(error);
     }
 }
-/* eslint-disable max-len */
-customElements.define('notebook-default-card', NotebookDefaultCard
-);
+
+
+customElements.define('notebook-default-card', NotebookDefaultCard);
