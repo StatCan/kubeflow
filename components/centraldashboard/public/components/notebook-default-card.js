@@ -10,8 +10,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 
 import {html, PolymerElement} from '@polymer/polymer';
 
-import './resources/paper-chip.js';
-import './resources/md2-input/md2-input.js';
+import './card-styles.js';
 import css from './notebook-default-card.css';
 import template from './notebook-default-card.pug';
 // eslint-disable-next-line max-len
@@ -137,6 +136,5 @@ export class NotebookDefaultCard
         console.log(error);
     }
 }
-
 
 customElements.define('notebook-default-card', NotebookDefaultCard);
