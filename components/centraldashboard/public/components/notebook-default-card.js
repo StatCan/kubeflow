@@ -51,22 +51,22 @@ export class NotebookDefaultCard
         return t.notebook.status.phase == 'ready';
     }
 
-    /**
-     * Main ready method for Polymer Elements.
-     */
-    ready() {
-        super.ready();
-    }
-
     _connectNotebook() {
         // eslint-disable-next-line max-len
-        window.open(`/notebook/${this.namespace}/${this.defaultNotebook.name}/`);
+        window.open(`/notebook/${this.namespace}/${this.defaultNotebook.notebook.name}/`);
     }
 
     _detailNotebook() {
         // Possibly need the language flag beforehand and or the jupyter
         // eslint-disable-next-line max-len
-        window.open(`/notebook/details/${this.namespace}/${this.defaultNotebook.name}/`);
+        window.open(`/notebook/details/${this.namespace}/${this.defaultNotebook.notebook.name}/`);
+    }
+
+    /**
+     * Main ready method for Polymer Elements.
+     */
+    ready() {
+        super.ready();
     }
 
     async _createDefaultNotebook() {

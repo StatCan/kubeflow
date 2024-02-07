@@ -1,53 +1,81 @@
-:host {
-    background: white;
-    position: relative;
+paper-card {
+    border-radius: 5px;
+    width: 100%;
+    padding-bottom: 16px;
+    font-size: 14px;
+    --paper-card-header-color: #202124;
+    --paper-card-header: {
+        @apply --dashboard-card-header;
+    }
+    --paper-card-header-text: {
+        font-size: 16px;
+        font-weight: 500;
+        padding: 0 1em;
+        flex: 1;
+    };
+    --paper-card-content: {
+        font-size: 14px;
+    }
 }
-h1, h2 {
-    font-family: Google Sans;
-    font-size: 1.2em;
-    margin: 0;
+paper-card {
+    --paper-item-body-two-line-min-height: 2em;
 }
-h1 {
-    color: black;
-    padding: 1rem;
-    border-bottom: 1px solid var(--border-color);
-}
-article:not(:first-of-type) {
-    margin-top: 1.5em;
-}
-h2 {
-    @apply --layout-horizontal;
-    @apply --layout-center;
+
+paper-icon-item {
+    @apply --layout-flex;
+    @apply --layout-justified;
+    @apply --layout-horizontal-reverse;
     font-size: 1em;
-    font-weight: 500;
-    color: var(--subheading-color);
-    margin: .5em 0;
+    overflow: hidden;
+    --paper-item-icon-width: 40px;
+    --paper-icon-item: {
+        font-weight: 500;
+    };
+    --paper-item-icon: {
+        color: var(--icon-color);
+        border-radius: 50%;
+    };
+    --paper-item-focused-before: {
+        /* Approximates the hover style since it uses opacity */
+        background: var(--google-grey-700);
+    };
+    --paper-icon-button-ink-color: var(--accent-color);
 }
-h2 .icon {
-    color: var(--accent-color);
-    margin-right: 1rem;
-    /* Because Hamburger icon has a padding area for ripple*/
-    padding-left: .6rem;
-}
-.content {
-    margin-left: calc(1.6rem + 24px);
-    color: var(--content-color);
-    font-size: .9em;
-}
-.content.small {
-    max-width: 640px;
-}
-#ContribError {
-    background: #F44336
-}
-.contributor {
+
+paper-icon-item:not(.external) {
     @apply --layout-horizontal;
-    position: relative;
-    padding: .5em;
-    flex-wrap: wrap;
-    border: 2px solid var(--action-color);
-    border-radius: 3px;
-    transition: border-color .25s;
-    display: block;
+    justify-content: unset;
 }
-[hidden] {display: none !important}
+
+paper-icon-item.external {
+    --paper-item-icon: {
+        color: var(--external-icon-color);
+    };
+}
+
+
+.link:hover, .link:active {
+    background-color: var(--google-grey-100);
+}
+
+.link paper-icon-item {
+    padding: .5em 1em;
+}
+
+paper-progress {
+    width: 100%;
+    --paper-progress-active-color: #669df6;
+    --paper-progress-container-color: #f1f3f4;
+}
+
+.data-content {
+    padding: 0.5em 1em;
+}
+
+.button-div {
+    display: flex;
+    justify-content: center;
+}
+paper-button {
+    color: var(--paper-blue-700);
+}
