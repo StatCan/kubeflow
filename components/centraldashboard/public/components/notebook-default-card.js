@@ -32,9 +32,10 @@ export class NotebookDefaultCard
      */
     static get properties() {
         return {
-            notebookError: Object,
+            defaultNotebookError: Object,
             namespace: String,
             loading: {type: Boolean, value: false},
+            error: Object,
         };
     }
 
@@ -75,19 +76,18 @@ export class NotebookDefaultCard
         // Create the default notebook
         const APICreateDefault = this.$.CreateDefaultNotebook;
 
-        await APICreateDefault.generateRequest().completes.catch((e) => e);
+        await APICreateDefault.generateRequest().completes.catch((e) => {
+            this.error = e;
+        });
+
         setInterval(() => { }, 1000);
         // So the errors and callbacks can schedule
         if (this.error && this.error.response) {
-            if (this.error.response.error) {
-                this.set('error', {response: {
-                    error: 'registrationPage.errCreateNotebook',
-                    namespace: this.namespace,
-                }});
+            if (!this.error) {
+                // Temp fix for refreshing data
+                // window.location.reload();
             }
         }
-        // Temp fix for refreshing data
-        window.location.reload();
     }
 
     /**
@@ -107,10 +107,12 @@ export class NotebookDefaultCard
      */
     handleNotebookCreate(e) {
         if (e.detail.error) {
-            this.notebookCreate = e;
+            this.defaultNotebookError = e;
+            this.$.DefaultNotebookError.show();
+        } else {
+            this.defaultNotebook = e.detail.response.notebook;
+            this.defaultNotebookError = '';
         }
-        this.defaultNotebook = e.detail.response.notebook;
-        this.notebookCreate = '';
         this.loading = false;
     }
 
@@ -119,10 +121,8 @@ export class NotebookDefaultCard
      * @param {IronAjaxEvent} e
      */
     handleNotebookFetchError(e) {
-        const error = this._isolateErrorFromIronRequest(e);
-        this.notebookError = error;
-        // eslint-disable-next-line no-console
-        console.log(error);
+        this.defaultNotebookError = this._isolateErrorFromIronRequest(e);
+        this.$.DefaultNotebookError.show();
     }
 
     /**
@@ -130,10 +130,8 @@ export class NotebookDefaultCard
      * @param {IronAjaxEvent} e
      */
     handleNotebookCreateError(e) {
-        const error = this._isolateErrorFromIronRequest(e);
-        this.notebookError = error;
-        // eslint-disable-next-line no-console
-        console.log(error);
+        this.defaultNotebookError = this._isolateErrorFromIronRequest(e);
+        this.$.DefaultNotebookError.show();
     }
 }
 

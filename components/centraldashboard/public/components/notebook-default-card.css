@@ -79,3 +79,8 @@ paper-progress {
 paper-button {
     color: var(--paper-blue-700);
 }
+
+paper-toast#DefaultNotebookError {
+    background: #F44336;
+    left: 240px !important;
+}
