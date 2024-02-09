@@ -35,11 +35,10 @@ export class NotebookDefaultCard
             defaultNotebookError: Object,
             namespace: String,
             loading: {type: Boolean, value: false},
-            error: Object,
         };
     }
 
-    // Functions to render the HTML correctly
+    // Functions to render the HTML template ifs correctly
     _isNotebookUndefined(t) {
         return t.notebook === undefined;
     }
@@ -51,6 +50,10 @@ export class NotebookDefaultCard
     _isNotebookReady(t) {
         return t.notebook.status.phase == 'ready';
     }
+    _isCreateDisabled() {
+        return this.loading;
+    }
+
 
     _connectNotebook() {
         // eslint-disable-next-line max-len
@@ -75,19 +78,7 @@ export class NotebookDefaultCard
         this.loading = true;
         // Create the default notebook
         const APICreateDefault = this.$.CreateDefaultNotebook;
-
-        await APICreateDefault.generateRequest().completes.catch((e) => {
-            this.error = e;
-        });
-
-        setInterval(() => { }, 1000);
-        // So the errors and callbacks can schedule
-        if (this.error && this.error.response) {
-            if (!this.error) {
-                // Temp fix for refreshing data
-                // window.location.reload();
-            }
-        }
+        await APICreateDefault.generateRequest().completes.catch((e) => e);
     }
 
     /**
@@ -102,36 +93,26 @@ export class NotebookDefaultCard
     }
 
     /**
-     * Iron-Ajax response / error handler for addNewContributor
+     * Iron-Ajax response for creating new Default Notebook
      * @param {IronAjaxEvent} e
      */
     handleNotebookCreate(e) {
-        if (e.detail.error) {
-            this.defaultNotebookError = e;
-            this.$.DefaultNotebookError.show();
-        } else {
-            this.defaultNotebook = e.detail.response.notebook;
-            this.defaultNotebookError = '';
-        }
+        this.defaultNotebook = e.detail.response.notebook;
+        this.defaultNotebookError = '';
         this.loading = false;
     }
 
-    /**
-     * Iron-Ajax error handler for getContributors
-     * @param {IronAjaxEvent} e
-     */
+
+    // Methods to handle errors when triggered by ajax called
     handleNotebookFetchError(e) {
         this.defaultNotebookError = this._isolateErrorFromIronRequest(e);
         this.$.DefaultNotebookError.show();
+        this.loading = false;
     }
-
-    /**
-     * Iron-Ajax error handler for getContributors
-     * @param {IronAjaxEvent} e
-     */
     handleNotebookCreateError(e) {
         this.defaultNotebookError = this._isolateErrorFromIronRequest(e);
         this.$.DefaultNotebookError.show();
+        this.loading = false;
     }
 }
 

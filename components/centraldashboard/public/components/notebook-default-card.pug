@@ -10,7 +10,7 @@ paper-card#DefaultNotebookCard(heading="{{localize('notebookDefaultCard.txtDefau
             template(is='dom-if', if='[[_isNotebookEmpty(defaultNotebook)]]')
                 p {{localize('notebookDefaultCard.txtNoDefaultNotebook')}}
                 div.button-div
-                    paper-button(on-click='_createDefaultNotebook') {{localize('notebookDefaultCard.create')}}
+                    paper-button(on-click='_createDefaultNotebook' disabled='_isCreateDisabled) {{localize('notebookDefaultCard.create')}}
             template(is='dom-if', if='[[!_isNotebookEmpty(defaultNotebook)]]')
                 template(is='dom-if', if='[[!_isNotebookReady(defaultNotebook)]]')
                     p {{localize('notebookDefaultCard.txtDefaultNotReady')}}
@@ -20,6 +20,6 @@ paper-card#DefaultNotebookCard(heading="{{localize('notebookDefaultCard.txtDefau
                         div.button-div
                             paper-button(on-click='_detailNotebook') {{localize('notebookDefaultCard.details')}}
                             paper-button(on-click='[[_connectNotebook(defaultNotebook)]]') {{localize('notebookDefaultCard.connect')}}
-paper-toast#DefaultNotebookError(duration=8000000)
+paper-toast#DefaultNotebookError(duration=8000)
     | {{localize('notebookDefaultCard.errorDefaultNotebook')}}
     strong [[defaultNotebookError]]

@@ -82,5 +82,10 @@ paper-button {
 
 paper-toast#DefaultNotebookError {
     background: #F44336;
-    left: 240px !important;
+}
+
+@media only screen and (min-width:1770px) {
+    paper-toast#DefaultNotebookError {
+        left: 240px !important;
+    }
 }
