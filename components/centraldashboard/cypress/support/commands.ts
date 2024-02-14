@@ -77,3 +77,9 @@ Cypress.Commands.add('mockNotebookContentsRequest', (namespace: string, notebook
     fixture: 'contents',
   }).as('mockNotebookContentsRequest');
 });
+
+Cypress.Commands.add('mockDefaultNotebook', (namespace: string) =>{
+  cy.intercept('GET', `/jupyter/api/namespaces/${namespace}/defaultnotebook`, {
+    fixture: 'defaultnotebook',
+  }).as('mockDefaultNotebook');
+})

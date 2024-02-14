@@ -10,7 +10,7 @@ paper-card#DefaultNotebookCard(heading="{{localize('notebookDefaultCard.txtDefau
             template(is='dom-if', if='[[_isNotebookEmpty(defaultNotebook)]]')
                 p {{localize('notebookDefaultCard.txtNoDefaultNotebook')}}
                 div.button-div
-                    paper-button(on-click='_createDefaultNotebook' disabled='_isCreateDisabled') {{localize('notebookDefaultCard.create')}}
+                    paper-button(on-click='_createDefaultNotebook' disabled='[[_isCreateDisabled()]]') {{localize('notebookDefaultCard.create')}}
             template(is='dom-if', if='[[!_isNotebookEmpty(defaultNotebook)]]')
                 template(is='dom-if', if='[[!_isNotebookReady(defaultNotebook)]]')
                     p {{localize('notebookDefaultCard.txtDefaultNotReady')}}

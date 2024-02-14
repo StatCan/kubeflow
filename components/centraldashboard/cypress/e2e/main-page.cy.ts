@@ -7,6 +7,8 @@ describe('Main Page', () => {
     cy.mockGetNotebooksRequest('test-namespace');
     cy.mockGetContributorsRequest('test-namespace');
     cy.mockNotebookContentsRequest('test-namespace', 'a-dog-breed-katib');
+    cy.mockDefaultNotebook('test-namespace');
+    
     cy.visit('/');
 
     cy.wait([
@@ -18,6 +20,9 @@ describe('Main Page', () => {
       '@mockGetContributorsRequest',
       '@mockNotebookContentsRequest',
     ]);
+
+   
+    cy.wait('@mockDefaultNotebook');
   });
 
   it('should access the dashboard', () => {
