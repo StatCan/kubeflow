@@ -19,7 +19,7 @@ paper-card#DefaultNotebookCard(heading="{{localize('notebookDefaultCard.txtDefau
                         p {{localize('notebookDefaultCard.type')}}: {{defaultNotebook.notebook.serverType}}
                         div.button-div
                             paper-button(on-click='_detailNotebook') {{localize('notebookDefaultCard.details')}}
-                            paper-button(on-click='[[_connectNotebook(defaultNotebook)]]') {{localize('notebookDefaultCard.connect')}}
+                            paper-button(on-click='_connectNotebook') {{localize('notebookDefaultCard.connect')}}
 paper-toast#DefaultNotebookError(duration=8000)
     |{{localize('notebookDefaultCard.errorDefaultNotebook')}}
     strong [[defaultNotebookError]]
