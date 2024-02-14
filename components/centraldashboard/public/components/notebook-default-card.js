@@ -33,9 +33,22 @@ export class NotebookDefaultCard
     static get properties() {
         return {
             defaultNotebookError: Object,
-            namespace: String,
+            namespace: {
+                type: String,
+                observer: '_namespaceChanged',
+                value: null,
+            },
             loading: {type: Boolean, value: false},
         };
+    }
+
+    /**
+     * Retrieves default notebook when namespace is selected.
+     * @param {string} newNamespace
+     */
+    _namespaceChanged(newNamespace) {
+        if (!newNamespace) return;
+        this.$['GetDefaultNotebook'].generateRequest();
     }
 
     _isNotebookReady() {

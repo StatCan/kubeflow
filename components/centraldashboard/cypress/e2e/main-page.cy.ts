@@ -103,7 +103,11 @@ describe('Main Page', () => {
 
     cy.visit('/');
 
-    cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest', '@mockEnvInfoRequest']);
+    cy.wait([
+      '@mockWorkgroupRequest', 
+      '@mockDashboardLinksRequest', 
+      '@mockEnvInfoRequest'
+    ]);
 
     cy.get('main-page').shadow().find('#Menu').click();
     cy.get('main-page').shadow().find('a[href="/manage-users?ns=test-namespace-2"]').should('not.exist');
@@ -142,14 +146,15 @@ describe('Main Page', () => {
         }
       ]
     }).as('mockGetNotebooksRequest2');
-    cy.intercept('GET', `/notebook/test-namespace-2/test-notebook-for-testing/api/contents`, {
-      statusCode: 504,
-    }).as('mockNotebookContentsRequest2');
+    cy.intercept('GET', `/jupyter/api/namespaces/test-namespace-2/defaultnotebook`, {
+      statusCode: 500,
+    }).as('mockDefaultNotebook2');
     cy.get('main-page').shadow().find('#NamespaceSelector').click({force: true});
     cy.get('main-page').shadow().find('#NamespaceSelector').shadow().find('paper-menu-button > paper-listbox > paper-item:nth-child(2)').click({force: true});
     cy.wait([
       '@mockActivitiesRequest',
-      '@mockGetNotebooksRequest2'
+      '@mockGetNotebooksRequest2',
+      '@mockDefaultNotebook2'
     ]);
 
     cy.url().should('eq', 'http://localhost:8080/?ns=test-namespace-2');
