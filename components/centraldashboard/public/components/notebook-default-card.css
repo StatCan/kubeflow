@@ -1,73 +1,3 @@
-paper-card {
-    border-radius: 5px;
-    width: 100%;
-    padding-bottom: 16px;
-    font-size: 14px;
-    --paper-card-header-color: #202124;
-    --paper-card-header: {
-        @apply --dashboard-card-header;
-    }
-    --paper-card-header-text: {
-        font-size: 16px;
-        font-weight: 500;
-        padding: 0 1em;
-        flex: 1;
-    };
-    --paper-card-content: {
-        font-size: 14px;
-    }
-}
-paper-card {
-    --paper-item-body-two-line-min-height: 2em;
-}
-
-paper-icon-item {
-    @apply --layout-flex;
-    @apply --layout-justified;
-    @apply --layout-horizontal-reverse;
-    font-size: 1em;
-    overflow: hidden;
-    --paper-item-icon-width: 40px;
-    --paper-icon-item: {
-        font-weight: 500;
-    };
-    --paper-item-icon: {
-        color: var(--icon-color);
-        border-radius: 50%;
-    };
-    --paper-item-focused-before: {
-        /* Approximates the hover style since it uses opacity */
-        background: var(--google-grey-700);
-    };
-    --paper-icon-button-ink-color: var(--accent-color);
-}
-
-paper-icon-item:not(.external) {
-    @apply --layout-horizontal;
-    justify-content: unset;
-}
-
-paper-icon-item.external {
-    --paper-item-icon: {
-        color: var(--external-icon-color);
-    };
-}
-
-
-.link:hover, .link:active {
-    background-color: var(--google-grey-100);
-}
-
-.link paper-icon-item {
-    padding: .5em 1em;
-}
-
-paper-progress {
-    width: 100%;
-    --paper-progress-active-color: #669df6;
-    --paper-progress-container-color: #f1f3f4;
-}
-
 .data-content {
     padding: 0.5em 1em;
 }
@@ -76,8 +6,13 @@ paper-progress {
     display: flex;
     justify-content: center;
 }
+
 paper-button {
     color: var(--paper-blue-700);
+}
+paper-button:disabled {
+    color:gray;
+    cursor: not-allowed;
 }
 
 paper-toast#DefaultNotebookError {

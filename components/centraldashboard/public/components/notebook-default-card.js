@@ -22,7 +22,9 @@ export class NotebookDefaultCard
     extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
     static get template() {
         return html([`
-            <style>${css.toString()}</style>
+        <style include="card-styles">
+            ${css.toString()}
+        </style>
             ${template()}
         `]);
     }
@@ -32,7 +34,7 @@ export class NotebookDefaultCard
      */
     static get properties() {
         return {
-            defaultNotebookError: Object,
+            defaultNotebookError: String,
             namespace: {
                 type: String,
                 observer: '_namespaceChanged',
@@ -54,9 +56,7 @@ export class NotebookDefaultCard
     _isNotebookReady() {
         return this.defaultNotebook.notebook.status.phase == 'ready';
     }
-    _isCreateDisabled() {
-        return this.loading;
-    }
+
     _getNamespace() {
         if (this.namespace == undefined) {
             return false;
