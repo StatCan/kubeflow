@@ -38,25 +38,18 @@ export class NotebookDefaultCard
         };
     }
 
-    // Functions to render the HTML template ifs correctly
-    _isNotebookUndefined(t) {
-        return t && t.notebook === undefined;
-    }
-
-    _isNotebookEmpty(t) {
-        return t == 'null';
-    }
-
-    _isNotebookReady(t) {
-        return t.notebook.status.phase == 'ready';
+    _isNotebookReady() {
+        return this.defaultNotebook.notebook.status.phase == 'ready';
     }
     _isCreateDisabled() {
         return this.loading;
     }
     _getNamespace() {
+        if (this.namespace == undefined) {
+            return false;
+        }
         return this.namespace;
     }
-
 
     _connectNotebook() {
         // eslint-disable-next-line max-len
