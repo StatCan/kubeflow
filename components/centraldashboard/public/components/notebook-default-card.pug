@@ -1,6 +1,6 @@
 iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespace]]/createdefault',
     on-response='handleNotebookCreate', on-error='handleNotebookCreateError', handle-as='json', content-type='application/json')  
-iron-ajax#GetDefaultNotebook(auto, method='GET', url='/jupyter/api/namespaces/[[namespace]]/defaultnotebook',
+iron-ajax#GetDefaultNotebook(auto, params="[[_getNamespace()]]" method='GET', url='/jupyter/api/namespaces/[[namespace]]/defaultnotebook',
     last-response='{{defaultNotebook}}', on-error='handleNotebookFetchError', handle-as='json', content-type='application/json')
 paper-card#DefaultNotebookCard(heading="{{localize('notebookDefaultCard.txtDefaultNotebook')}}")
     div.data-content

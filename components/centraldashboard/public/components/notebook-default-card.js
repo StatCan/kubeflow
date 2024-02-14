@@ -40,11 +40,11 @@ export class NotebookDefaultCard
 
     // Functions to render the HTML template ifs correctly
     _isNotebookUndefined(t) {
-        return t.notebook === undefined;
+        return t && t.notebook === undefined;
     }
 
     _isNotebookEmpty(t) {
-        return t.notebook.name == '';
+        return t == 'null';
     }
 
     _isNotebookReady(t) {
@@ -52,6 +52,9 @@ export class NotebookDefaultCard
     }
     _isCreateDisabled() {
         return this.loading;
+    }
+    _getNamespace() {
+        return this.namespace;
     }
 
 
@@ -79,6 +82,7 @@ export class NotebookDefaultCard
         // Create the default notebook
         const APICreateDefault = this.$.CreateDefaultNotebook;
         await APICreateDefault.generateRequest().completes.catch((e) => e);
+        this.loading = false;
     }
 
     /**
@@ -89,7 +93,7 @@ export class NotebookDefaultCard
      */
     _isolateErrorFromIronRequest(e) {
         const bd = e.detail.request.response||{};
-        return bd.error || e.detail.error || e.detail;
+        return bd.error || bd.log || e.detail.error || e.detail;
     }
 
     /**
