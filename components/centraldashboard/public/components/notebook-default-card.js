@@ -108,8 +108,11 @@ export class NotebookDefaultCard
 
     // Methods to handle errors when triggered by ajax called
     handleNotebookFetchError(e) {
-        this.defaultNotebookError = this._isolateErrorFromIronRequest(e);
-        this.$.DefaultNotebookError.show();
+        // If the error is not finding a default notebook, no need for toast
+        if (e.detail.request.response.status != 404) {
+            this.defaultNotebookError = this._isolateErrorFromIronRequest(e);
+            this.$.DefaultNotebookError.show();
+        }
         this.loading = false;
     }
     handleNotebookCreateError(e) {
