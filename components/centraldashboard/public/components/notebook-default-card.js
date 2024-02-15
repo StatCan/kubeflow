@@ -65,7 +65,7 @@ export class NotebookDefaultCard
     _detailNotebook() {
         // Possibly need the language flag beforehand and or the jupyter
         // eslint-disable-next-line max-len
-        window.open(`/notebook/details/${this.namespace}/${this.defaultNotebook.notebook.name}/`);
+        window.open(`/_/${this.language}/notebook/details/${this.namespace}/${this.defaultNotebook.notebook.name}/`);
     }
 
     /**

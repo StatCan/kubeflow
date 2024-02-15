@@ -19,7 +19,7 @@ paper-toast#DefaultNotebookError {
     background: #F44336;
 }
 
-@media only screen and (min-width:1770px) {
+@media only screen and (min-width:1270px) {
     paper-toast#DefaultNotebookError {
         left: 240px !important;
     }

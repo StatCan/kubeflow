@@ -312,6 +312,12 @@ iframe-container {
     }
 }
 
+@media only screen and (min-width:1270px) {
+    paper-toast#ErrorToast {
+        left: 240px !important;
+    }
+}
+
 
 [hides] {
     transition: opacity .25s
