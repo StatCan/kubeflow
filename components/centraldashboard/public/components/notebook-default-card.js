@@ -57,13 +57,6 @@ export class NotebookDefaultCard
         return this.defaultNotebook.notebook.status.phase == 'ready';
     }
 
-    _getNamespace() {
-        if (this.namespace == undefined) {
-            return false;
-        }
-        return this.namespace;
-    }
-
     _connectNotebook() {
         // eslint-disable-next-line max-len
         window.open(`/notebook/${this.namespace}/${this.defaultNotebook.notebook.name}/`);
@@ -98,8 +91,8 @@ export class NotebookDefaultCard
      * @return {string}
      */
     _isolateErrorFromIronRequest(e) {
-        const bd = e.detail.request.response||{};
-        return bd.error || bd.log || e.detail.error || e.detail;
+        const reqResp = e.detail.request.response||{};
+        return reqResp.error || reqResp.log || e.detail.error || e.detail;
     }
 
     /**
