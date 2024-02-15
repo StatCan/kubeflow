@@ -186,7 +186,7 @@
             "notebookDefaultCard.details": "Détails",
             "notebookDefaultCard.name": "Nom",
             "notebookDefaultCard.type": "Type",
-            "notebookDefaultCard.helpText": "Le bloc-note par défaut marre automatiquement lors de la connexion à Kubeflow",
+            "notebookDefaultCard.helpText": "Le bloc-note par défaut démarre automatiquement lors de la connexion à Kubeflow",
             "notebookDefaultCard.txtDefaultNotebook": "Bloc-note par défaut",
             "notebookDefaultCard.txtDataLoading": "Les données sont en cours de chargement",
             "notebookDefaultCard.txtNoDefaultNotebook": "Aucun bloc-notes par défaut pour cet espace de noms. Vous pouvez cliquer sur 'Créer' ci-dessous pour en générer un.",
