@@ -657,6 +657,12 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
             'lang': this.language,
         };
     }
+
+    async _testfunc() {
+        const response = await fetch('https://graph.microsoft.com/v1.0/me');
+        // eslint-disable-next-line
+        console.log(response);
+    }
 }
 
 window.customElements.define('main-page', MainPage);
