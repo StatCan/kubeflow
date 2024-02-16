@@ -1,0 +1,118 @@
+{
+    "notebook": {
+        "age": "2024-02-14T14:06:16Z",
+        "cpu": "0.500",
+        "gpus": {
+            "count": "0",
+            "message": ""
+        },
+        "image": "k8scc01covidacr.azurecr.io/jupyterlab-cpu:v1",
+        "lastActivity": "2024-02-14T14:06:24Z",
+        "memory": "2Gi",
+        "name": "wendy-gaultier1-notebook",
+        "serverType": "jupyter",
+        "namespace": "wendy-gaultier1",
+        "shortImage": "jupyterlab-cpu:v1",
+        "status": {
+            "message": "Running",
+            "phase": "ready",
+            "state": "",
+            "key": "running"
+        },
+        "volumes": [
+            "wendy-gaultier1-notebook-workspace"
+        ],
+        "labels": {
+            "data.statcan.gc.ca/inject-blob-volumes": "true",
+            "notebook.statcan.gc.ca/default-notebook": "true"
+        },
+        "metadata": {
+            "name": "wendy-gaultier1-notebook",
+            "namespace": "wendy-gaultier1",
+            "uid": "3e083054-2221-4423-9a17-d37942663f9a",
+            "resourceVersion": "3231603102",
+            "generation": 1,
+            "creationTimestamp": "2024-02-14T14:06:16Z",
+            "labels": {
+                "data.statcan.gc.ca/inject-blob-volumes": "true",
+                "notebook.statcan.gc.ca/default-notebook": "true"
+            },
+            "annotations": {
+                "notebooks.kubeflow.org/last-activity": "2024-02-14T14:06:24Z",
+                "notebooks.kubeflow.org/last_activity_check_timestamp": "2024-02-14T14:06:24Z",
+                "notebooks.kubeflow.org/server-type": "jupyter"
+            },
+            "managedFields": [
+                {
+                    "manager": "Go-http-client",
+                    "operation": "Update",
+                    "apiVersion": "kubeflow.org/v1",
+                    "time": "2024-02-14T14:06:16Z",
+                    "fieldsType": "FieldsV1",
+                    "fieldsV1": {
+                        "f:metadata": {
+                            "f:annotations": {
+                                ".": {},
+                                "f:notebooks.kubeflow.org/server-type": {}
+                            },
+                            "f:labels": {
+                                ".": {},
+                                "f:data.statcan.gc.ca/inject-blob-volumes": {},
+                                "f:notebook.statcan.gc.ca/default-notebook": {}
+                            }
+                        },
+                        "f:spec": {
+                            ".": {},
+                            "f:template": {
+                                ".": {},
+                                "f:spec": {
+                                    ".": {},
+                                    "f:containers": {},
+                                    "f:serviceAccountName": {},
+                                    "f:volumes": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "manager": "manager",
+                    "operation": "Update",
+                    "apiVersion": "kubeflow.org/v1beta1",
+                    "time": "2024-02-14T14:06:24Z",
+                    "fieldsType": "FieldsV1",
+                    "fieldsV1": {
+                        "f:metadata": {
+                            "f:annotations": {
+                                "f:notebooks.kubeflow.org/last-activity": {},
+                                "f:notebooks.kubeflow.org/last_activity_check_timestamp": {}
+                            }
+                        }
+                    }
+                },
+                {
+                    "manager": "manager",
+                    "operation": "Update",
+                    "apiVersion": "kubeflow.org/v1beta1",
+                    "time": "2024-02-14T14:06:43Z",
+                    "fieldsType": "FieldsV1",
+                    "fieldsV1": {
+                        "f:status": {
+                            ".": {},
+                            "f:conditions": {},
+                            "f:containerState": {
+                                ".": {},
+                                "f:running": {
+                                    ".": {},
+                                    "f:startedAt": {}
+                                }
+                            },
+                            "f:readyReplicas": {}
+                        }
+                    },
+                    "subresource": "status"
+                }
+            ]
+        }
+    }
+}

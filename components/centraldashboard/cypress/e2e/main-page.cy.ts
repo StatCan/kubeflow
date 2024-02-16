@@ -6,7 +6,8 @@ describe('Main Page', () => {
     cy.mockActivitiesRequest('test-namespace');
     cy.mockGetNotebooksRequest('test-namespace');
     cy.mockGetContributorsRequest('test-namespace');
-    cy.mockNotebookContentsRequest('test-namespace', 'a-dog-breed-katib');
+    cy.mockDefaultNotebook('test-namespace');
+    
     cy.visit('/');
 
     cy.wait([
@@ -16,7 +17,7 @@ describe('Main Page', () => {
       '@mockActivitiesRequest', 
       '@mockGetNotebooksRequest', 
       '@mockGetContributorsRequest',
-      '@mockNotebookContentsRequest',
+      '@mockDefaultNotebook'
     ]);
   });
 
@@ -27,9 +28,6 @@ describe('Main Page', () => {
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').should('exist');
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('iframe-link').should('exist').and('have.length', 1).and('have.prop', 'href', '/en/new?ns=test-namespace');
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('iframe-link').find('div.header').should('have.text', 'Create a new Notebook server');
-    // recent notebooks links
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebooks-card').should('exist');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebooks-card').shadow().find('iframe-link').should('have.length', 5);
     // documentation links
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').should('exist');
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').should('have.length', 4);
@@ -105,7 +103,11 @@ describe('Main Page', () => {
 
     cy.visit('/');
 
-    cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest', '@mockEnvInfoRequest']);
+    cy.wait([
+      '@mockWorkgroupRequest', 
+      '@mockDashboardLinksRequest', 
+      '@mockEnvInfoRequest'
+    ]);
 
     cy.get('main-page').shadow().find('#Menu').click();
     cy.get('main-page').shadow().find('a[href="/manage-users?ns=test-namespace-2"]').should('not.exist');
@@ -144,16 +146,18 @@ describe('Main Page', () => {
         }
       ]
     }).as('mockGetNotebooksRequest2');
-    cy.intercept('GET', `/notebook/test-namespace-2/test-notebook-for-testing/api/contents`, {
-      statusCode: 504,
-    }).as('mockNotebookContentsRequest2');
+    cy.intercept('GET', `/jupyter/api/namespaces/test-namespace-2/defaultnotebook`, {
+      statusCode: 500,
+    }).as('mockDefaultNotebook2');
     cy.get('main-page').shadow().find('#NamespaceSelector').click({force: true});
     cy.get('main-page').shadow().find('#NamespaceSelector').shadow().find('paper-menu-button > paper-listbox > paper-item:nth-child(2)').click({force: true});
-    cy.wait(['@mockActivitiesRequest', '@mockGetNotebooksRequest2', '@mockNotebookContentsRequest2']);
+    cy.wait([
+      '@mockActivitiesRequest',
+      '@mockGetNotebooksRequest2',
+      '@mockDefaultNotebook2'
+    ]);
 
     cy.url().should('eq', 'http://localhost:8080/?ns=test-namespace-2');
-    // see new list of recent notebooks
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebooks-card').shadow().find('header#message').should('have.text', "\n                No Notebooks in namespace test-namespace-2\n            ");
 
     // test links with new namespace
     cy.get('main-page').shadow().find('app-drawer').should('have.prop', 'opened', false);

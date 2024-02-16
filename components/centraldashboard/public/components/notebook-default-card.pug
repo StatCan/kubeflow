@@ -1,0 +1,24 @@
+iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespace]]/createdefault',
+    on-response='handleNotebookCreate', on-error='handleNotebookCreateError', handle-as='json', content-type='application/json')  
+iron-ajax#GetDefaultNotebook(method='GET', url='/jupyter/api/namespaces/[[namespace]]/defaultnotebook',
+    last-response='{{defaultNotebook}}', on-error='handleNotebookFetchError', handle-as='json', content-type='application/json')
+paper-card#DefaultNotebookCard(heading="{{localize('notebookDefaultCard.txtDefaultNotebook')}}")
+    div.data-content
+        paper-progress(indeterminate, class="slow", hidden$="[[!loading]]")
+        template(is='dom-if', if='[[!defaultNotebook]]')
+            p {{localize('notebookDefaultCard.helpText')}}
+            p {{localize('notebookDefaultCard.txtNoDefaultNotebook')}}
+                div.button-div
+                    paper-button(on-click='_createDefaultNotebook' disabled='[[loading]]') {{localize('notebookDefaultCard.create')}}
+        template(is='dom-if', if='[[defaultNotebook]]')
+            template(is='dom-if', if='[[!_isNotebookReady]]')
+                p {{localize('notebookDefaultCard.txtDefaultNotReady')}}
+            template(is='dom-if', if='[[_isNotebookReady]]')
+                    p {{localize('notebookDefaultCard.name')}}: {{defaultNotebook.notebook.name}}
+                    p {{localize('notebookDefaultCard.type')}}: {{defaultNotebook.notebook.serverType}}
+                    div.button-div
+                        paper-button(on-click='_detailNotebook') {{localize('notebookDefaultCard.details')}}
+                        paper-button(on-click='_connectNotebook') {{localize('notebookDefaultCard.connect')}}
+paper-toast#DefaultNotebookError(duration=8000)
+    |{{localize('notebookDefaultCard.errorDefaultNotebook')}}
+    strong [[defaultNotebookError]]

@@ -60,6 +60,12 @@ declare global {
        * and returns an object with a mock object of contents for the given notebook in the given namespace
        */
       mockNotebookContentsRequest(namespace: string, notebook: string): Chainable<void>;
+
+      /**
+       * Custom command to mock request at '/jupyter/namespaces/<namespace>/defaultnotebook'
+       * and returns an object with a mock object of contents for the given default notebook in the given namespace
+       */
+      mockDefaultNotebook(namespace: string): Chainable<void>;
     }
   }
 }
