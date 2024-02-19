@@ -57,9 +57,9 @@ export class NotebookDefaultCard
         return this.defaultNotebook.notebook.status.phase == 'ready';
     }
 
-    _connectNotebook() {
-        // eslint-disable-next-line max-len
-        window.open(`/notebook/${this.namespace}/${this.defaultNotebook.notebook.name}/`);
+    // Changing this code for now to open the notebooks page instead
+    _goToNotebook() {
+        window.open(`/_/${this.language}/?ns=/${this.namespace}/`);
     }
 
     _detailNotebook() {
