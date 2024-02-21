@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import '@polymer/iron-ajax/iron-ajax.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
@@ -40,7 +41,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
             userDetails: {type: Object, observer: '_onUserDetails'},
             namespaceName: String,
             emailAddress: String,
-            error: Object,
+            errorText: {type: String, value: ''},
             flowComplete: {type: Boolean, value: false},
             waitForRedirect: {type: Boolean, value: false},
             showAPIText: {type: Boolean, value: false},
@@ -51,7 +52,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         super.ready();
     }
 
-    _onUserDetails(d) {
+    _onUserDetails() {
         this.emailAddress = this.userDetails;
         this.generateNamespace(this.userDetails);
     }
@@ -93,10 +94,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
                 }
                 this.namespaceName = ns;
             }).catch((e)=> {
-                this.set('error', {response: {
-                    error: e,
-                    namespace: this.namespaceName,
-                }});
+                this.showError('Error during Getting namespaces');
             });
     }
 
@@ -106,37 +104,34 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         this.waitForRedirect = true;
         await API.generateRequest().completes.catch((e) => e);
         await this.sleep(1); // So the errors and callbacks can schedule
-        if (this.error && this.error.response) {
-            if (this.error.response.error) {
-                this.set('error', {response: {
-                    error: 'registrationPage.errDuplicate',
-                    namespace: this.namespaceName,
-                }});
-            }
-            return this.waitForRedirect = false;
-        }
+
+        console.log('error next triggered');
+        this.errorText= 'mainPage.errGeneric';
+        return this.waitForRedirect = false;
+
         /*
          * Poll for profile over a span of 20 seconds (every 300ms)
          * if still not there, let the user click next again!
          */
-        const success = await this.pollProfile(66, 300);
-        if (success) this._successSetup();
+        // const success = await this.pollProfile(66, 300);
+        // if (success) this._successSetup();
 
+        // console.log('Trigger second part');
         // Create the default notebook
-        const APICreateDefault = this.$.CreateDefaultNotebook;
+        // const APICreateDefault = this.$.CreateDefaultNotebook;
 
-        await APICreateDefault.generateRequest().completes.catch((e) => e);
-        await this.sleep(1); // So the errors and callbacks can schedule
-        if (this.error && this.error.response) {
-            if (this.error.response.error) {
-                this.set('error', {response: {
-                    error: 'registrationPage.errCreateNotebook',
-                    namespace: this.namespaceName,
-                }});
-            }
-            return this.waitForRedirect = false;
-        }
-        this.waitForRedirect = false;
+        // await APICreateDefault.generateRequest().completes.catch((e) => e);
+        // await this.sleep(1); // So the errors and callbacks can schedule
+        // if (this.error && this.error.response) {
+        //     if (this.error.response.error) {
+        //         this.set('error', {response: {
+        //             error: 'registrationPage.errCreateNotebook',
+        //             namespace: this.namespaceName,
+        //         }});
+        //     }
+        //     return this.waitForRedirect = false;
+        // }
+        // this.waitForRedirect = false;
     }
 
     async pollProfile(times, delay) {
@@ -152,8 +147,35 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
 
     _successSetup() {
         this.flowComplete = true;
-        this.set('error', {});
+        this.closeError();
         this.fireEvent('flowcomplete');
+    }
+
+    // Error handling functions
+    showError(err) {
+        this.errorText = err;
+    }
+
+    closeError() {
+        this.errorText = '';
+    }
+
+    _onCreateNamespaceError(ev) {
+        console.log('createnamespace');
+        this.showError('mainPage.errGeneric');
+        return;
+    }
+
+    _onGetNamespaceError(ev) {
+        console.lot('get namespace');
+        this.showError('mainPage.errGeneric');
+        return;
+    }
+
+    _onCreateDefaultNotebookError(ev) {
+        console.log('create default');
+        this.showError('mainPage.errGeneric');
+        return;
     }
 }
 
