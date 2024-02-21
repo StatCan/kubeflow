@@ -10,7 +10,7 @@ export function attachUser(
     let email = 'anonymous@kubeflow.org';
     let auth: User.AuthObject;
     //eslint-disable-next-line
-    console.log('req', req, userIdHeader, userIdPrefix)
+    console.log('req', req, userIdHeader, userIdPrefix);
     if (userIdHeader && req.header(userIdHeader)) {
       email = req.header(userIdHeader).slice(userIdPrefix.length);
       auth = {[userIdHeader]: req.header(userIdHeader)};
