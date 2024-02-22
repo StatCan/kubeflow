@@ -1,0 +1,26 @@
+.data-content {
+    padding: 0.5em 1em;
+}
+
+.button-div {
+    display: flex;
+    justify-content: center;
+}
+
+paper-button {
+    color: var(--paper-blue-700);
+}
+paper-button:disabled {
+    color:gray;
+    cursor: not-allowed;
+}
+
+paper-toast#DefaultNotebookError {
+    background: #F44336;
+}
+
+@media only screen and (min-width:1270px) {
+    paper-toast#DefaultNotebookError {
+        left: 240px !important;
+    }
+}
