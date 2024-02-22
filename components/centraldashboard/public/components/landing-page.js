@@ -42,6 +42,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
             namespaceName: String,
             emailAddress: String,
             errorText: {type: String, value: ''},
+            errorDetail: {type: String, value: ''},
             flowComplete: {type: Boolean, value: false},
             waitForRedirect: {type: Boolean, value: false},
             showAPIText: {type: Boolean, value: false},
@@ -94,7 +95,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
                 }
                 this.namespaceName = ns;
             }).catch((e)=> {
-                this.showError('Error during Getting namespaces');
+                this.showError('mainPage.errGeneric');
             });
     }
 
@@ -105,33 +106,26 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         await API.generateRequest().completes.catch((e) => e);
         await this.sleep(1); // So the errors and callbacks can schedule
 
-        console.log('error next triggered');
-        this.errorText= 'mainPage.errGeneric';
-        return this.waitForRedirect = false;
-
         /*
          * Poll for profile over a span of 20 seconds (every 300ms)
          * if still not there, let the user click next again!
          */
-        // const success = await this.pollProfile(66, 300);
-        // if (success) this._successSetup();
+        const success = await this.pollProfile(66, 300);
+        if (success) this._successSetup();
 
         // console.log('Trigger second part');
         // Create the default notebook
-        // const APICreateDefault = this.$.CreateDefaultNotebook;
+        const APICreateDefault = this.$.CreateDefaultNotebook;
 
-        // await APICreateDefault.generateRequest().completes.catch((e) => e);
-        // await this.sleep(1); // So the errors and callbacks can schedule
-        // if (this.error && this.error.response) {
-        //     if (this.error.response.error) {
-        //         this.set('error', {response: {
-        //             error: 'registrationPage.errCreateNotebook',
-        //             namespace: this.namespaceName,
-        //         }});
-        //     }
-        //     return this.waitForRedirect = false;
-        // }
-        // this.waitForRedirect = false;
+        await APICreateDefault.generateRequest().completes.catch((e) => e);
+        await this.sleep(1); // So the errors and callbacks can schedule
+        if (this.error && this.error.response) {
+            if (this.error.response.error) {
+                this.errorText= 'mainPage.errGeneric';
+                this.errorDetail= this.error.response.error;
+            }
+        }
+        return this.waitForRedirect = false;
     }
 
     async pollProfile(times, delay) {
@@ -154,27 +148,26 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     // Error handling functions
     showError(err) {
         this.errorText = err;
+        this.errorDetail = '';
     }
 
     closeError() {
         this.errorText = '';
+        this.errorDetail = '';
     }
 
     _onCreateNamespaceError(ev) {
-        console.log('createnamespace');
-        this.showError('mainPage.errGeneric');
+        this.showError('mainPage.errCreateNS');
         return;
     }
 
     _onGetNamespaceError(ev) {
-        console.lot('get namespace');
-        this.showError('mainPage.errGeneric');
+        this.showError('mainPage.errGetNS');
         return;
     }
 
     _onCreateDefaultNotebookError(ev) {
-        console.log('create default');
-        this.showError('mainPage.errGeneric');
+        this.showError('mainPage.errCreateDefaultNotebook');
         return;
     }
 }

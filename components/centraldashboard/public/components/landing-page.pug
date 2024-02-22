@@ -23,4 +23,5 @@ nav#Links
     a(href='https://policies.google.com/privacy', tabindex='-1', target="_blank") {{localize('registrationPage.linkPrivacy')}}
 
 paper-toast#ErrorLandingPageToast(duration=0, opened='[[!empty(errorText)]]', on-click='closeError') {{localize(errorText)}}
+    strong [[errorDetail]] 
     paper-icon-button(icon='close')
