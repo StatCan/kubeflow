@@ -91,7 +91,6 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                     a(target="_top", href="/logout")
                         iron-icon.icon(icon='kubeflow:logout' title="Logout")
         main#Content
-            button(on-click="_testfunc") test123
             section#ViewTabs(hidden$='[[hideTabs]]')
                 paper-tabs(selected='[[page]]', attr-for-selected='page')
                     paper-tab(page='dashboard', link)
