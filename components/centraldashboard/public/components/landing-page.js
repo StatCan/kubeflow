@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import '@polymer/iron-ajax/iron-ajax.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
@@ -114,13 +113,12 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         const success = await this.pollProfile(66, 300);
         if (success) this._successSetup();
 
-        // console.log('Trigger second part');
         // Create the default notebook
         const APICreateDefault = this.$.CreateDefaultNotebook;
 
         await APICreateDefault.generateRequest().completes.catch((e) => e);
-
         await this.sleep(1); // So the errors and callbacks can schedule
+
         return this.waitForRedirect = false;
     }
 
