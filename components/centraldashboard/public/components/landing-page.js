@@ -95,7 +95,8 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
                 }
                 this.namespaceName = ns;
             }).catch((e)=> {
-                this.showError('mainPage.errGeneric');
+                this.showError('landingPage.errGeneral');
+                this.errorDetail= e;
             });
     }
 
@@ -118,13 +119,8 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         const APICreateDefault = this.$.CreateDefaultNotebook;
 
         await APICreateDefault.generateRequest().completes.catch((e) => e);
+
         await this.sleep(1); // So the errors and callbacks can schedule
-        if (this.error && this.error.response) {
-            if (this.error.response.error) {
-                this.errorText= 'mainPage.errGeneric';
-                this.errorDetail= this.error.response.error;
-            }
-        }
         return this.waitForRedirect = false;
     }
 
