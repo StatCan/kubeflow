@@ -40,7 +40,8 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
             userDetails: {type: Object, observer: '_onUserDetails'},
             namespaceName: String,
             emailAddress: String,
-            error: Object,
+            errorText: {type: String, value: ''},
+            errorDetail: {type: String, value: ''},
             flowComplete: {type: Boolean, value: false},
             waitForRedirect: {type: Boolean, value: false},
             showAPIText: {type: Boolean, value: false},
@@ -51,7 +52,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         super.ready();
     }
 
-    _onUserDetails(d) {
+    _onUserDetails() {
         this.emailAddress = this.userDetails;
         this.generateNamespace(this.userDetails);
     }
@@ -93,10 +94,8 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
                 }
                 this.namespaceName = ns;
             }).catch((e)=> {
-                this.set('error', {response: {
-                    error: e,
-                    namespace: this.namespaceName,
-                }});
+                this.showError('landingPage.errGeneral');
+                this.errorDetail= e;
             });
     }
 
@@ -106,15 +105,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         this.waitForRedirect = true;
         await API.generateRequest().completes.catch((e) => e);
         await this.sleep(1); // So the errors and callbacks can schedule
-        if (this.error && this.error.response) {
-            if (this.error.response.error) {
-                this.set('error', {response: {
-                    error: 'registrationPage.errDuplicate',
-                    namespace: this.namespaceName,
-                }});
-            }
-            return this.waitForRedirect = false;
-        }
+
         /*
          * Poll for profile over a span of 20 seconds (every 300ms)
          * if still not there, let the user click next again!
@@ -127,16 +118,8 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
 
         await APICreateDefault.generateRequest().completes.catch((e) => e);
         await this.sleep(1); // So the errors and callbacks can schedule
-        if (this.error && this.error.response) {
-            if (this.error.response.error) {
-                this.set('error', {response: {
-                    error: 'registrationPage.errCreateNotebook',
-                    namespace: this.namespaceName,
-                }});
-            }
-            return this.waitForRedirect = false;
-        }
-        this.waitForRedirect = false;
+
+        return this.waitForRedirect = false;
     }
 
     async pollProfile(times, delay) {
@@ -152,8 +135,34 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
 
     _successSetup() {
         this.flowComplete = true;
-        this.set('error', {});
+        this.closeError();
         this.fireEvent('flowcomplete');
+    }
+
+    // Error handling functions
+    showError(err) {
+        this.errorText = err;
+        this.errorDetail = '';
+    }
+
+    closeError() {
+        this.errorText = '';
+        this.errorDetail = '';
+    }
+
+    _onCreateNamespaceError(ev) {
+        this.showError('mainPage.errCreateNS');
+        return;
+    }
+
+    _onGetNamespaceError(ev) {
+        this.showError('mainPage.errGetNS');
+        return;
+    }
+
+    _onCreateDefaultNotebookError(ev) {
+        this.showError('mainPage.errCreateDefaultNotebook');
+        return;
     }
 }
 

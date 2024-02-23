@@ -1,7 +1,7 @@
-iron-ajax#MakeNamespace(method='POST', url='/api/workgroup/create', handle-as='json', last-error='{{error}}', last-response='{{resp}}',
+iron-ajax#MakeNamespace(method='POST', url='/api/workgroup/create', handle-as='json', on-error='_onCreateNamespaceError', last-response='{{resp}}',
     content-type='application/json', loading='{{submittingWorkgroup}}')
-iron-ajax#GetMyNamespace(url='/api/workgroup/exists', handle-as='json')
-iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespaceName]]/createdefault', headers='{"Content-Type": "application/json"}')
+iron-ajax#GetMyNamespace(url='/api/workgroup/exists', handle-as='json', on-error='_onGetNamespaceError')
+iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespaceName]]/createdefault', headers='{"Content-Type": "application/json"}', on-error='_onCreateDefaultNotebookError')
 paper-card#MainCard
     figure#Logo !{logo}
     neon-animatable.Main-Content
@@ -21,3 +21,7 @@ nav#Links
     a(href='https://github.com/kubeflow/kubeflow', tabindex='-1', target="_blank") {{localize('registrationPage.linkGitHub')}}
     a(href='https://www.kubeflow.org/docs/about/kubeflow/', tabindex='-1', target="_blank") {{localize('registrationPage.linkDocumentation')}}
     a(href='https://policies.google.com/privacy', tabindex='-1', target="_blank") {{localize('registrationPage.linkPrivacy')}}
+
+paper-toast#ErrorLandingPageToast(duration=0, opened='[[!empty(errorText)]]', on-click='closeError') {{localize(errorText)}}
+    strong [[errorDetail]] 
+    paper-icon-button(icon='close')
