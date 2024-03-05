@@ -1,4 +1,4 @@
-# Kubeflow Landing-Page
+# Kubeflow 2.0 Landing-Page
 
 This component serves as the landing page and central dashboard for Kubeflow
 deployments. It provides a jump-off point to all other facets of the platform.

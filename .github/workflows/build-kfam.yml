@@ -2,7 +2,7 @@ name: component/access-management
 on:
   push:
     branches:
-      - stc-master
+      - kubeflow-aaw2.0
     paths:
       - components/access-management/**
   pull_request:
@@ -40,7 +40,7 @@ jobs:
       run: echo "REGISTRY=${{env.DEV_REGISTRY_NAME}}.azurecr.io" >> "$GITHUB_ENV"
    
     - name: Set ENV variable for pushes to master
-      if: github.event_name == 'push' && github.ref == 'refs/heads/stc-master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/kubeflow-aaw2.0'
       run: echo "REGISTRY=${{env.REGISTRY_NAME}}.azurecr.io" >> "$GITHUB_ENV"
 
     # Connect to Azure Container registry (ACR)
