@@ -34,7 +34,7 @@ kubectl --record deployment.apps/centraldashboard \
 Make sure you have the latest LTS version of `node` installed along with `npm`.
 
 1. Clone the repository and change directories to `components/centraldashboard`
-2. Run `make build-local`. This will install all of the project dependencies and
+2. Run `make build-local`, this will install all of the project dependencies and
    prepare your system for development.
 3. To start a development environment, run `npm run dev`. It can then be accessed at `localhost:8080`.
     - This runs [webpack](https://webpack.js.org/) over the front-end code in
