@@ -12,7 +12,8 @@
     {
       "text": "Create a new Notebook server",
       "desc": "Notebook Servers",
-      "link": "/en/new?ns={ns}"
+      "link": "/en/new?ns={ns}",
+      "type": "internal"
     }
   ],
   "documentationItems": [
