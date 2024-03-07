@@ -9,15 +9,14 @@ div#grid
             template(is='dom-repeat', items='[[quickLinks]]')
                 template(is='dom-if', if='[[equals(item.type, "internal")]]')
                     iframe-link.link(href$="[[item.link]]")
-                        paper-icon-item
+                        paper-icon-item.external
                             paper-ripple
                             paper-item-body(two-line)
                                 .header [[item.text]]
                                 aside(secondary) [[item.desc]]
-                            iron-icon(icon='kubeflow:plus', slot='item-icon')
+                            iron-icon(icon='kubeflow:bolt', slot='item-icon')
                 template(is='dom-if', if='[[equals(item.type, "external")]]')
-                    a.link(href$='[[item.link]]', tabindex='-1',
-                                target='_blank')
+                    a.link(href$='[[item.link]]', tabindex='-1', target='_blank')
                         paper-icon-item.external
                             paper-ripple
                             paper-item-body(two-line)
