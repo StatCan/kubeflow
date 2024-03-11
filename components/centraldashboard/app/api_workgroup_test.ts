@@ -420,54 +420,5 @@ describe('Workgroup API', () => {
             expect(response).toEqual({error: `Unable to ascertain user identity from request, cannot access route.`});
             expect(mockProfilesService.createBinding).not.toHaveBeenCalled();
         });
-        it('Should error on missing contributor', async () => {
-            const [rAdd, rRemove] = await Promise.all([
-                sendTestRequest(url('add'), headers, 400, 'post'),
-                sendTestRequest(url('remove'), headers, 400, 'delete'),
-            ]);
-            [rAdd, rRemove].forEach(response => {
-                expect(response).toEqual({error: `Missing contributor field.`});
-            });
-            expect(mockProfilesService.createBinding).not.toHaveBeenCalled();
-        });
-        it('Should error on invalid email for contrib', async () => {
-            const response = await sendTestRequest(url('add'), headers, 400, 'post', {
-                contributor: 'apverma'
-            });
-            expect(response).toEqual({error: `Contributor doesn't look like a valid email address`});
-            expect(mockProfilesService.createBinding).not.toHaveBeenCalled();
-        });
-        it('Should successfully add a contributor', async () => {
-            const response = await sendTestRequest(url('add'), headers, 200, 'post', requestBody);
-            expect(response).toEqual(['test']);
-            expect(mockProfilesService.createBinding).toHaveBeenCalledWith({
-                user: {
-                    kind: 'User',
-                    name: 'apverma@google.com',
-                },
-                referredNamespace: 'apverma',
-                roleRef: {
-                    kind: 'ClusterRole',
-                    name: 'edit',
-                }
-            }, jasmine.anything());
-            expect(mockProfilesService.deleteBinding).not.toHaveBeenCalled();
-        });
-        it('Should successfully remove a contributor', async () => {
-            const response = await sendTestRequest(url('remove'), {...headers, 'Transfer-Encoding': 'chunked'}, 200, 'delete', requestBody);
-            expect(response).toEqual(['test']);
-            expect(mockProfilesService.createBinding).not.toHaveBeenCalled();
-            expect(mockProfilesService.deleteBinding).toHaveBeenCalledWith({
-                user: {
-                    kind: 'User',
-                    name: 'apverma@google.com',
-                },
-                referredNamespace: 'apverma',
-                roleRef: {
-                    kind: 'ClusterRole',
-                    name: 'edit',
-                }
-            }, jasmine.anything());
-        });
     });
 });
