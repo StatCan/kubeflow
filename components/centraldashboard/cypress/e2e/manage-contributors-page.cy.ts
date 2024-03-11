@@ -1,16 +1,16 @@
-describe('Manage contributors page', () => {
-  beforeEach(()=>{
-    cy.mockWorkgroupRequest();
-    cy.mockDashboardLinksRequest();
-    cy.mockEnvInfoRequest();
-    cy.mockActivitiesRequest('test-namespace');
-    cy.mockGetNotebooksRequest('test-namespace');
-    cy.mockGetContributorsRequest('test-namespace');
+// describe('Manage contributors page', () => {
+//   beforeEach(()=>{
+//     cy.mockWorkgroupRequest();
+//     cy.mockDashboardLinksRequest();
+//     cy.mockEnvInfoRequest();
+//     cy.mockActivitiesRequest('test-namespace');
+//     cy.mockGetNotebooksRequest('test-namespace');
+//     cy.mockGetContributorsRequest('test-namespace');
     
-    cy.visit('/manage-users');
+//     cy.visit('/manage-users');
 
-    cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest', '@mockEnvInfoRequest', '@mockActivitiesRequest', '@mockGetNotebooksRequest', '@mockGetContributorsRequest']);
-  });
+//     cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest', '@mockEnvInfoRequest', '@mockActivitiesRequest', '@mockGetNotebooksRequest', '@mockGetContributorsRequest']);
+//   });
 
   // 2.0 Deactivating the contributors page
   // it('should access the manage contributors page', ()=>{
@@ -33,4 +33,4 @@ describe('Manage contributors page', () => {
   //   cy.get('main-page').shadow().find('manage-users-view').shadow().find('manage-users-view-contributor').shadow().find('md2-input > div.prefix > paper-chip').eq(0).should('have.text', 'user.name@cloud.ca');
   //   cy.get('main-page').shadow().find('manage-users-view').shadow().find('manage-users-view-contributor').shadow().find('md2-input > div.prefix > paper-chip').eq(1).should('have.text', 'first.last@domain.com');
   // });
-});
+// });

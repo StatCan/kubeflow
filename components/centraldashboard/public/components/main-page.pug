@@ -48,10 +48,6 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                         paper-item.menu-item
                             iron-icon(icon='[[item.icon]]')
                             | [[item.text]]
-            template(is='dom-if', if='[[_showManageUsers(isolationMode, ownedNamespace)]]')
-                aside.divider
-                a(href$='[[_buildHref("/manage-users", queryParams.*)]]', tabindex='-1')
-                    paper-item.menu-item#contributors {{localize('mainPage.menuManageContributors')}}
             aside.divider
             a(href$='[[_getGrafanaUrl(namespace)]]',
                 tabindex='-1', target="_blank")
