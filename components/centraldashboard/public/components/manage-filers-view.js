@@ -1,4 +1,3 @@
-/* eslint-disable */
 import '@polymer/iron-ajax/iron-ajax.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-toast/paper-toast.js';
@@ -42,11 +41,11 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         super.ready();
     }
 
-    isUserFiler(userFilers, filer){
+    isUserFiler(userFilers, filer) {
         return userFilers ? Object.keys(userFilers).includes(filer) : false;
     }
 
-    isLoading(filersLoading, userFilersLoading){
+    isLoading(filersLoading, userFilersLoading) {
         return filersLoading || userFilersLoading;
     }
 
@@ -71,8 +70,8 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
     }
 
     /**
-     * Show a toast error on main-page
-     * @param {string} err Error message to show
+     * Show a toast success response on main-page
+     * @param {string} text Success response message to show
      */
     showResponse(text) {
         this.responseText = text;
@@ -87,48 +86,48 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
     formatFilers(filers) {
         if (filers === null) return [];
 
-        return Object.keys(filers).map(key=>{
+        return Object.keys(filers).map((key)=>{
             return {name: key, value: filers[key]};
         });
     }
 
-    formatFormData(formData){
-        let result = {};
-        formData.forEach(i=>{
-            result[i]= "true";
+    formatFormData(formData) {
+        const result = {};
+        formData.forEach((i)=>{
+            result[i]= 'true';
         });
         return result;
     }
 
-    updateFilers(){
-        const formData = new FormData(this.$.filersForm).getAll("filers-check");
+    updateFilers() {
+        const formData = new FormData(this.$.filersForm).getAll('filers-check');
         const newConfigmap = this.formatFormData(formData);
         const userData = this.userFilers === null ? {} : this.userFilers;
 
-        if(_.isEqual(userData, newConfigmap)){
-            //no new data, do nothing
+        if (_.isEqual(userData, newConfigmap)) {
+            // no new data, do nothing
             return;
         }
-        
-        if(formData.length===0){
-            //delete the configmap
+
+        if (formData.length===0) {
+            // delete the configmap
             const api = this.$.DeleteFilerAjax;
             api.generateRequest();
-            return
+            return;
         }
-        
-        if(Object.keys(userData).length===0){
-            //new configmap to create
+
+        if (Object.keys(userData).length===0) {
+            // new configmap to create
             const api = this.$.CreateFilerAjax;
             api.body = newConfigmap;
             api.generateRequest();
             return;
         }
-        //else is update the config map
+        // else is update the config map
         const api = this.$.UpdateFilerAjax;
         api.body = newConfigmap;
         api.generateRequest();
-        return
+        return;
     }
 
     /**
@@ -152,7 +151,7 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
             this.showError(error);
             return;
         }
-        this.showResponse(this.localize("manageFilersView.successUpdate"));
+        this.showResponse(this.localize('manageFilersView.successUpdate'));
         this.userFilers = e.detail.response;
         return;
     }

@@ -8,7 +8,7 @@ iron-ajax#UpdateFilerAjax(method='PATCH', url='/api/update-filer/[[namespace]]',
     on-response='handleUpdateFilers', on-error='handleUpdateFilers', handle-as='json', content-type='application/json')
 iron-ajax#DeleteFilerAjax(method='DELETE', url='/api/delete-filer/[[namespace]]',
     on-response='handleUpdateFilers', on-error='handleUpdateFilers')
-h1 {{localize('manageFilersView.lblManageFilers')}} {{localize('manageUsersView.lblAccountInfo')}}
+h1 {{localize('manageFilersView.lblManageFilers')}}
 section#Main-Content
     article.Filers
         h2
