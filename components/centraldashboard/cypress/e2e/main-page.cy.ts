@@ -66,9 +66,6 @@ describe('Main Page', () => {
     cy.get('main-page').shadow().find('iframe-link[href="/en/?ns=test-namespace"]').should('exist');
     cy.get('main-page').shadow().find('iframe-link[href="/en/?ns=test-namespace"]').find('paper-item').should('have.text', 'Notebooks');
 
-    cy.get('main-page').shadow().find('a[href="/manage-users?ns=test-namespace"]').should('exist');
-    cy.get('main-page').shadow().find('a[href="/manage-users?ns=test-namespace"]').find('paper-item').should('have.text', 'Manage Contributors');
-
     cy.get('main-page').shadow().find('a[href="https://grafana.aaw-dev.cloud.statcan.ca/d/ZLp774O4z/namespace-metrics?orgId=1&var-namespace=test-namespace&kiosk=tv"]').should('exist');
     cy.get('main-page').shadow().find('a[href="https://grafana.aaw-dev.cloud.statcan.ca/d/ZLp774O4z/namespace-metrics?orgId=1&var-namespace=test-namespace&kiosk=tv"]').find('paper-item').should('have.text', 'Metrics');
 
@@ -171,9 +168,6 @@ describe('Main Page', () => {
 
     cy.get('main-page').shadow().find('iframe-link[href="/en/?ns=test-namespace-2"]').should('exist');
     cy.get('main-page').shadow().find('iframe-link[href="/en/?ns=test-namespace-2"]').find('paper-item').should('have.text', 'Notebooks');
-
-    cy.get('main-page').shadow().find('a[href="/manage-users?ns=test-namespace-2"]').should('exist');
-    cy.get('main-page').shadow().find('a[href="/manage-users?ns=test-namespace-2"]').find('paper-item').should('have.text', 'Manage Contributors');
 
     cy.get('main-page').shadow().find('a[href="https://grafana.aaw-dev.cloud.statcan.ca/d/ZLp774O4z/namespace-metrics?orgId=1&var-namespace=test-namespace-2&kiosk=tv"]').should('exist');
     cy.get('main-page').shadow().find('a[href="https://grafana.aaw-dev.cloud.statcan.ca/d/ZLp774O4z/namespace-metrics?orgId=1&var-namespace=test-namespace-2&kiosk=tv"]').find('paper-item').should('have.text', 'Metrics');

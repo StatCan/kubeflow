@@ -49,9 +49,6 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                             iron-icon(icon='[[item.icon]]')
                             | [[item.text]]
             aside.divider
-            template(is='dom-if', if='[[_showManageUsers(isolationMode, ownedNamespace)]]')
-                a(href$='[[_buildHref("/manage-users", queryParams.*)]]', tabindex='-1')
-                    paper-item.menu-item#contributors {{localize('mainPage.menuManageContributors')}}
             a(href$='[[_buildHref("/manage-filers", queryParams.*)]]', tabindex='-1')
                 paper-item.menu-item#filers {{localize('mainPage.menuManageFilers')}}
             aside.divider

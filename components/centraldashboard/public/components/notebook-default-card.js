@@ -59,13 +59,13 @@ export class NotebookDefaultCard
 
     // Changing this code for now to open the notebooks page instead
     _goToNotebook() {
-        window.open(`/_/${this.language}/?ns=/${this.namespace}/`);
+        return this.buildHref(`/_/${this.language}/?ns=/${this.namespace}/`);
     }
 
     _detailNotebook() {
         // Possibly need the language flag beforehand and or the jupyter
         // eslint-disable-next-line max-len
-        window.open(`/_/${this.language}/notebook/details/${this.namespace}/${this.defaultNotebook.notebook.name}/`);
+        return this.buildHref(`/_/${this.language}/notebook/details/${this.namespace}/${this.defaultNotebook.notebook.name}/`);
     }
 
     /**

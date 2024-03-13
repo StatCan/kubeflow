@@ -396,12 +396,13 @@ export class WorkgroupApi {
                     err,
                 });
             }
-        })
-        .post('/add-contributor/:namespace', async (req: Request, res: Response) => {
-            this.handleContributor('create', req, res);
-        })
-        .delete('/remove-contributor/:namespace', async (req: Request, res: Response) => {
-            this.handleContributor('remove', req, res);
         });
+        // As part of 2.0, remove the functionnality to add or remove contributors
+        // .post('/add-contributor/:namespace', async (req: Request, res: Response) => {
+        //     this.handleContributor('create', req, res);
+        // })
+        // .delete('/remove-contributor/:namespace', async (req: Request, res: Response) => {
+        //     this.handleContributor('remove', req, res);
+        // });
     }
 }
