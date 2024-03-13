@@ -1,0 +1,33 @@
+iron-ajax(auto, url='/api/filers', handle-as='json',
+    last-response='{{filers}}', on-error='onHasFilersError', loading='{{filersLoading}}')
+iron-ajax(auto, url='/api/get-filer/[[namespace]]', handle-as='json',
+    last-response='{{userFilers}}', on-error='onHasFilersError', loading='{{userFilersLoading}}')
+iron-ajax#CreateFilerAjax(method='POST', url='/api/create-filer/[[namespace]]',
+    on-response='handleUpdateFilers', on-error='handleUpdateFilers', handle-as='json', content-type='application/json')
+iron-ajax#UpdateFilerAjax(method='PATCH', url='/api/update-filer/[[namespace]]',
+    on-response='handleUpdateFilers', on-error='handleUpdateFilers', handle-as='json', content-type='application/json')
+iron-ajax#DeleteFilerAjax(method='DELETE', url='/api/delete-filer/[[namespace]]',
+    on-response='handleUpdateFilers', on-error='handleUpdateFilers')
+h1 {{localize('manageFilersView.lblManageFilers')}} {{localize('manageUsersView.lblAccountInfo')}}
+section#Main-Content
+    article.Filers
+        h2
+            iron-icon.icon(icon='kubeflow:namespace')
+            span.text {{localize('manageFilersView.lblFilers')}}
+        .content.small
+            template(is='dom-if', if="[[isLoading(filersLoading, userFilersLoading)]]")
+                paper-spinner-lite(active)
+            template(is='dom-if', if="[[!isLoading(filersLoading, userFilersLoading)]]")
+                form#filersForm
+                    table#filersTable
+                        template(is='dom-repeat', items='[[formatFilers(filers)]]')
+                            tr 
+                                td {{item.name}}
+                                td
+                                    input(type="checkbox", name="filers-check", value="{{item.value}}", checked="[[isUserFiler(userFilers, item.value)]]")
+                    template(is='dom-if', if="[[filers]]")
+                        button#filersSubmit(type="button", on-click="updateFilers") {{localize('manageFilersView.btnSubmit')}}
+    paper-toast#FilersErrorToast(duration=8000, horizontal-align="center")
+        strong [[errorText]]
+    paper-toast#FilersSuccessToast(duration=8000, horizontal-align="center")
+        strong [[responseText]]

@@ -36,6 +36,7 @@
             "mainPage.menuKatib": "Katib",
             "mainPage.menuArtifactStore": "Artifact Store",
             "mainPage.menuManageContributors": "Manage Contributors",
+            "mainPage.menuManageFilers": "Manage Filers",
             "mainPage.menuMetrics": "Metrics",
             "mainPage.menuGitHub": "GitHub",
             "mainPage.menuDocumentation": "Documentation",
@@ -125,6 +126,10 @@
             "manageUsersViewContributor.errorCreateGeneral": "An error occured while trying to add the email. Please make check the email format and make sure there are no duplicates in this namespace.",
             "manageUsersViewContributor.errorCreateFDI": "Cannot add an external user to a namespace containing internal only buckets. Please contact the AAW team.",
             "manageUsersViewContributor.errorDeleteGeneral": "An error occured while trying to remove the email. Please try again.",
+            "manageFilersView.lblManageFilers": "Manage Filers",
+            "manageFilersView.lblFilers": "Filers",
+            "manageFilersView.btnSubmit": "Submit",
+            "manageFilersView.successUpdate": "Filers updated!",
             "s3Proxy.defaultMessage": "This namespace does not include S3 proxy. To start using S3 proxy, please opt in to the service."
         },
         "fr": {
@@ -163,6 +168,7 @@
             "mainPage.menuKatib": "Katib",
             "mainPage.menuArtifactStore": "Magasin d'artefact",
             "mainPage.menuManageContributors": "Gérer les contributeurs",
+            "mainPage.menuManageFilers": "Gérer les filers",
             "mainPage.menuMetrics": "Mesures",
             "mainPage.menuGitHub": "GitHub",
             "mainPage.menuDocumentation": "Documentation",
@@ -252,6 +258,10 @@
             "manageUsersViewContributor.errorCreateGeneral": "Échec lors de l'ajout d'un courriel. Veuillez vous assurez que le format est valide et qu'il n'y a pas de duplicat dans cet espace de noms.",
             "manageUsersViewContributor.errorCreateFDI": "Ne peut pas ajouter un utilisateur externe à un espace de noms qui contient des seaux seulement internes. Veuillez contacter l'équipe d'ETAA",
             "manageUsersViewContributor.errorDeleteGeneral": "Échec lors de la supression du courriel. Veuillez réessayer.",
+            "manageFilersView.lblManageFilers": "Gérer les filers",
+            "manageFilersView.lblFilers": "Filers",
+            "manageFilersView.btnSubmit": "Soumettre",
+            "manageFilersView.successUpdate": "Filers mis à jour!",
             "s3Proxy.defaultMessage": "Cet espace de noms n'inclue pas S3 proxy. Pour commencer à utiliser S3 proxy, veuilliez choisir de participer au service."
         }
     }
