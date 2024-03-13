@@ -5,7 +5,10 @@ import {Interval, MetricsService} from './metrics_service';
 export const ERRORS = {
   operation_not_supported: 'Operation not supported',
   invalid_links_config: 'Cannot load dashboard menu link',
-  invalid_settings: 'Cannot load dashboard settings'
+  invalid_settings: 'Cannot load dashboard settings',
+  invalid_get_filers: 'Failed to load filers',
+  invalid_get_user_filers: 'Failed to load user filers',
+  invalid_update_filer: 'Failed to update filers'
 };
 
 export function apiError(a: {res: Response, error: string, code?: number}) {
@@ -99,7 +102,74 @@ export class Api {
               });
             }
             res.json(settings);
-          });
+          })
+        .get(
+          '/filers',
+          async (req: Request, res: Response) => {
+            const cm = await this.k8sService.getConfigMap();
+            let filers = {};
+            try {
+              filers = JSON.parse(cm.data["filers"]);
+            }catch(e){
+              return apiError({
+                res, code: 500,
+                error: ERRORS.invalid_get_filers,
+              });
+            }
+            res.json(filers);
+          })
+          .post(
+            '/create-filer/:namespace',
+            async (req: Request, res: Response) => {
+              try {
+                const cm = await this.k8sService.createUserFilerConfigMap(req.params.namespace, req.body);
+                res.json(cm.data);
+              }catch(e){
+                return apiError({
+                  res, code: 500,
+                  error: ERRORS.invalid_update_filer,
+                });
+              }
+            })
+            .get(
+              '/get-filer/:namespace',
+              async (req: Request, res: Response) => {
+                try {
+                  const cm = await this.k8sService.getUserFilerConfigMap(req.params.namespace);
+                  res.json(cm.data);
+                }catch(e){
+                  return apiError({
+                    res, code: 500,
+                    error: ERRORS.invalid_get_user_filers,
+                  });
+                }
+              })
+            .patch(
+              '/update-filer/:namespace',
+              async (req: Request, res: Response) => {
+                try {
+                  const cm = await this.k8sService.updateUserFilerConfigMap(req.params.namespace, req.body);
+                  res.json(cm.data);
+                }catch(e){
+                  return apiError({
+                    res, code: 500,
+                    error: ERRORS.invalid_update_filer,
+                  });
+                }
+              })
+              .delete(
+                '/delete-filer/:namespace',
+                async (req: Request, res: Response) => {
+                  try {
+                    await this.k8sService.deleteUserFilerConfigMap(req.params.namespace);
+                    res.json({});
+                  }catch(e){
+                    return apiError({
+                      res, code: 500,
+                      error: ERRORS.invalid_update_filer,
+                    });
+                  }
+                });
   }
 
   resolveLanguage(requested: string[], supported: string[], defaultLang: string) {

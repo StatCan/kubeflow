@@ -47,6 +47,7 @@ interface V1BetaApplicationList {
 const APP_API_GROUP = 'app.k8s.io';
 const APP_API_VERSION = 'v1beta1';
 const APP_API_NAME = 'applications';
+const USER_FILERS_CM_NAME = 'user-filers';
 
 /** Wrap Kubernetes API calls in a simpler interface for use in routes. */
 export class KubernetesService {
@@ -87,6 +88,65 @@ export class KubernetesService {
     } catch (err) {
       console.error('Unable to fetch ConfigMap:', err.body || err);
       return null;
+    }
+  }
+  /** Retrieves the configmap data for the central dashboard. */
+  async createUserFilerConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
+    try {
+      const config = {
+        metadata: {
+          name: USER_FILERS_CM_NAME
+        },
+        data: data
+      } as k8s.V1ConfigMap;
+      const { body } = await this.coreAPI.createNamespacedConfigMap(namespace, config);
+      return body;
+    } catch (err) {
+      console.error('Unable to create ConfigMap:', err.body || err);
+      throw err;
+    }
+  }
+
+  /** Retrieves the configmap data for the central dashboard. */
+  async getUserFilerConfigMap(namespace: string): Promise<k8s.V1ConfigMap> {
+    try {
+      const { body } = await this.coreAPI.readNamespacedConfigMap(USER_FILERS_CM_NAME, namespace);
+      return body;
+    } catch (err) {
+      if(err.statusCode === 404){
+        //user has no user-filers yet
+        return new k8s.V1ConfigMap;
+      }
+      console.error('Unable to fetch ConfigMap:', err.body || err);
+      throw err;
+    }
+  }
+
+  /** Retrieves the configmap data for the central dashboard. */
+  async updateUserFilerConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
+    try {
+      const config = {
+        metadata: {
+          name: USER_FILERS_CM_NAME
+        },
+        data: data
+      } as k8s.V1ConfigMap;
+      const { body } = await this.coreAPI.replaceNamespacedConfigMap(USER_FILERS_CM_NAME, namespace, config);
+      return body;
+    } catch (err) {
+      console.error('Unable to patch ConfigMap:', err.body || err);
+      throw err;
+    }
+  }
+
+  /** Retrieves the configmap data for the central dashboard. */
+  async deleteUserFilerConfigMap(namespace: string): Promise<k8s.V1Status> {
+    try {
+      const { body } = await this.coreAPI.deleteNamespacedConfigMap(USER_FILERS_CM_NAME, namespace);
+      return body;
+    } catch (err) {
+      console.error('Unable to delete ConfigMap:', err.body || err);
+      throw err;
     }
   }
 
