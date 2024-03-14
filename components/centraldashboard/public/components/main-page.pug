@@ -49,6 +49,9 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                             iron-icon(icon='[[item.icon]]')
                             | [[item.text]]
             aside.divider
+            a(href$='[[_buildHref("/manage-filers", queryParams.*)]]', tabindex='-1')
+                paper-item.menu-item#filers {{localize('mainPage.menuManageFilers')}}
+            aside.divider
             a(href$='[[_getGrafanaUrl(namespace)]]',
                 tabindex='-1', target="_blank")
                 paper-item.menu-item {{localize('mainPage.menuMetrics')}}
@@ -105,6 +108,8 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                 neon-animatable(page='manage-users')
                     manage-users-view(user='[[user]]', namespaces='[[namespaces]]', multi-owned-namespaces='[[multiOwnedNamespaces]]', 
                         is-cluster-admin='[[isClusterAdmin]]', language='[[language]]', resources='[[resources]]')
+                neon-animatable(page='manage-filers')
+                    manage-filers-view(namespace='[[namespace]]', language='[[language]]', resources='[[resources]]')
                 neon-animatable(page='s3proxy')
                     s3proxy-view(language='[[language]]', resources='[[resources]]')
                 neon-animatable(page='iframe')

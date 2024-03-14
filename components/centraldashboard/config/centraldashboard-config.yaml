@@ -1,6 +1,20 @@
 apiVersion: v1
 data:
   defaultLanguage: "en"
+  filers: |-
+    {
+      "Field 3 Filer (FLD3Filer)": "fld3filersvm",
+      "Field 4 Filer (FLD4Filer)": "fld4filersvm",
+      "Field 5 Filer (FLD5Filer)": "fld5filersvm",
+      "Field 6 Filer (FLD6Filer)": "fld6filersvm",
+      "Field 7 Filer (FLD7Filer)": "fld7filersvm",
+      "Field 8 Filer (FLD8Filer)": "fld8filersvm",
+      "Field 9 Filer (FLD9Filer)": "fld9filersvm",
+      "SAS Server (STDCFLR-SASFS10) (Alias - IBSPDATADEV)": "stdcflr_sasfs10svm",
+      "SAS Server (STTCFLR-SASFS20) (Alias - IBSPDATATEST)": "sttcflr_sasfs20svm",
+      "SAS Server (STUCFLR-SASFS30) (Alias - IBSPDATAUAT)": "stucflr_sasfs30svm",
+      "SAS Server (STQCFLR-SASFS40) (Alias - IBSPDATAQA)": "stqcflr_sasfs40svm"
+    }
   settings: |-
     {
       DASHBOARD_FORCE_IFRAME: true

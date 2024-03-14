@@ -39,6 +39,7 @@ import './activity-view.js';
 import './s3proxy-view.js';
 import './not-found-view.js';
 import './namespace-needed-view.js';
+import './manage-filers-view.js';
 import './manage-users-view.js';
 import './resources/kubeflow-icons.js';
 import './iframe-container.js';
@@ -325,6 +326,15 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
             // need to use the shadowRoot selector instead of this.$ because
             // this.$ does not contain dynamically created DOM nodes
             this._setActiveLink(this.shadowRoot.querySelector('#contributors'));
+            break;
+        case 'manage-filers':
+            this.page = 'manage-filers';
+            hideTabs = true;
+            allNamespaces = false;
+            hideSidebar = false;
+            // need to use the shadowRoot selector instead of this.$ because
+            // this.$ does not contain dynamically created DOM nodes
+            this._setActiveLink(this.shadowRoot.querySelector('#filers'));
             break;
         case '':
             this.page = 'dashboard';
