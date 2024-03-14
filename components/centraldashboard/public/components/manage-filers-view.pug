@@ -17,16 +17,15 @@ section#Main-Content
         .content.small
             template(is='dom-if', if="[[isLoading(filersLoading, userFilersLoading)]]")
                 paper-spinner-lite(active)
-            template(is='dom-if', if="[[!isLoading(filersLoading, userFilersLoading)]]")
-                form#filersForm
-                    table#filersTable
-                        template(is='dom-repeat', items='[[formatFilers(filers)]]')
-                            tr 
-                                td {{item.name}}
-                                td
-                                    input(type="checkbox", name="filers-check", value="{{item.value}}", checked="[[isUserFiler(userFilers, item.value)]]")
-                    template(is='dom-if', if="[[filers]]")
-                        button#filersSubmit(type="button", on-click="updateFilers") {{localize('manageFilersView.btnSubmit')}}
+            form#filersForm
+                table#filersTable
+                    template(is='dom-repeat', items='[[formatFilers(filers)]]')
+                        tr 
+                            td {{item.name}}
+                            td
+                                input(type="checkbox", name="filers-check", value="{{item.value}}", checked="[[isUserFiler(userFilers, item.value)]]")
+                template(is='dom-if', if="[[filers]]")
+                    button#filersSubmit(type="button", on-click="updateFilers") {{localize('manageFilersView.btnSubmit')}}
     paper-toast#FilersErrorToast(duration=8000, horizontal-align="center")
         strong [[errorText]]
     paper-toast#FilersSuccessToast(duration=8000, horizontal-align="center")
