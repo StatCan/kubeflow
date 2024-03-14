@@ -97,7 +97,7 @@ export class KubernetesService {
         metadata: {
           name: USER_FILERS_CM_NAME
         },
-        data: data
+        data
       } as k8s.V1ConfigMap;
       const { body } = await this.coreAPI.createNamespacedConfigMap(namespace, config);
       return body;
@@ -115,7 +115,7 @@ export class KubernetesService {
     } catch (err) {
       if(err.statusCode === 404){
         //user has no user-filers yet
-        return new k8s.V1ConfigMap;
+        return new k8s.V1ConfigMap();
       }
       console.error('Unable to fetch ConfigMap:', err.body || err);
       throw err;
@@ -129,7 +129,7 @@ export class KubernetesService {
         metadata: {
           name: USER_FILERS_CM_NAME
         },
-        data: data
+        data
       } as k8s.V1ConfigMap;
       const { body } = await this.coreAPI.replaceNamespacedConfigMap(USER_FILERS_CM_NAME, namespace, config);
       return body;
