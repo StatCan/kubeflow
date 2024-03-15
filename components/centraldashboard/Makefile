@@ -12,7 +12,7 @@ clean:
 
 # Builds the package locally
 build-local:
-	npm i --legacy-peer-deps 
+	npm i
 
 # Runs unit tests with coverage
 test: build-local

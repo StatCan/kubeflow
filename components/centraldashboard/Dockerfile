@@ -19,9 +19,9 @@ RUN BUILDARCH="$(dpkg --print-architecture)" &&  npm rebuild && \
     export CFLAGS=-Wno-error && \
     export CXXFLAGS=-Wno-error;  \
     fi && \
-    npm install --legacy-peer-deps && \
+    npm install && \
     npm run build && \
-    npm prune --production --legacy-peer-deps
+    npm prune --production
 
 # Step 2: Packages assets for serving
 FROM node:16.20.2-alpine AS serve

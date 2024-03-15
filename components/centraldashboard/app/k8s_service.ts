@@ -86,7 +86,7 @@ export class KubernetesService {
       const { body } = await this.coreAPI.readNamespacedConfigMap(this.dashboardConfigMap,this.namespace);
       return body;
     } catch (err) {
-      console.error('Unable to fetch ConfigMap:', err.body || err);
+      console.error('Unable to fetch ConfigMap:', err.response?.body || err.body || err);
       return null;
     }
   }
@@ -102,7 +102,7 @@ export class KubernetesService {
       const { body } = await this.coreAPI.createNamespacedConfigMap(namespace, config);
       return body;
     } catch (err) {
-      console.error('Unable to create ConfigMap:', err.body || err);
+      console.error('Unable to create ConfigMap:', err.response?.body || err.body || err);
       throw err;
     }
   }
@@ -117,7 +117,7 @@ export class KubernetesService {
         //user has no user-filers yet
         return new k8s.V1ConfigMap();
       }
-      console.error('Unable to fetch ConfigMap:', err.body || err);
+      console.error('Unable to fetch ConfigMap:', err.response?.body || err.body || err);
       throw err;
     }
   }
@@ -134,7 +134,7 @@ export class KubernetesService {
       const { body } = await this.coreAPI.replaceNamespacedConfigMap(USER_FILERS_CM_NAME, namespace, config);
       return body;
     } catch (err) {
-      console.error('Unable to patch ConfigMap:', err.body || err);
+      console.error('Unable to patch ConfigMap:', err.response?.body || err.body || err);
       throw err;
     }
   }
@@ -145,7 +145,7 @@ export class KubernetesService {
       const { body } = await this.coreAPI.deleteNamespacedConfigMap(USER_FILERS_CM_NAME, namespace);
       return body;
     } catch (err) {
-      console.error('Unable to delete ConfigMap:', err.body || err);
+      console.error('Unable to delete ConfigMap:', err.response?.body || err.body || err);
       throw err;
     }
   }
