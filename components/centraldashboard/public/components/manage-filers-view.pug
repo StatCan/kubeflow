@@ -19,13 +19,24 @@ section#Main-Content
                 paper-spinner-lite(active)
             form#filersForm
                 table#filersTable
-                    template(is='dom-repeat', items='[[formatFilers(filers)]]')
+                    template(is='dom-repeat', items='[[formatUserFilers(userFilers)]]')
                         tr 
-                            td {{item.name}}
+                            td {{item}}
                             td
-                                input(type="checkbox", name="filers-check", value="{{item.value}}", checked="[[isUserFiler(userFilers, item.value)]]")
+                                button(type="button", on-click="deleteFilerShare") Delete
+                select#filersSelect(name="filersSelect", on-change="onChangeFilers", value="", required)
+                    option(value="") Select a filer
+                    template(is='dom-repeat', items='[[formatFilers(filers)]]')
+                        option(value="{{item.key}}") {{item.name}}
+                select#sharesSelect(name="sharesSelect", disabled="[[!filersFormValue]]", on-change="onChangeShares", value="", required)
+                    option(value="") Select a share
+                    template(is='dom-repeat', items='[[getShares(filersFormValue)]]')
+                        option {{item}}
+                aside.Error {{validateError}}
+
                 template(is='dom-if', if="[[filers]]")
                     button#filersSubmit(type="button", on-click="updateFilers") {{localize('manageFilersView.btnSubmit')}}
+
     paper-toast#FilersErrorToast(duration=8000, horizontal-align="center")
         strong [[errorText]]
     paper-toast#FilersSuccessToast(duration=8000, horizontal-align="center")

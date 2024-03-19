@@ -62,3 +62,7 @@ paper-toast#FilersErrorToast {
 paper-toast#FilersSuccessToast {
   background: #198754;
 }
+
+.Error{
+  color: #F44336
+}
