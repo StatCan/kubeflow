@@ -1,6 +1,8 @@
 import {Router, Request, Response, NextFunction} from 'express';
 import {KubernetesService} from './k8s_service';
 import {Interval, MetricsService} from './metrics_service';
+import {readFile} from 'fs/promises';
+import {resolve} from 'path';
 
 export const ERRORS = {
   operation_not_supported: 'Operation not supported',
@@ -106,17 +108,17 @@ export class Api {
         .get(
           '/filers',
           async (req: Request, res: Response) => {
-            const cm = await this.k8sService.getConfigMap();
-            let filers = {};
-            try {
-              filers = JSON.parse(cm.data["filers"]);
+            try{
+              const filePath = resolve('./filerShares.json');
+              const contents = await readFile(filePath, {encoding: 'utf8'});
+              const filers = JSON.parse(contents);
+              res.json(filers);
             }catch(e){
               return apiError({
-                res, code: 500,
-                error: ERRORS.invalid_get_filers,
-              });
+                  res, code: 500,
+                  error: ERRORS.invalid_get_filers,
+                });
             }
-            res.json(filers);
           })
           .post(
             '/create-filer/:namespace',
