@@ -5,6 +5,7 @@ iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[na
 paper-card#MainCard
     figure#Logo !{logo}
     neon-animatable.Main-Content
+        template(is='dom-if', if="[[isStatcanEmail]]")
             h2 {{localize('registrationPage.lblWelcome')}}
 
             p {{localize('landingPage.firstTime')}}
@@ -12,16 +13,15 @@ paper-card#MainCard
 
             md2-input#Email(label="{{localize('landingPage.email')}}", value='{{emailAddress}}', disabled="true")
             md2-input#Namespace(label="{{localize('landingPage.yourNamespace')}}", value='{{namespaceName}}', disabled='true')
-            aside {{localize('landingPage.landingDesc')}} 
-                a(href='https://business-transformation.pages.cloud.statcan.ca/aaw/aaw/en/', tabindex='-1', target="_blank") {{localize('landingPage.slackLink')}}
+            aside {{localize('landingPage.landingDesc')}}
+                a(href='https://business-transformation.pages.cloud.statcan.ca/aaw/zone/en/', tabindex='-1', target="_blank") {{localize('landingPage.doc')}}
             .actions
-            paper-button(on-click='nextPage') {{localize('registrationPage.btnNext')}}
-
-nav#Links
-    a(href='https://github.com/kubeflow/kubeflow', tabindex='-1', target="_blank") {{localize('registrationPage.linkGitHub')}}
-    a(href='https://www.kubeflow.org/docs/about/kubeflow/', tabindex='-1', target="_blank") {{localize('registrationPage.linkDocumentation')}}
-    a(href='https://policies.google.com/privacy', tabindex='-1', target="_blank") {{localize('registrationPage.linkPrivacy')}}
-
+            paper-button#Next(on-click='nextPage') {{localize('registrationPage.btnNext')}}
+        template(is='dom-if', if="[[!isStatcanEmail]]")
+            h2 {{localize('registrationPage.lblWelcome')}}
+            p {{localize('landingPage.wrongEmail', 'email', emailAddress)}}
+            .actions
+            paper-button#Next(on-click='logout') {{localize('landingPage.btnLogout')}}
 paper-toast#ErrorLandingPageToast(duration=0, opened='[[!empty(errorText)]]', on-click='closeError') {{localize(errorText)}}
     strong [[errorDetail]] 
     paper-icon-button(icon='close')

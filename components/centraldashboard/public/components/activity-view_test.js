@@ -70,7 +70,7 @@ describe('Activity View', () => {
         expect(activityView.activities).toEqual(activities);
         const message = activityView.shadowRoot.querySelector('.message');
         expect(message.hasAttribute('hidden')).toBe(false);
-        expect(message.innerText).toBe('No activities for namespace default');
+        expect(message.innerText).toBe('No activities for workspace default');
     });
 
     it('Shows error message when activites request fails', async () => {
@@ -86,6 +86,6 @@ describe('Activity View', () => {
         const message = activityView.shadowRoot.querySelector('.message');
         expect(message.hasAttribute('hidden')).toBe(false);
         expect(message.innerText)
-            .toBe('Error retrieving activities for namespace default');
+            .toBe('Error retrieving activities for workspace default');
     });
 });

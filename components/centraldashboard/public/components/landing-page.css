@@ -35,7 +35,7 @@ h2+aside {
 
 #MainCard {
   background: white;
-  padding: 0 40px;
+  padding: 40px;
   font-family: Roboto;
   max-width: 500px;
   width: 100%;
@@ -90,4 +90,19 @@ neon-animatable {
   --paper-input-error: {
       white-space: unset;
   }
+}
+
+paper-button {
+  color: var(--paper-blue-700);
+}
+
+paper-button:disabled {
+  color:gray;
+  cursor: not-allowed;
+}
+
+#Next {
+  color: #FFF;
+  background-color:var(--paper-blue-700);
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
 }
