@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import '@polymer/iron-ajax/iron-ajax.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
@@ -167,6 +168,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     }
 
     _onCreateNamespaceError(ev) {
+        console.log('Event ' + ev);
         if (ev=='editedData') {
             this.showError('landingPage.errEditedContent');
         } else {

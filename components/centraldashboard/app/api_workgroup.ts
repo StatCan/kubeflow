@@ -293,6 +293,17 @@ export class WorkgroupApi {
             }
         })
         .post('/create', async (req: Request, res: Response) => {
+            // Verify if the email is statcan
+            // Regex for the email
+            const regex = new RegExp('.+@statcan.gc.ca');
+            if(regex.test(req.body.email)){
+                // tHROW AN exception
+                return surfaceProfileControllerErrors({
+                    res,
+                    err: 400,
+                    msg: 'Wrong email was used ' + req.body,
+                });
+            }
             const profile = req.body as CreateProfileRequest;
             try {
                 const namespace = profile.namespace || req.user.username;
@@ -328,6 +339,18 @@ export class WorkgroupApi {
                 const code = (err.response && err.response.statusCode) || 400;
                 const error = err.body || 'Unexpected error getting environment info';
                 console.log(`Unable to get environment info: ${error}${err.stack?'\n'+err.stack:''}`);
+                apiError({res, code, error});
+            }
+        })
+        .get('/user-info', async (req: Request, res: Response) => {
+            try {
+                if (req.user) {
+                    return req.user;
+                }
+            } catch (err) {
+                const code = (err.response && err.response.statusCode) || 400;
+                const error = err.body || 'Unexpected error getting user info';
+                console.log(`Unable to get user info: ${error}${err.stack?'\n'+err.stack:''}`);
                 apiError({res, code, error});
             }
         })
