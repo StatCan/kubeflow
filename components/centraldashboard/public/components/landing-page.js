@@ -39,12 +39,14 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         return {
             userDetails: {type: Object, observer: '_onUserDetails'},
             namespaceName: String,
+            generatedNamespace: String,
             emailAddress: String,
             errorText: {type: String, value: ''},
             errorDetail: {type: String, value: ''},
             flowComplete: {type: Boolean, value: false},
             waitForRedirect: {type: Boolean, value: false},
             showAPIText: {type: Boolean, value: false},
+            isStatcanEmail: {type: Boolean, value: false},
         };
     }
 
@@ -52,8 +54,10 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         super.ready();
     }
 
-    _onUserDetails() {
+    _onUserDetails(d) {
         this.emailAddress = this.userDetails;
+        const regex = new RegExp('.+@statcan.gc.ca');
+        this.isStatcanEmail = regex.test(this.emailAddress);
         this.generateNamespace(this.userDetails);
     }
 
@@ -85,7 +89,8 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
                     namespaceNames.push(element.metadata.name);
                 });
                 let counter = 1;
-                const originalNs = ns;
+                // Remove any numbers at the end
+                const originalNs = ns.replace(/\d+/g, '');
                 if (namespaceNames.includes(originalNs)) {
                     while (namespaceNames.includes(originalNs + counter)) {
                         counter++;
@@ -93,32 +98,43 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
                     ns = originalNs + counter;
                 }
                 this.namespaceName = ns;
+                this.generatedNamespace = ns;
             }).catch((e)=> {
                 this.showError('landingPage.errGeneral');
                 this.errorDetail= e;
             });
     }
 
+    async logout() {
+        return this.buildHref(`/logout`);
+    }
+
     async nextPage() {
-        const API = this.$.MakeNamespace;
-        API.body = {namespace: this.namespaceName};
-        this.waitForRedirect = true;
-        await API.generateRequest().completes.catch((e) => e);
-        await this.sleep(1); // So the errors and callbacks can schedule
+        // Verify the email + namesoace are as expacted
+        if (this.emailAddress != this.userDetails ||
+            this.generatedNamespace != this.namespaceName) {
+            this._onCreateNamespaceError('editedData');
+            return;
+        } else {
+            const API = this.$.MakeNamespace;
+            API.body = {namespace: this.namespaceName};
+            this.waitForRedirect = true;
+            await API.generateRequest().completes.catch((e) => e);
+            await this.sleep(1); // So the errors and callbacks can schedule
 
-        /*
-         * Poll for profile over a span of 20 seconds (every 300ms)
-         * if still not there, let the user click next again!
-         */
-        const success = await this.pollProfile(66, 300);
-        if (success) this._successSetup();
+            /*
+             * Poll for profile over a span of 20 seconds (every 300ms)
+             * if still not there, let the user click next again!
+             */
+            const success = await this.pollProfile(66, 300);
+            if (success) this._successSetup();
 
-        // Create the default notebook
-        const APICreateDefault = this.$.CreateDefaultNotebook;
+            // Create the default notebook
+            const APICreateDefault = this.$.CreateDefaultNotebook;
 
-        await APICreateDefault.generateRequest().completes.catch((e) => e);
-        await this.sleep(1); // So the errors and callbacks can schedule
-
+            await APICreateDefault.generateRequest().completes.catch((e) => e);
+            await this.sleep(1); // So the errors and callbacks can schedule
+        }
         return this.waitForRedirect = false;
     }
 
@@ -151,17 +167,21 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     }
 
     _onCreateNamespaceError(ev) {
-        this.showError('mainPage.errCreateNS');
+        if (ev=='editedData') {
+            this.showError('landingPage.errEditedContent');
+        } else {
+            this.showError('landingPage.errCreateNS');
+        }
         return;
     }
 
     _onGetNamespaceError(ev) {
-        this.showError('mainPage.errGetNS');
+        this.showError('landingPage.errGetNS');
         return;
     }
 
     _onCreateDefaultNotebookError(ev) {
-        this.showError('mainPage.errCreateDefaultNotebook');
+        this.showError('landingPage.errCreateDefaultNotebook');
         return;
     }
 }
