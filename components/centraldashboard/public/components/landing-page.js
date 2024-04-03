@@ -56,6 +56,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     }
 
     _onUserDetails(d) {
+        console.log(this.userDetails);
         this.emailAddress = this.userDetails;
         const regex = new RegExp('.+@statcan.gc.ca');
         this.isStatcanEmail = regex.test(this.emailAddress);
