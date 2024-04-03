@@ -271,9 +271,10 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      */
     _onHasWorkgroupResponse(ev) {
         console.log('onHasWorkgroupResponse', ev);
-        const {user, hasWorkgroup, hasAuth,
+        const {user, email, hasWorkgroup, hasAuth,
             registrationFlowAllowed} = ev.detail.response;
         this._setIsolationMode(hasAuth ? 'multi-user' : 'single-user');
+        console.log('email', email);
         if (registrationFlowAllowed && hasAuth && !hasWorkgroup) {
             this.user = user;
             this._setRegistrationFlow(true);

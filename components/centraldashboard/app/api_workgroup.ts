@@ -25,6 +25,7 @@ interface AddOrRemoveContributorRequest {
 
 interface HasWorkgroupResponse {
     user: string;
+    email: string;
     hasAuth: boolean;
     hasWorkgroup: boolean;
     registrationFlowAllowed: boolean;
@@ -271,6 +272,7 @@ export class WorkgroupApi {
                 const response: HasWorkgroupResponse = {
                     hasAuth: req.user.hasAuth,
                     user: req.user.username,
+                    email: req.user.email,
                     hasWorkgroup: false,
                     registrationFlowAllowed: this.registrationFlowAllowed,
                 };
