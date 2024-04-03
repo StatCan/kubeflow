@@ -270,6 +270,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      * @param {Event} ev AJAX-response
      */
     _onHasWorkgroupResponse(ev) {
+        console.log('onHasWorkgroupResponse');
         const {user, hasWorkgroup, hasAuth,
             registrationFlowAllowed} = ev.detail.response;
         this._setIsolationMode(hasAuth ? 'multi-user' : 'single-user');
@@ -380,6 +381,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
     }
 
     _namespaceChanged(namespace) {
+        console.log('namespaceCanged');
         // update namespaced menu item when namespace is changed
         // by namespace selector
 
