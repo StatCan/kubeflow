@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
 import '@polymer/app-layout/app-header/app-header.js';
@@ -118,6 +119,11 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
                 type: Boolean,
                 // eslint-disable-next-line max-len
                 computed: 'computeShouldFetchEnv(registrationFlow, workgroupStatusHasLoaded)',
+            },
+            _shouldFetchEmail: {
+                type: Boolean,
+                // eslint-disable-next-line max-len
+                computed: 'computeShouldFetchEmail(registrationFlow, workgroupStatusHasLoaded)',
             },
             matchingIndex: Number,
             namespacedItemTemplete: String,
@@ -442,7 +448,13 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      * @return {boolean}
      */
     computeShouldFetchEnv(registrationFlow, workgroupStatusHasLoaded) {
+        console.log('fetch env', registrationFlow, workgroupStatusHasLoaded);
         return !registrationFlow && workgroupStatusHasLoaded;
+    }
+
+    computeShouldFetchEmail(registrationFlow, workgroupStatusHasLoaded) {
+        console.log('fetch user', registrationFlow, workgroupStatusHasLoaded);
+        return registrationFlow && workgroupStatusHasLoaded;
     }
 
     /**
@@ -531,6 +543,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      * @param {Event} responseEvent AJAX-response
      */
     _onEnvInfoResponse(responseEvent) {
+        console.log('envInfoResponse');
         const {
             platform, user, namespaces, isClusterAdmin,
         } = responseEvent.detail.response;

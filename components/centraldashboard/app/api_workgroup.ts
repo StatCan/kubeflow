@@ -351,6 +351,7 @@ export class WorkgroupApi {
         })
         .get('/user-info', async (req: Request, res: Response) => {
             try {
+                console.log('User-info ', req.user);
                 if (req.user) {
                     return req.user;
                 }
