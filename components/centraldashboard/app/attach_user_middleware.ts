@@ -13,6 +13,7 @@ export function attachUser(
       email = req.header(userIdHeader).slice(userIdPrefix.length);
       auth = {[userIdHeader]: req.header(userIdHeader)};
     }
+    console.log('test 1', email, req.header(userIdHeader));
     req.user = {
       email,
       username: email.split('@')[0],
@@ -20,6 +21,7 @@ export function attachUser(
       hasAuth: auth !== undefined,
       auth,
     };
+    console.log(email.split('@')[1]);
     next();
   };
 }

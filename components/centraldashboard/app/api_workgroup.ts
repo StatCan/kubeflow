@@ -337,6 +337,7 @@ export class WorkgroupApi {
         })
         .get('/env-info', async (req: Request, res: Response) => {
             try {
+                console.log('test 2', req.user);
                 if (req.user.hasAuth) {
                     return res.json(await this.getProfileAwareEnv(req.user));
                 }
