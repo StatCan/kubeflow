@@ -295,32 +295,38 @@ export class WorkgroupApi {
         .post('/create', async (req: Request, res: Response) => {
             // Verify if the email is statcan
             // Regex for the email
+            const profile = req.body as CreateProfileRequest;
             const regex = new RegExp('.+@statcan.gc.ca');
-            if(regex.test(req.body.email)){
+            if(!regex.test(req.body.email)){
                 // tHROW AN exception
                 return surfaceProfileControllerErrors({
                     res,
                     err: 400,
-                    msg: 'Wrong email was used ' + req.body,
+                    msg: 'Wrong email was used ' + req.body.email + ' profile ns ' + profile.namespace + ' profile user ' +  profile.user,
                 });
             }
-            const profile = req.body as CreateProfileRequest;
+            
             try {
-                const namespace = profile.namespace || req.user.username;
-                const owerName = profile.user || req.user.email;
-                // Use the request body if provided, fallback to auth headers
-                await this.profilesService.createProfile({
-                    metadata: {
-                        name: namespace,
-                    },
-                    spec: {
-                        owner: {
-                            kind: 'User',
-                            name: owerName,
-                        }
-                    },
+                return surfaceProfileControllerErrors({
+                    res,
+                    err: 400,
+                    msg: 'RIGHT email was used ' + req.body.email + ' profile ns ' + profile.namespace + ' profile user ' +  profile.user,
                 });
-                res.json({message: `Created namespace ${namespace}`});
+                // const namespace = profile.namespace || req.user.username;
+                // const owerName = profile.user || req.user.email;
+                // // Use the request body if provided, fallback to auth headers
+                // await this.profilesService.createProfile({
+                //     metadata: {
+                //         name: namespace,
+                //     },
+                //     spec: {
+                //         owner: {
+                //             kind: 'User',
+                //             name: owerName,
+                //         }
+                //     },
+                // });
+                // res.json({message: `Created namespace ${namespace}`});
             } catch (err) {
                 surfaceProfileControllerErrors({
                     res,
