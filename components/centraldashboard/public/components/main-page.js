@@ -121,11 +121,6 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
                 // eslint-disable-next-line max-len
                 computed: 'computeShouldFetchEnv(registrationFlow, workgroupStatusHasLoaded)',
             },
-            _shouldFetchEmail: {
-                type: Boolean,
-                // eslint-disable-next-line max-len
-                computed: 'computeShouldFetchEmail(registrationFlow, workgroupStatusHasLoaded)',
-            },
             matchingIndex: Number,
             namespacedItemTemplete: String,
             // for translations
@@ -455,11 +450,6 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
     computeShouldFetchEnv(registrationFlow, workgroupStatusHasLoaded) {
         console.log('fetch env', registrationFlow, workgroupStatusHasLoaded);
         return !registrationFlow && workgroupStatusHasLoaded;
-    }
-
-    computeShouldFetchEmail(registrationFlow, workgroupStatusHasLoaded) {
-        console.log('fetch user', registrationFlow, workgroupStatusHasLoaded);
-        return registrationFlow && workgroupStatusHasLoaded;
     }
 
     /**

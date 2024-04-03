@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import '@polymer/iron-ajax/iron-ajax.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
@@ -56,7 +55,6 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     }
 
     _onUserDetails(d) {
-        console.log(this.userDetails);
         this.emailAddress = this.userDetails;
         const regex = new RegExp('.+@statcan.gc.ca');
         this.isStatcanEmail = regex.test(this.emailAddress);
@@ -70,6 +68,8 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         ns = ns
             .replace(/[^\w]|\./g, '-')
             .replace(/^-+|-+$|_/g, '')
+            .replace(/[0-9]/g), ''
+            // Remove any didgits
             .toLowerCase();
 
         this.getNamespaces(ns);
@@ -169,7 +169,6 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     }
 
     _onCreateNamespaceError(ev) {
-        console.log('Event ' + ev);
         if (ev=='editedData') {
             this.showError('landingPage.errEditedContent');
         } else {
