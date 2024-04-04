@@ -108,7 +108,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     }
 
     async logout() {
-        return location.href(`/logout`);
+        location.href = `/logout`;
     }
 
     async nextPage() {
