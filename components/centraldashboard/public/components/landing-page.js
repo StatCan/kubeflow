@@ -119,7 +119,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
             return;
         } else {
             const API = this.$.MakeNamespace;
-            API.body = {namespace: this.namespaceName};
+            API.body = {namespace: this.namespaceName, email: this.emailAddress};
             this.waitForRedirect = true;
             await API.generateRequest().completes.catch((e) => e);
             await this.sleep(1); // So the errors and callbacks can schedule

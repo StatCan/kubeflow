@@ -16,7 +16,7 @@ type ContributorActions = 'create' | 'remove';
 
 interface CreateProfileRequest {
     namespace?: string;
-    user?: string;
+    email?: string;
 }
 
 interface AddOrRemoveContributorRequest {
@@ -299,12 +299,12 @@ export class WorkgroupApi {
             // Regex for the email
             const profile = req.body as CreateProfileRequest;
             const regex = new RegExp('.+@statcan.gc.ca');
-            if(!regex.test(req.body.email)){
+            if(!regex.test(profile.email)){
                 // tHROW AN exception
                 return surfaceProfileControllerErrors({
                     res,
                     err: 400,
-                    msg: 'Wrong email was used ' + req.body.email + ' profile ns ' + profile.namespace + ' profile user ' +  profile.user,
+                    msg: 'Wrong email was used ' + req.body.email + ' profile ns ' + profile.namespace + ' profile user ' +  profile.email,
                 });
             }
             
@@ -312,7 +312,7 @@ export class WorkgroupApi {
                 return surfaceProfileControllerErrors({
                     res,
                     err: 400,
-                    msg: 'RIGHT email was used ' + req.body.email + ' profile ns ' + profile.namespace + ' profile user ' +  profile.user,
+                    msg: 'RIGHT email was used ' + req.body.email + ' profile ns ' + profile.namespace + ' profile user ' +  profile.email,
                 });
                 // const namespace = profile.namespace || req.user.username;
                 // const owerName = profile.user || req.user.email;
