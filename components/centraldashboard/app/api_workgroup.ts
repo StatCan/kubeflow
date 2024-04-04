@@ -295,20 +295,8 @@ export class WorkgroupApi {
             }
         })
         .post('/create', async (req: Request, res: Response) => {
-            // Verify if the email is statcan
-            // Regex for the email
-            const profile = req.body as CreateProfileRequest;
-            const regex = new RegExp('.+@statcan.gc.ca');
-            if(!regex.test(profile.email)){
-                // tHROW AN exception
-                return surfaceProfileControllerErrors({
-                    res,
-                    err: 400,
-                    msg: 'Wrong email was used ' +  profile.email,
-                });
-            }
-            
             try {
+                const profile = req.body as CreateProfileRequest;
                 const namespace = profile.namespace || req.user.username;
                 const owerName = profile.email || req.user.email;
                 // Use the request body if provided, fallback to auth headers

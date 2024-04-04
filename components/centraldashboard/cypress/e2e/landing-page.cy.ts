@@ -4,6 +4,7 @@ describe('Landing Page', () => {
     cy.intercept('GET', `/api/workgroup/exists`, {
       "hasAuth":true,
       "user":"user.name@statcan.gc.ca",
+      "email": "user.name@statcan.gc.ca",
       "hasWorkgroup":false,
       "registrationFlowAllowed":true
     }).as('mockWorkgroupRequest');
