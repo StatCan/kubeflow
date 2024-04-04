@@ -237,14 +237,14 @@ describe('Workgroup API', () => {
         it('Should return for an identity aware cluster with a Workgroup',
             async () => {
                 mockProfilesService.v1RoleClusteradminGet
-                    .withArgs('test@statcan.gc.ca')
+                    .withArgs('test@testdomain.com')
                     .and.returnValue(Promise.resolve({response: null, body: false}));
-                mockProfilesService.readBindings.withArgs('test@statcan.gc.ca')
+                mockProfilesService.readBindings.withArgs('test@testdomain.com')
                     .and.returnValue(Promise.resolve({
                         response: null,
                         body: {
                             bindings: [{
-                                user: {kind: 'user', name: 'test@statcan.gc.ca'},
+                                user: {kind: 'user', name: 'test@testdomain.com'},
                                 referredNamespace: 'test',
                                 roleRef: {apiGroup: '', kind: 'ClusterRole', name: 'admin'}
                             }]
@@ -252,17 +252,17 @@ describe('Workgroup API', () => {
                     }));
 
                 const expectedResponse = {hasAuth: true, hasWorkgroup: true, 
-                    user: 'test', email: 'test@statcan.gc.ca', registrationFlowAllowed: true};
+                    user: 'test', email: 'test@testdomain.com', registrationFlowAllowed: true};
 
                 const headers = {
-                    [header.goog]: `${prefix.goog}test@statcan.gc.ca`,
+                    [header.goog]: `${prefix.goog}test@testdomain.com`,
                 };
                 const response = await sendTestRequest(url, headers);
                 expect(response).toEqual(expectedResponse);
                 expect(mockProfilesService.readBindings)
-                    .toHaveBeenCalledWith('test@statcan.gc.ca');
+                    .toHaveBeenCalledWith('test@testdomain.com');
                 expect(mockProfilesService.v1RoleClusteradminGet)
-                    .toHaveBeenCalledWith('test@statcan.gc.ca');
+                    .toHaveBeenCalledWith('test@testdomain.com');
             });
 
         it('Should return for an identity aware cluster without a Workgroup', async () => {
