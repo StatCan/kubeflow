@@ -351,7 +351,7 @@ describe('Workgroup API', () => {
             };
             const response = await sendTestRequest(
                 url, headers, 200, 'post',
-                {namespace: 'a_different_namespace', user: 'another_user@foo.bar'});
+                {namespace: 'a_different_namespace', email: 'another_user@foo.bar'});
             expect(response).toEqual({message: 'Created namespace a_different_namespace'});
             expect(mockProfilesService.createProfile).toHaveBeenCalledWith({
                 metadata: {

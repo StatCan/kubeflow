@@ -333,18 +333,6 @@ export class WorkgroupApi {
                 apiError({res, code, error});
             }
         })
-        .get('/user-info', async (req: Request, res: Response) => {
-            try {
-                if (req.user) {
-                    return req.user;
-                }
-            } catch (err) {
-                const code = (err.response && err.response.statusCode) || 400;
-                const error = err.body || 'Unexpected error getting user info';
-                console.log(`Unable to get user info: ${error}${err.stack?'\n'+err.stack:''}`);
-                apiError({res, code, error});
-            }
-        })
         .use((req: Request, res: Response, next: NextFunction) => {
             if (!req.user.hasAuth) {
                 return apiError({
