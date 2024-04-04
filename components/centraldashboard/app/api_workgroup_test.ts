@@ -226,7 +226,7 @@ describe('Workgroup API', () => {
                     },
                 }));
             const expectedResponse = {hasAuth: false, hasWorkgroup: false, 
-                user: 'anonymous', registrationFlowAllowed: true};
+                user: 'anonymous', email: 'anonymous@kubeflow.org', registrationFlowAllowed: true};
 
             const response = await sendTestRequest(url);
             expect(response).toEqual(expectedResponse);
@@ -252,7 +252,7 @@ describe('Workgroup API', () => {
                     }));
 
                 const expectedResponse = {hasAuth: true, hasWorkgroup: true, 
-                    user: 'test', registrationFlowAllowed: true};
+                    user: 'test', email: 'test@testdomain.com', registrationFlowAllowed: true};
 
                 const headers = {
                     [header.goog]: `${prefix.goog}test@testdomain.com`,
@@ -276,7 +276,7 @@ describe('Workgroup API', () => {
                 }));
 
             const expectedResponse = {hasAuth: true, hasWorkgroup: false, 
-                user: 'test', registrationFlowAllowed: true};
+                user: 'test', email: 'test@testdomain.com', registrationFlowAllowed: true};
 
             const headers = {
                 [header.goog]: `${prefix.goog}test@testdomain.com`,
@@ -351,7 +351,7 @@ describe('Workgroup API', () => {
             };
             const response = await sendTestRequest(
                 url, headers, 200, 'post',
-                {namespace: 'a_different_namespace', user: 'another_user@foo.bar'});
+                {namespace: 'a_different_namespace', email: 'another_user@foo.bar'});
             expect(response).toEqual({message: 'Created namespace a_different_namespace'});
             expect(mockProfilesService.createProfile).toHaveBeenCalledWith({
                 metadata: {

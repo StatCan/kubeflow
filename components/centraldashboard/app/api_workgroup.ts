@@ -16,7 +16,7 @@ type ContributorActions = 'create' | 'remove';
 
 interface CreateProfileRequest {
     namespace?: string;
-    user?: string;
+    email?: string;
 }
 
 interface AddOrRemoveContributorRequest {
@@ -25,6 +25,7 @@ interface AddOrRemoveContributorRequest {
 
 interface HasWorkgroupResponse {
     user: string;
+    email: string;
     hasAuth: boolean;
     hasWorkgroup: boolean;
     registrationFlowAllowed: boolean;
@@ -271,6 +272,7 @@ export class WorkgroupApi {
                 const response: HasWorkgroupResponse = {
                     hasAuth: req.user.hasAuth,
                     user: req.user.username,
+                    email: req.user.email,
                     hasWorkgroup: false,
                     registrationFlowAllowed: this.registrationFlowAllowed,
                 };
@@ -293,10 +295,10 @@ export class WorkgroupApi {
             }
         })
         .post('/create', async (req: Request, res: Response) => {
-            const profile = req.body as CreateProfileRequest;
             try {
+                const profile = req.body as CreateProfileRequest;
                 const namespace = profile.namespace || req.user.username;
-                const owerName = profile.user || req.user.email;
+                const owerName = profile.email || req.user.email;
                 // Use the request body if provided, fallback to auth headers
                 await this.profilesService.createProfile({
                     metadata: {

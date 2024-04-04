@@ -68,6 +68,8 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         ns = ns
             .replace(/[^\w]|\./g, '-')
             .replace(/^-+|-+$|_/g, '')
+            .replace(/[0-9]/g), ''
+            // Remove any didgits
             .toLowerCase();
 
         this.getNamespaces(ns);
@@ -106,7 +108,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     }
 
     async logout() {
-        return this.buildHref(`/logout`);
+        location.href = `/logout`;
     }
 
     async nextPage() {
@@ -117,7 +119,8 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
             return;
         } else {
             const API = this.$.MakeNamespace;
-            API.body = {namespace: this.namespaceName};
+            API.body = {namespace: this.namespaceName,
+                email: this.emailAddress};
             this.waitForRedirect = true;
             await API.generateRequest().completes.catch((e) => e);
             await this.sleep(1); // So the errors and callbacks can schedule

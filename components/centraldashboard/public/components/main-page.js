@@ -112,6 +112,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
             namespaces: Array,
             namespace: String,
             user: String,
+            email: String,
             isClusterAdmin: {type: Boolean, value: false},
             isolationMode: {type: String, value: 'undecided', readOnly: true},
             _shouldFetchEnv: {
@@ -264,11 +265,12 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      * @param {Event} ev AJAX-response
      */
     _onHasWorkgroupResponse(ev) {
-        const {user, hasWorkgroup, hasAuth,
+        const {user, email, hasWorkgroup, hasAuth,
             registrationFlowAllowed} = ev.detail.response;
         this._setIsolationMode(hasAuth ? 'multi-user' : 'single-user');
         if (registrationFlowAllowed && hasAuth && !hasWorkgroup) {
             this.user = user;
+            this.email = email;
             this._setRegistrationFlow(true);
         }
         this._setWorkgroupStatusHasLoaded(true);
