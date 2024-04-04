@@ -123,14 +123,14 @@ describe('Workgroup API', () => {
         it('Should retrieve information for an identity aware cluster',
             async () => {
                 mockProfilesService.v1RoleClusteradminGet
-                    .withArgs('test@statcan.gc.ca')
+                    .withArgs('test@testdomain.com')
                     .and.returnValue(Promise.resolve({response: null, body: false}));
-                mockProfilesService.readBindings.withArgs('test@statcan.gc.ca')
+                mockProfilesService.readBindings.withArgs('test@testdomain.com')
                     .and.returnValue(Promise.resolve({
                         response: null,
                         body: {
                             bindings: [{
-                                user: {kind: 'user', name: 'test@statcan.gc.ca'},
+                                user: {kind: 'user', name: 'test@testdomain.com'},
                                 referredNamespace: 'test',
                                 roleRef: {apiGroup: '', kind: 'ClusterRole', name: 'edit'}
                             }]
@@ -138,7 +138,7 @@ describe('Workgroup API', () => {
                     }));
 
                 const headers = {
-                    [header.goog]: `${prefix.goog}test@statcan.gc.ca`,
+                    [header.goog]: `${prefix.goog}test@testdomain.com`,
                 };
                 const expectedResponse = {
                     platform: {
@@ -146,11 +146,11 @@ describe('Workgroup API', () => {
                         providerName: 'onprem',
                         kubeflowVersion: '1.0.0',
                     },
-                    user: 'test@statcan.gc.ca',
+                    user: 'test@testdomain.com',
                     isClusterAdmin: false,
                     namespaces: [
                         {
-                            user: 'test@statcan.gc.ca',
+                            user: 'test@testdomain.com',
                             namespace: 'test',
                             role: 'contributor',
                         },
@@ -162,22 +162,22 @@ describe('Workgroup API', () => {
                 expect(mockK8sService.getNamespaces).not.toHaveBeenCalled();
                 expect(mockK8sService.getPlatformInfo).toHaveBeenCalled();
                 expect(mockProfilesService.readBindings)
-                    .toHaveBeenCalledWith('test@statcan.gc.ca');
+                    .toHaveBeenCalledWith('test@testdomain.com');
                 expect(mockProfilesService.v1RoleClusteradminGet)
-                    .toHaveBeenCalledWith('test@statcan.gc.ca');
+                    .toHaveBeenCalledWith('test@testdomain.com');
             });
 
         it('Returns an error status if the Profiles service fails', async () => {
-            mockProfilesService.v1RoleClusteradminGet.withArgs('test@statcan.gc.ca')
+            mockProfilesService.v1RoleClusteradminGet.withArgs('test@testdomain.com')
                 .and.callFake(
                     () => Promise.reject(
                         {response: {statusCode: 400}, body: 'A bad thing happened'}));
-            mockProfilesService.readBindings.withArgs('test@statcan.gc.ca')
+            mockProfilesService.readBindings.withArgs('test@testdomain.com')
                 .and.returnValue(Promise.resolve({
                     response: null,
                     body: {
                         bindings: [{
-                            user: {kind: 'user', name: 'test@statcan.gc.ca'},
+                            user: {kind: 'user', name: 'test@testdomain.com'},
                             referredNamespace: 'test',
                             roleRef: {apiGroup: '', kind: 'ClusterRole', name: 'edit'}
                         }]
@@ -185,16 +185,16 @@ describe('Workgroup API', () => {
                 }));
 
             const headers = {
-                [header.goog]: `${prefix.goog}test@statcan.gc.ca`,
+                [header.goog]: `${prefix.goog}test@testdomain.com`,
             };
             const response = await sendTestRequest(url, headers, 400);
             expect(response).toEqual({error: 'A bad thing happened'});
             expect(mockK8sService.getNamespaces).not.toHaveBeenCalled();
             expect(mockK8sService.getPlatformInfo).toHaveBeenCalled();
             expect(mockProfilesService.readBindings)
-                .toHaveBeenCalledWith('test@statcan.gc.ca');
+                .toHaveBeenCalledWith('test@testdomain.com');
             expect(mockProfilesService.v1RoleClusteradminGet)
-                .toHaveBeenCalledWith('test@statcan.gc.ca');
+                .toHaveBeenCalledWith('test@testdomain.com');
         });
     });
 
@@ -226,7 +226,7 @@ describe('Workgroup API', () => {
                     },
                 }));
             const expectedResponse = {hasAuth: false, hasWorkgroup: false, 
-                user: 'anonymous', registrationFlowAllowed: true};
+                user: 'anonymous', email: 'anonymous@kubeflow.org', registrationFlowAllowed: true};
 
             const response = await sendTestRequest(url);
             expect(response).toEqual(expectedResponse);
@@ -252,7 +252,7 @@ describe('Workgroup API', () => {
                     }));
 
                 const expectedResponse = {hasAuth: true, hasWorkgroup: true, 
-                    user: 'test', registrationFlowAllowed: true};
+                    user: 'test', email: 'test@statcan.gc.ca', registrationFlowAllowed: true};
 
                 const headers = {
                     [header.goog]: `${prefix.goog}test@statcan.gc.ca`,
@@ -267,26 +267,26 @@ describe('Workgroup API', () => {
 
         it('Should return for an identity aware cluster without a Workgroup', async () => {
             mockProfilesService.v1RoleClusteradminGet
-                .withArgs('test@statcan.gc.ca')
+                .withArgs('test@testdomain.com')
                 .and.returnValue(Promise.resolve({response: null, body: false}));
-            mockProfilesService.readBindings.withArgs('test@statcan.gc.ca')
+            mockProfilesService.readBindings.withArgs('test@testdomain.com')
                 .and.returnValue(Promise.resolve({
                     response: null,
                     body: {bindings: []},
                 }));
 
             const expectedResponse = {hasAuth: true, hasWorkgroup: false, 
-                user: 'test', registrationFlowAllowed: true};
+                user: 'test', email: 'test@testdomain.com', registrationFlowAllowed: true};
 
             const headers = {
-                [header.goog]: `${prefix.goog}test@statcan.gc.ca`,
+                [header.goog]: `${prefix.goog}test@testdomain.com`,
             };
             const response = await sendTestRequest(url, headers);
             expect(response).toEqual(expectedResponse);
             expect(mockProfilesService.readBindings)
-                .toHaveBeenCalledWith('test@statcan.gc.ca');
+                .toHaveBeenCalledWith('test@testdomain.com');
             expect(mockProfilesService.v1RoleClusteradminGet)
-                .toHaveBeenCalledWith('test@statcan.gc.ca');
+                .toHaveBeenCalledWith('test@testdomain.com');
         });
     });
 
@@ -327,7 +327,7 @@ describe('Workgroup API', () => {
 
         it('Should use user identity if no body is provided', async () => {
             const headers = {
-                [header.goog]: `${prefix.goog}test@statcan.gc.ca`,
+                [header.goog]: `${prefix.goog}test@testdomain.com`,
             };
             const response = await sendTestRequest(url, headers, 200, 'post');
             expect(response).toEqual({message: 'Created namespace test'});
@@ -338,7 +338,7 @@ describe('Workgroup API', () => {
                 spec: {
                     owner: {
                         kind: 'User',
-                        name: 'test@statcan.gc.ca',
+                        name: 'test@testdomain.com',
                     }
                 },
             });
@@ -346,12 +346,12 @@ describe('Workgroup API', () => {
 
         it('Should use post body when provided', async () => {
             const headers = {
-                [header.goog]: `${prefix.goog}test@statcan.gc.ca`,
+                [header.goog]: `${prefix.goog}test@testdomain.com`,
                 'content-type': 'application/json',
             };
             const response = await sendTestRequest(
                 url, headers, 200, 'post',
-                {namespace: 'a_different_namespace', user: 'another_user@statcan.gc.ca'});
+                {namespace: 'a_different_namespace', user: 'another_user@foo.bar'});
             expect(response).toEqual({message: 'Created namespace a_different_namespace'});
             expect(mockProfilesService.createProfile).toHaveBeenCalledWith({
                 metadata: {
@@ -360,7 +360,7 @@ describe('Workgroup API', () => {
                 spec: {
                     owner: {
                         kind: 'User',
-                        name: 'another_user@statcan.gc.ca',
+                        name: 'another_user@foo.bar',
                     }
                 },
             });
@@ -375,14 +375,14 @@ describe('Workgroup API', () => {
                     spec: {
                         owner: {
                             kind: 'User',
-                            name: 'test@statcan.gc.ca',
+                            name: 'test@testdomain.com',
                         }
                     },
                 })
                 .and.callFake(() => Promise.reject({response: {statusCode: 405}}));
 
             const headers = {
-                [header.goog]: `${prefix.goog}test@statcan.gc.ca`,
+                [header.goog]: `${prefix.goog}test@testdomain.com`,
             };
             const response = await sendTestRequest(url, headers, 405, 'post');
             expect(response).toEqual({error: 'Unexpected error creating profile'});
@@ -394,7 +394,7 @@ describe('Workgroup API', () => {
         const requestBody = {contributor: 'apverma@google.com'};
         const headers = {
             'content-type': 'application/json',
-            [header.goog]: `${prefix.goog}test@statcan.gc.ca`,
+            [header.goog]: `${prefix.goog}test@testdomain.com`,
         };
 
         beforeEach(() => {
