@@ -66,8 +66,8 @@ describe('Main Page', () => {
     cy.get('main-page').shadow().find('iframe-link[href="/en/?ns=test-namespace"]').should('exist');
     cy.get('main-page').shadow().find('iframe-link[href="/en/?ns=test-namespace"]').find('paper-item').should('have.text', 'Notebooks');
 
-    cy.get('main-page').shadow().find('a[href="https://business-transformation.pages.cloud.statcan.ca/aaw/aaw/en/"]').should('exist');
-    cy.get('main-page').shadow().find('a[href="https://business-transformation.pages.cloud.statcan.ca/aaw/aaw/en/"]').find('paper-item').should('have.text', 'Documentation');
+    cy.get('main-page').shadow().find('a[href="https://business-transformation.pages.cloud.statcan.ca/aaw/zone/en/"]').should('exist');
+    cy.get('main-page').shadow().find('a[href="https://business-transformation.pages.cloud.statcan.ca/aaw/zone/en/"]').find('paper-item').should('have.text', 'Documentation');
   
     //mock env info to hide manage contributors link
     cy.intercept('GET', `/api/workgroup/env-info`, {
@@ -163,7 +163,7 @@ describe('Main Page', () => {
     cy.get('main-page').shadow().find('iframe-link[href="/en/?ns=test-namespace-2"]').should('exist');
     cy.get('main-page').shadow().find('iframe-link[href="/en/?ns=test-namespace-2"]').find('paper-item').should('have.text', 'Notebooks');
 
-    cy.get('main-page').shadow().find('a[href="https://business-transformation.pages.cloud.statcan.ca/aaw/aaw/en/"]').should('exist');
-    cy.get('main-page').shadow().find('a[href="https://business-transformation.pages.cloud.statcan.ca/aaw/aaw/en/"]').find('paper-item').should('have.text', 'Documentation');
+    cy.get('main-page').shadow().find('a[href="https://business-transformation.pages.cloud.statcan.ca/aaw/zone/en/"]').should('exist');
+    cy.get('main-page').shadow().find('a[href="https://business-transformation.pages.cloud.statcan.ca/aaw/zone/en/"]').find('paper-item').should('have.text', 'Documentation');
   });
 })

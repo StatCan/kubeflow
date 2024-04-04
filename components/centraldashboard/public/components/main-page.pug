@@ -52,7 +52,7 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
             a(href$='[[_buildHref("/manage-filers", queryParams.*)]]', tabindex='-1')
                 paper-item.menu-item#filers {{localize('mainPage.menuManageFilers')}}
             aside.divider
-            a(href='https://business-transformation.pages.cloud.statcan.ca/aaw/aaw/en/',
+            a(href$=`{{localize('dashboardView.docItemCommunityChatLink')}}`,
                 tabindex='-1', target="_blank")
                 paper-item.menu-item {{localize('mainPage.menuDocumentation')}}
                     iron-icon.external(icon="launch")
