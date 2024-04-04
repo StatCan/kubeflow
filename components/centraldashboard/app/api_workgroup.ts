@@ -304,31 +304,26 @@ export class WorkgroupApi {
                 return surfaceProfileControllerErrors({
                     res,
                     err: 400,
-                    msg: 'Wrong email was used ' + req.body.email + ' profile ns ' + profile.namespace + ' profile user ' +  profile.email,
+                    msg: 'Wrong email was used ' +  profile.email,
                 });
             }
             
             try {
-                return surfaceProfileControllerErrors({
-                    res,
-                    err: 400,
-                    msg: 'RIGHT email was used ' + req.body.email + ' profile ns ' + profile.namespace + ' profile user ' +  profile.email,
+                const namespace = profile.namespace || req.user.username;
+                const owerName = profile.email || req.user.email;
+                // Use the request body if provided, fallback to auth headers
+                await this.profilesService.createProfile({
+                    metadata: {
+                        name: namespace,
+                    },
+                    spec: {
+                        owner: {
+                            kind: 'User',
+                            name: owerName,
+                        }
+                    },
                 });
-                // const namespace = profile.namespace || req.user.username;
-                // const owerName = profile.user || req.user.email;
-                // // Use the request body if provided, fallback to auth headers
-                // await this.profilesService.createProfile({
-                //     metadata: {
-                //         name: namespace,
-                //     },
-                //     spec: {
-                //         owner: {
-                //             kind: 'User',
-                //             name: owerName,
-                //         }
-                //     },
-                // });
-                // res.json({message: `Created namespace ${namespace}`});
+                res.json({message: `Created namespace ${namespace}`});
             } catch (err) {
                 surfaceProfileControllerErrors({
                     res,
