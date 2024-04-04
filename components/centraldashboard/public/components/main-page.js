@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
 import '@polymer/app-layout/app-header/app-header.js';
@@ -266,11 +265,9 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      * @param {Event} ev AJAX-response
      */
     _onHasWorkgroupResponse(ev) {
-        console.log('onHasWorkgroupResponse', ev);
         const {user, email, hasWorkgroup, hasAuth,
             registrationFlowAllowed} = ev.detail.response;
         this._setIsolationMode(hasAuth ? 'multi-user' : 'single-user');
-        console.log('email', email);
         if (registrationFlowAllowed && hasAuth && !hasWorkgroup) {
             this.user = user;
             this.email = email;
@@ -379,7 +376,6 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
     }
 
     _namespaceChanged(namespace) {
-        console.log('namespaceCanged', namespace);
         // update namespaced menu item when namespace is changed
         // by namespace selector
 
@@ -448,7 +444,6 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      * @return {boolean}
      */
     computeShouldFetchEnv(registrationFlow, workgroupStatusHasLoaded) {
-        console.log('fetch env', registrationFlow, workgroupStatusHasLoaded);
         return !registrationFlow && workgroupStatusHasLoaded;
     }
 
@@ -538,7 +533,6 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      * @param {Event} responseEvent AJAX-response
      */
     _onEnvInfoResponse(responseEvent) {
-        console.log('envInfoResponse');
         const {
             platform, user, namespaces, isClusterAdmin,
         } = responseEvent.detail.response;
