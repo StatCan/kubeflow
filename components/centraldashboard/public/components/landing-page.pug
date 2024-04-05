@@ -14,7 +14,7 @@ paper-card#MainCard
             md2-input#Email(label="{{localize('landingPage.email')}}", value='{{emailAddress}}', disabled="true")
             md2-input#Namespace(label="{{localize('landingPage.yourNamespace')}}", value='{{namespaceName}}', disabled='true')
             aside {{localize('landingPage.landingDesc')}}
-                a(href='https://business-transformation.pages.cloud.statcan.ca/aaw/zone/en/', tabindex='-1', target="_blank") {{localize('landingPage.doc')}}
+                a(href$=`{{localize('dashboardView.docItemCommunityChatLink')}}`, tabindex='-1', target="_blank") {{localize('landingPage.doc')}}
             .actions
             paper-button#Next(on-click='nextPage') {{localize('registrationPage.btnNext')}}
         template(is='dom-if', if="[[!isStatcanEmail]]")
