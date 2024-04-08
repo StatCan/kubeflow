@@ -1,0 +1,66 @@
+:host {
+  @apply --layout-fullbleed;
+  @apply --layout-vertical;
+  @apply --layout-center-center;
+  position: absolute;
+  width: 100vw;
+  left: 0;
+  top: 0;
+  --accent-color: #3674e0;
+  --logo-color: #183b6d;
+  --primary-background-color: #f1f3f4;
+  --heading-color: #3c4043;
+  --subtext-color: #80868b;
+  background: var(--primary-background-color);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: Google Sans;
+  color: var(--heading-color);
+  font-weight: 400
+}
+
+h2 {
+  font-size: 1.25em
+}
+
+#MainCard {
+  background: white;
+  padding: 40px;
+  font-family: Roboto;
+  max-width: 500px;
+  width: 100%;
+}
+
+#Logo {
+  color: var(--logo-color);
+  margin: 0;
+  padding: 3em 0 4em;
+}
+
+#Logo>svg * {
+  fill: currentColor
+}
+
+neon-animatable {
+  @apply --layout-vertical;
+}
+
+.actions {
+  margin-top: 1.5em;
+  flex: 1;
+  @apply --layout-horizontal-reverse;
+  @apply --layout-end;
+}
+
+paper-button {
+  color: var(--paper-blue-700);
+}
+
+paper-button:disabled {
+  color:gray;
+  cursor: not-allowed;
+}

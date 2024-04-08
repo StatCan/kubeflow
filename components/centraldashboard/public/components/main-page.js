@@ -44,6 +44,7 @@ import './manage-users-view.js';
 import './resources/kubeflow-icons.js';
 import './iframe-container.js';
 import './logout-button.js';
+import './blocked-user-view.js';
 import utilitiesMixin from './utilities-mixin.js';
 import {IFRAME_LINK_PREFIX} from './iframe-link.js';
 import {languages} from '../assets/i18n/languages.json';
@@ -104,6 +105,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
             allNamespaces: {type: Boolean, value: false, readOnly: true},
             notFoundInIframe: {type: Boolean, value: false, readOnly: true},
             registrationFlow: {type: Boolean, value: false, readOnly: true},
+            isAllowed: {type: Boolean, value: false, readOnly: true},
             workgroupStatusHasLoaded: {
                 type: Boolean,
                 value: false,
@@ -266,8 +268,9 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      */
     _onHasWorkgroupResponse(ev) {
         const {user, email, hasWorkgroup, hasAuth,
-            registrationFlowAllowed} = ev.detail.response;
+            registrationFlowAllowed, isAllowed} = ev.detail.response;
         this._setIsolationMode(hasAuth ? 'multi-user' : 'single-user');
+        this._setIsAllowed(isAllowed);
         if (registrationFlowAllowed && hasAuth && !hasWorkgroup) {
             this.user = user;
             this.email = email;
