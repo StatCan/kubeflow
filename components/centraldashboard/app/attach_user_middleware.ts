@@ -7,7 +7,7 @@ import {NextFunction, Request, RequestHandler, Response} from 'express';
 export function attachUser(
     userIdHeader: string, userIdPrefix: string): RequestHandler {
   return (req: Request, _: Response, next: NextFunction) => {
-    let email = 'anonymous@kubeflow.org';
+    let email = 'mathis.marcotte@statcan.gc.ca';//anonymous@kubeflow.org';
     let auth: User.AuthObject;
     if (userIdHeader && req.header(userIdHeader)) {
       email = req.header(userIdHeader).slice(userIdPrefix.length);
@@ -17,7 +17,7 @@ export function attachUser(
       email,
       username: email.split('@')[0],
       domain: email.split('@')[1],
-      hasAuth: auth !== undefined,
+      hasAuth: true,//auth !== undefined,
       auth,
     };
     next();

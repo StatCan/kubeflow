@@ -3,5 +3,6 @@
   "user":"user.name",
   "email": "user.name@statcan.gc.ca",
   "hasWorkgroup":true,
-  "registrationFlowAllowed":true
+  "registrationFlowAllowed":true,
+  "isAllowed": true
 }
