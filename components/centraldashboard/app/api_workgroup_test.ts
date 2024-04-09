@@ -226,7 +226,8 @@ describe('Workgroup API', () => {
                     },
                 }));
             const expectedResponse = {hasAuth: false, hasWorkgroup: false, 
-                user: 'anonymous', email: 'anonymous@kubeflow.org', registrationFlowAllowed: true};
+                user: 'anonymous', email: 'anonymous@kubeflow.org', registrationFlowAllowed: true, 
+                isAllowed: true};
 
             const response = await sendTestRequest(url);
             expect(response).toEqual(expectedResponse);
@@ -252,7 +253,8 @@ describe('Workgroup API', () => {
                     }));
 
                 const expectedResponse = {hasAuth: true, hasWorkgroup: true, 
-                    user: 'test', email: 'test@testdomain.com', registrationFlowAllowed: true};
+                    user: 'test', email: 'test@testdomain.com', registrationFlowAllowed: true,
+                    isAllowed: true};
 
                 const headers = {
                     [header.goog]: `${prefix.goog}test@testdomain.com`,
@@ -276,7 +278,8 @@ describe('Workgroup API', () => {
                 }));
 
             const expectedResponse = {hasAuth: true, hasWorkgroup: false, 
-                user: 'test', email: 'test@testdomain.com', registrationFlowAllowed: true};
+                user: 'test', email: 'test@testdomain.com', registrationFlowAllowed: true,
+                isAllowed: true};
 
             const headers = {
                 [header.goog]: `${prefix.goog}test@testdomain.com`,
