@@ -37,6 +37,7 @@ describe('Workgroup API', () => {
             mockK8sService = jasmine.createSpyObj<KubernetesService>([
                 'getPlatformInfo',
                 'getNamespaces',
+                'getAllowlistConfigMap'
             ]);
             mockK8sService.getPlatformInfo.and.returnValue(Promise.resolve({
                 provider: 'onprem',
@@ -203,6 +204,9 @@ describe('Workgroup API', () => {
         beforeEach(() => {
             mockProfilesService = jasmine.createSpyObj<DefaultApi>(
                 ['readBindings', 'v1RoleClusteradminGet']);
+            mockK8sService = jasmine.createSpyObj<KubernetesService>([
+                'getAllowlistConfigMap'
+            ]);
 
             testApp = express();
             testApp.use(express.json());
@@ -225,6 +229,10 @@ describe('Workgroup API', () => {
                         bindings: []
                     },
                 }));
+            mockK8sService.getAllowlistConfigMap.and.returnValue(Promise.resolve({
+                data: {
+                    allowlist: '{"users": []}'
+                }}));
             const expectedResponse = {hasAuth: false, hasWorkgroup: false, 
                 user: 'anonymous', email: 'anonymous@kubeflow.org', registrationFlowAllowed: true, 
                 isAllowed: true};
@@ -251,6 +259,10 @@ describe('Workgroup API', () => {
                             }]
                         },
                     }));
+                mockK8sService.getAllowlistConfigMap.and.returnValue(Promise.resolve({
+                    data: {
+                        allowlist: '{"users": []}'
+                    }}));
 
                 const expectedResponse = {hasAuth: true, hasWorkgroup: true, 
                     user: 'test', email: 'test@testdomain.com', registrationFlowAllowed: true,
@@ -276,6 +288,10 @@ describe('Workgroup API', () => {
                     response: null,
                     body: {bindings: []},
                 }));
+            mockK8sService.getAllowlistConfigMap.and.returnValue(Promise.resolve({
+                data: {
+                    allowlist: '{"users": []}'
+                }}));
 
             const expectedResponse = {hasAuth: true, hasWorkgroup: false, 
                 user: 'test', email: 'test@testdomain.com', registrationFlowAllowed: true,
