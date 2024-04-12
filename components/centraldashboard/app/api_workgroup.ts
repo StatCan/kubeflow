@@ -29,6 +29,7 @@ interface HasWorkgroupResponse {
     hasAuth: boolean;
     hasWorkgroup: boolean;
     registrationFlowAllowed: boolean;
+    isAllowed: boolean;
 }
 
 interface EnvironmentInfo {
@@ -57,6 +58,7 @@ export interface SimpleBinding {
 export interface WorkgroupInfo {
     namespaces: SimpleBinding[];
     isClusterAdmin: boolean;
+    isAllowed: boolean;
 }
 
 /**
@@ -182,25 +184,29 @@ export class WorkgroupApi {
      * Retrieves WorkgroupInfo from Profile Controller for the given user.
      */
     async getWorkgroupInfo(user: User.User): Promise<WorkgroupInfo> {
-        let adminResponse, bindings;
+        let adminResponse, bindings, allowlist;
         try{
             //try catch is for a retry when it fails
-            [adminResponse, bindings] = await Promise.all([
+            [adminResponse, bindings, allowlist] = await Promise.all([
                 this.profilesService.v1RoleClusteradminGet(user.email),
                 this.profilesService.readBindings(user.email),
+                this.k8sService.getAllowlistConfigMap(),
             ]);
         }catch(e){
-            [adminResponse, bindings] = await Promise.all([
+            [adminResponse, bindings, allowlist] = await Promise.all([
                 this.profilesService.v1RoleClusteradminGet(user.email),
                 this.profilesService.readBindings(user.email),
+                this.k8sService.getAllowlistConfigMap(),
             ]);
         }
         const namespaces = mapWorkgroupBindingToSimpleBinding(
             bindings.body.bindings || []
         );
+        const allowlistUsers = allowlist ? JSON.parse(allowlist.data.allowlist).users : [];
         return {
             isClusterAdmin: adminResponse.body,
             namespaces,
+            isAllowed: allowlistUsers.length === 0 ? true : allowlistUsers.includes(user.email)
         };
     }
     async handleContributor(action: ContributorActions, req: Request, res: Response) {
@@ -275,12 +281,14 @@ export class WorkgroupApi {
                     email: req.user.email,
                     hasWorkgroup: false,
                     registrationFlowAllowed: this.registrationFlowAllowed,
+                    isAllowed: true,
                 };
                 if (req.user.hasAuth) {
                     const workgroup = await this.getWorkgroupInfo(
                         req.user,
                     );
                     response.hasWorkgroup = !!(workgroup.namespaces && workgroup.namespaces.length);
+                    response.isAllowed = workgroup.isAllowed;
                 } else {
                     // Basic auth workgroup condition
                     response.hasWorkgroup = !!(await this.getAllWorkgroups(req.user.username)).length;

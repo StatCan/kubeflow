@@ -90,7 +90,23 @@ export class KubernetesService {
       return null;
     }
   }
-  /** Retrieves the configmap data for the central dashboard. */
+
+  /** Retrieves the user allowlist for the DEV central dashboard. */
+  async getAllowlistConfigMap(): Promise<k8s.V1ConfigMap> {
+    try {
+      const { body } = await this.coreAPI.readNamespacedConfigMap("centraldashboard-allowlist", this.namespace);
+      return body;
+    } catch (err) {
+      if(err.statusCode === 404){
+        //No allowlist probably means not in DEV env.
+        return null;
+      }
+      console.error('Unable to fetch ConfigMap:', err.response?.body || err.body || err);
+      throw err;
+    }
+  }
+
+  /** Creates the user filers configmap for the central dashboard. */
   async createUserFilerConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
     try {
       const config = {
@@ -107,7 +123,7 @@ export class KubernetesService {
     }
   }
 
-  /** Retrieves the configmap data for the central dashboard. */
+  /** Retrieves the user filers configmap data for the central dashboard. */
   async getUserFilerConfigMap(namespace: string): Promise<k8s.V1ConfigMap> {
     try {
       const { body } = await this.coreAPI.readNamespacedConfigMap(USER_FILERS_CM_NAME, namespace);
@@ -122,7 +138,7 @@ export class KubernetesService {
     }
   }
 
-  /** Retrieves the configmap data for the central dashboard. */
+  /** Updates the user filers configmap for the central dashboard. */
   async updateUserFilerConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
     try {
       const config = {
@@ -139,7 +155,7 @@ export class KubernetesService {
     }
   }
 
-  /** Retrieves the configmap data for the central dashboard. */
+  /** Deletes the user filers configmap for the central dashboard. */
   async deleteUserFilerConfigMap(namespace: string): Promise<k8s.V1Status> {
     try {
       const { body } = await this.coreAPI.deleteNamespacedConfigMap(USER_FILERS_CM_NAME, namespace);

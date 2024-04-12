@@ -6,7 +6,8 @@ describe('Landing Page', () => {
       "user":"user.name@statcan.gc.ca",
       "email": "user.name@statcan.gc.ca",
       "hasWorkgroup":false,
-      "registrationFlowAllowed":true
+      "registrationFlowAllowed": true,
+      "isAllowed": true
     }).as('mockWorkgroupRequest');
 
     cy.visit('/');
