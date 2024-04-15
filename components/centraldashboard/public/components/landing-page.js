@@ -68,8 +68,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         ns = ns
             .replace(/[^\w]|\./g, '-')
             .replace(/^-+|-+$|_/g, '')
-            .replace(/[0-9]/g), ''
-            // Remove any didgits
+            .replace(/[0-9]/g, '')
             .toLowerCase();
 
         this.getNamespaces(ns);
