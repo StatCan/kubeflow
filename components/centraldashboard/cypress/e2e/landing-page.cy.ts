@@ -30,10 +30,10 @@ describe('Landing Page', () => {
       "email": "user.name@cloud.statcan.gc.ca",
       "hasWorkgroup":false,
       "registrationFlowAllowed":true
-    }).as('mockWorkgroupRequestError');
+    }).as('mockWorkgroupRequest');
     cy.visit('/');
 
-    cy.wait(['@mockWorkgroupRequestError', '@mockDashboardLinksRequest']);
+    cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest']);
 
     cy.get('main-page').shadow().find('landing-page').should('exist');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > h2').should('have.text', 'Welcome');
@@ -44,8 +44,7 @@ describe('Landing Page', () => {
   //Should retrieve namespace 
 
   //Error while creating namespace
-  if('should display error message when eror while creating namespace'){
-    it('should show wrong email page', ()=>{
+  it('should show wrong email page', ()=>{
       cy.intercept('GET', `/api/workgroup/create`, {
         "hasAuth":true,
         "user":"user.name@cloud.statcan.gc.ca",
@@ -56,6 +55,5 @@ describe('Landing Page', () => {
       cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest']);
   
       cy.get('main-page').shadow().find('landing-page').should('exist');
-  }
-  //paper-toast#ErrorLandingPageToast
+  })
 });
