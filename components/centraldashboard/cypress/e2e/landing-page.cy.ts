@@ -30,14 +30,32 @@ describe('Landing Page', () => {
       "email": "user.name@cloud.statcan.gc.ca",
       "hasWorkgroup":false,
       "registrationFlowAllowed":true
-    }).as('mockWorkgroupRequest');
+    }).as('mockWorkgroupRequestError');
     cy.visit('/');
 
-    cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest']);
+    cy.wait(['@mockWorkgroupRequestError', '@mockDashboardLinksRequest']);
 
     cy.get('main-page').shadow().find('landing-page').should('exist');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > h2').should('have.text', 'Welcome');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > p').should('have.text', 'You are currently logged in using user.name@cloud.statcan.gc.ca, this domain is not supported. Please log out and log in using your “@statcan.gc.ca” email.');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > paper-button').should('have.text', 'Logout');
   })
+
+  //Should retrieve namespace 
+
+  //Error while creating namespace
+  if('should display error message when eror while creating namespace'){
+    it('should show wrong email page', ()=>{
+      cy.intercept('GET', `/api/workgroup/create`, {
+        "hasAuth":true,
+        "user":"user.name@cloud.statcan.gc.ca",
+        "email": "user.name@cloud.statcan.gc.ca"
+      }).as('mockWorkgroupRequest');
+      cy.visit('/');
+  
+      cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest']);
+  
+      cy.get('main-page').shadow().find('landing-page').should('exist');
+  }
+  //paper-toast#ErrorLandingPageToast
 });
