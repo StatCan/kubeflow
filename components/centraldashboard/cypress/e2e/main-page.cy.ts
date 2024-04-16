@@ -166,4 +166,21 @@ describe('Main Page', () => {
     cy.get('main-page').shadow().find('a[href="https://zone.pages.cloud.statcan.ca/docs/en/"]').should('exist');
     cy.get('main-page').shadow().find('a[href="https://zone.pages.cloud.statcan.ca/docs/en/"]').find('paper-item').should('have.text', 'Documentation');
   });
+
+  //Should have the Create card
+  it('should have a notebook card', () => {
+    cy.get('main-page').should('exist');
+    cy.get('main-page').shadow().find('dashboard-view').should('exist');
+    // create new notebook link
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard').should('exist');
+    // test if the two buttons are there and valid
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#Details').should('exist');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#GoTo').should('exist');
+
+
+
+  })
+
+  //Should have a notebook + the buttons
 })
