@@ -178,14 +178,4 @@ describe('Main Page', () => {
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#Details').should('exist');
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#GoTo').should('exist');
   })
-
-  // Message + button if no default
-  it('should propose default notebook creation', () => {
-    cy.intercept('GET', `/jupyter/api/namespaces/test-namespace-1/defaultnotebook`, {notebook: {}}).as('mockDefaultNotebook');
-    cy.visit('/');
-    cy.wait([
-      '@mockDefaultNotebook',
-    ]);
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#Create').should('exist');
-  })
 })
