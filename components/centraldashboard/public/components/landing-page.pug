@@ -5,7 +5,7 @@ iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[na
 paper-card#MainCard
     figure#Logo !{logo}
     neon-animatable.Main-Content
-        template(is='dom-if', if="[[!isStatcanEmail]]")
+        template(is='dom-if', if="[[isStatcanEmail]]")
             h2 {{localize('registrationPage.lblWelcome')}}
 
             p {{localize('landingPage.firstTime')}}
@@ -17,7 +17,7 @@ paper-card#MainCard
                 a(href$=`{{localize('dashboardView.docItemCommunityChatLink')}}`, tabindex='-1', target="_blank") {{localize('landingPage.doc')}}
             .actions
             paper-button#Next(on-click='nextPage') {{localize('registrationPage.btnNext')}}
-        template(is='dom-if', if="[[isStatcanEmail]]")
+        template(is='dom-if', if="[[!isStatcanEmail]]")
             h2 {{localize('registrationPage.lblWelcome')}}
             p {{localize('landingPage.wrongEmail', 'email', emailAddress)}}
             .actions
