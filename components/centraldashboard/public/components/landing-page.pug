@@ -21,7 +21,7 @@ paper-card#MainCard
             h2 {{localize('registrationPage.lblWelcome')}}
             p {{localize('landingPage.wrongEmail', 'email', emailAddress)}}
             .actions
-            paper-button#Next(on-click='logout') {{localize('landingPage.btnLogout')}}
+            paper-button#Logout(on-click='logout') {{localize('landingPage.btnLogout')}}
 paper-toast#ErrorLandingPageToast(duration=0, opened='[[!empty(errorText)]]', on-click='closeError') {{localize(errorText)}}
     strong [[errorDetail]] 
     paper-icon-button(icon='close')
