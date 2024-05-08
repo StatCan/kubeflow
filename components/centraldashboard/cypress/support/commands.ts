@@ -82,4 +82,12 @@ Cypress.Commands.add('mockDefaultNotebook', (namespace: string) =>{
   cy.intercept('GET', `/jupyter/api/namespaces/${namespace}/defaultnotebook`, {
     fixture: 'defaultnotebook',
   }).as('mockDefaultNotebook');
-})
+});
+
+Cypress.Commands.add('mockCreateDefaultNotebook', (namespace: string) =>{
+  cy.intercept('POST', `/jupyter/api/namespaces/${namespace}/createdefault`, {
+    "success":true,
+    "status":200,
+    "user":"mathis.marcotte@cloud.statcan.ca"
+  }).as('mockCreateDefaultNotebook');
+});
