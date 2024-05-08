@@ -100,9 +100,12 @@ export class NotebookDefaultCard
      * @param {IronAjaxEvent} e
      */
     handleNotebookCreate(e) {
-        this.defaultNotebook = e.detail.response.notebook;
         this.defaultNotebookError = '';
         this.loading = false;
+
+        this.$.DefaultNotebookSuccess.show();
+        // updates the notebook card
+        this.$.GetDefaultNotebook.generateRequest();
     }
 
 
@@ -116,6 +119,7 @@ export class NotebookDefaultCard
         }
         this.loading = false;
     }
+
     handleNotebookCreateError(e) {
         this.defaultNotebookError = this._isolateErrorFromIronRequest(e);
         this.$.DefaultNotebookError.show();
