@@ -173,10 +173,10 @@ describe('Main Page', () => {
       cy.get('main-page').shadow().find('dashboard-view').should('exist');
       // create new notebook link
       cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist');
-      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard').should('exist');
+      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').shadow().find('paper-card#DefaultNotebookCard').should('exist');
       // test if the two buttons are there and valid
-      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#Details').should('exist');
-      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#GoTo').should('exist');
+      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#Details').should('exist');
+      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#GoTo').should('exist');
     });
   
     // Message + button if no default
