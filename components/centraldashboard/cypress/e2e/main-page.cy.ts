@@ -167,15 +167,59 @@ describe('Main Page', () => {
     cy.get('main-page').shadow().find('a[href="https://zone.pages.cloud.statcan.ca/docs/en/"]').find('paper-item').should('have.text', 'Documentation');
   });
 
-  //Should have the Create card
-  it('should have a notebook card', () => {
-    cy.get('main-page').should('exist');
-    cy.get('main-page').shadow().find('dashboard-view').should('exist');
-    // create new notebook link
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard').should('exist');
-    // test if the two buttons are there and valid
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#Details').should('exist');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#GoTo').should('exist');
-  })
+  describe('Notebook Default Card', () => {
+    it('should have a notebook card', () => {
+      cy.get('main-page').should('exist');
+      cy.get('main-page').shadow().find('dashboard-view').should('exist');
+      // create new notebook link
+      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist');
+      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').shadow().find('paper-card#DefaultNotebookCard').should('exist');
+      // test if the two buttons are there and valid
+      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#Details').should('exist');
+      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#GoTo').should('exist');
+    });
+  
+    // Message + button if no default
+    it('should propose default notebook creation', () => {
+      cy.intercept('GET', `/jupyter/api/namespaces/test-namespace/defaultnotebook`, {
+        "statusCode": 404,
+        "body": {
+          "success": false,
+          "status": 404,
+          "log": "No default notebook found",
+          "user": "user.name@statcan.gc.ca"
+        }
+      }).as('mockDefaultNotebook');
+      
+      cy.visit('/');
+  
+      cy.wait('@mockDefaultNotebook');
+  
+      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#Create').should('exist');
+    });
+
+    it('should create a new default notebook', ()=>{
+      cy.intercept('GET', `/jupyter/api/namespaces/test-namespace/defaultnotebook`, {
+        "statusCode": 404,
+        "body": {
+          "success": false,
+          "status": 404,
+          "log": "No default notebook found",
+          "user": "user.name@statcan.gc.ca"
+        }
+      }).as('mockDefaultNotebook');
+      
+      cy.visit('/');
+  
+      cy.wait('@mockDefaultNotebook');
+  
+      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').should('exist').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#Create').should('exist');
+
+      cy.mockCreateDefaultNotebook('test-namespace');
+      cy.mockDefaultNotebook('test-namespace');
+      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#Create').click();
+      cy.wait(['@mockCreateDefaultNotebook', '@mockDefaultNotebook']);
+      cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').shadow().find('paper-toast#DefaultNotebookSuccess').should('have.text', "New default notebook successfully created!");
+    });
+  });
 })
