@@ -44,24 +44,20 @@ h2+aside {
 #Logo {
   color: var(--logo-color);
   margin: 0;
-  padding: 3em 0 4em;
+  padding: 3em 0 3em;
 }
 
 #Logo>svg * {
   fill: currentColor
 }
 
-#MainCard .Main-Content {
-}
-
 neon-animatable {
   @apply --layout-vertical;
 }
-.actions {
-  margin-top: 1.5em;
-  flex: 1;
-  @apply --layout-horizontal-reverse;
-  @apply --layout-end;
+
+.centered {
+  @apply --layout-center;
+  @apply --layout-vertical;
 }
 
 #Links {
@@ -105,4 +101,29 @@ paper-button:disabled {
   color: #FFF;
   background-color:var(--paper-blue-700);
   box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.padded {
+  padding: .5em 0;
+}
+
+#ErrorLandingPageToast {
+  background: var(--google-red-500);
+  color: white;
+  padding: .75em 1.5em;
+  @apply --layout-horizontal;
+  @apply --layout-center;
+  --paper-icon-button: {
+      color: white;
+      margin-left: 1em;
+      padding: 5px;
+      width: 32px;
+      height: 32px;
+  }
+}
+
+@media only screen and (min-width:1270px) {
+  paper-toast#ErrorLandingPageToast {
+      left: 240px !important;
+  }
 }

@@ -1,7 +1,8 @@
-iron-ajax#MakeNamespace(method='POST', url='/api/workgroup/create', handle-as='json', on-error='_onCreateNamespaceError', last-response='{{resp}}',
-    content-type='application/json', loading='{{submittingWorkgroup}}')
+iron-ajax#MakeNamespace(method='POST', url='/api/workgroup/create', handle-as='json', on-error='_onCreateNamespaceError',
+    on-response='handleMakeNamespace', content-type='application/json', loading='{{submittingWorkgroup}}')
 iron-ajax#GetMyNamespace(url='/api/workgroup/exists', handle-as='json', on-error='_onGetNamespaceError')
-iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespaceName]]/createdefault', headers='{"Content-Type": "application/json"}', on-error='_onCreateDefaultNotebookError')
+iron-ajax#CreateDefaultNotebook(method='POST', url='/jupyter/api/namespaces/[[namespaceName]]/createdefault', 
+    headers='{"Content-Type": "application/json"}', on-error='_onCreateDefaultNotebookError')
 paper-card#MainCard
     figure#Logo !{logo}
     neon-animatable.Main-Content
@@ -11,12 +12,24 @@ paper-card#MainCard
             p {{localize('landingPage.firstTime')}}
             p {{localize('landingPage.autoNamespace')}}
 
-            md2-input#Email(label="{{localize('landingPage.email')}}", value='{{emailAddress}}', disabled="true")
-            md2-input#Namespace(label="{{localize('landingPage.yourNamespace')}}", value='{{namespaceName}}', disabled='true')
-            aside {{localize('landingPage.landingDesc')}}
+            div
+                div#emailDisplay.padded
+                    strong {{localize('landingPage.email')}}
+                    br
+                    span {{emailAddress}}
+                
+                div#namespaceDisplay.padded
+                    strong {{localize('landingPage.yourNamespace')}}
+                    br
+                    span {{namespaceName}}
+            p {{localize('landingPage.landingDesc')}}
                 a(href$=`{{localize('dashboardView.docItemCommunityChatLink')}}`, tabindex='-1', target="_blank") {{localize('landingPage.doc')}}
-            .actions
-            paper-button#Next(on-click='nextPage') {{localize('registrationPage.btnNext')}}
+            
+            template(is='dom-if', if="[[!loading]]")
+                paper-button#Next(on-click='nextPage') {{localize('registrationPage.btnNext')}}
+            template(is='dom-if', if="[[loading]]")
+                .centered
+                    paper-spinner-lite(active)
         template(is='dom-if', if="[[!isStatcanEmail]]")
             h2 {{localize('registrationPage.lblWelcome')}}
             p {{localize('landingPage.wrongEmail', 'email', emailAddress)}}

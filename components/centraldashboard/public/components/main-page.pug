@@ -113,6 +113,6 @@ paper-toast#welcomeUser(duration=5000, opened='[[!registrationFlow]]') {{localiz
 paper-toast#ErrorToast(duration=0, opened='[[!empty(errorText)]]', on-click='closeError') {{localize(errorText)}}
     paper-icon-button(icon='close')
 template(is='dom-if', if='[[registrationFlow]]')
-    landing-page(user-details='[[email]]' on-flowcomplete='resyncApp', language='[[language]]', resources='[[resources]]')
+    landing-page(email-address='[[email]]' on-flowcomplete='resyncApp', language='[[language]]', resources='[[resources]]')
 template(is='dom-if', if='[[!isAllowed]]')
     blocked-user-view(language='[[language]]', resources='[[resources]]')

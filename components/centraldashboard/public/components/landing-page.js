@@ -2,6 +2,8 @@ import '@polymer/iron-ajax/iron-ajax.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 import '@polymer/paper-card/paper-card.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-spinner/paper-spinner-lite.js';
 import '@polymer/iron-a11y-keys/iron-a11y-keys.js';
 import 'web-animations-js/web-animations-next.min.js';
 import '@polymer/neon-animation/neon-animatable.js';
@@ -37,14 +39,12 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
 
     static get properties() {
         return {
-            userDetails: {type: Object, observer: '_onUserDetails'},
+            emailAddress: {type: String, observer: '_onEmailAddress'},
             namespaceName: String,
-            generatedNamespace: String,
-            emailAddress: String,
             errorText: {type: String, value: ''},
             errorDetail: {type: String, value: ''},
             flowComplete: {type: Boolean, value: false},
-            waitForRedirect: {type: Boolean, value: false},
+            loading: {type: Boolean, value: false},
             showAPIText: {type: Boolean, value: false},
             isStatcanEmail: {type: Boolean, value: false},
         };
@@ -54,11 +54,10 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         super.ready();
     }
 
-    _onUserDetails(d) {
-        this.emailAddress = this.userDetails;
+    _onEmailAddress() {
         const regex = new RegExp('.+@statcan.gc.ca');
         this.isStatcanEmail = regex.test(this.emailAddress);
-        this.generateNamespace(this.userDetails);
+        this.generateNamespace(this.emailAddress);
     }
 
     async generateNamespace(email) {
@@ -99,45 +98,38 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
                     ns = originalNs + counter;
                 }
                 this.namespaceName = ns;
-                this.generatedNamespace = ns;
             }).catch((e)=> {
                 this.showError('landingPage.errGeneral');
                 this.errorDetail= e;
             });
     }
 
-    async logout() {
+    logout() {
         location.href = `/logout`;
     }
 
     async nextPage() {
-        // Verify the email + namesoace are as expacted
-        if (this.emailAddress != this.userDetails ||
-            this.generatedNamespace != this.namespaceName) {
-            this._onCreateNamespaceError('editedData');
-            return;
-        } else {
-            const API = this.$.MakeNamespace;
-            API.body = {namespace: this.namespaceName,
-                email: this.emailAddress};
-            this.waitForRedirect = true;
-            await API.generateRequest().completes.catch((e) => e);
-            await this.sleep(1); // So the errors and callbacks can schedule
+        this.loading = true;
 
-            /*
-             * Poll for profile over a span of 20 seconds (every 300ms)
-             * if still not there, let the user click next again!
-             */
-            const success = await this.pollProfile(66, 300);
-            if (success) this._successSetup();
+        const API = this.$.MakeNamespace;
+        API.body = {namespace: this.namespaceName,
+            email: this.emailAddress};
+        await API.generateRequest().completes.catch((e) => e);
+    }
 
-            // Create the default notebook
-            const APICreateDefault = this.$.CreateDefaultNotebook;
+    async handleMakeNamespace() {
+        /*
+            * Poll for profile over a span of 20 seconds (every 300ms)
+            * Waits for the new profile to be available
+            * if still not there, let the user click next again!
+            */
+        const success = await this.pollProfile(66, 300);
+        if (success) this._successSetup();
 
-            await APICreateDefault.generateRequest().completes.catch((e) => e);
-            await this.sleep(1); // So the errors and callbacks can schedule
-        }
-        return this.waitForRedirect = false;
+        // Create the default notebook
+        const APICreateDefault = this.$.CreateDefaultNotebook;
+
+        APICreateDefault.generateRequest();
     }
 
     async pollProfile(times, delay) {
@@ -159,6 +151,7 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
 
     // Error handling functions
     showError(err) {
+        this.loading = false;
         this.errorText = err;
         this.errorDetail = '';
     }
@@ -168,21 +161,17 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         this.errorDetail = '';
     }
 
-    _onCreateNamespaceError(ev) {
-        if (ev=='editedData') {
-            this.showError('landingPage.errEditedContent');
-        } else {
-            this.showError('landingPage.errCreateNS');
-        }
+    _onCreateNamespaceError() {
+        this.showError('landingPage.errCreateNS');
         return;
     }
 
-    _onGetNamespaceError(ev) {
+    _onGetNamespaceError() {
         this.showError('landingPage.errGetNS');
         return;
     }
 
-    _onCreateDefaultNotebookError(ev) {
+    _onCreateDefaultNotebookError() {
         this.showError('landingPage.errCreateDefaultNotebook');
         return;
     }
