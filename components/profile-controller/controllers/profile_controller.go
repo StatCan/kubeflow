@@ -69,6 +69,7 @@ const (
 	kubeflowEdit        = "kubeflow-edit"
 	kubeflowView        = "kubeflow-view"
 	istioInjectionLabel = "istio-injection"
+	filerInjectionLabel = "filer-sidecar-injection"
 )
 
 const DEFAULT_EDITOR = "default-editor"
@@ -130,6 +131,7 @@ func (r *ProfileReconciler) Reconcile(ctx context.Context, request ctrl.Request)
 			// inject istio sidecar to all pods in target namespace by default.
 			Labels: map[string]string{
 				istioInjectionLabel: "enabled",
+				filerInjectionLabel: "enabled",
 			},
 			Name: instance.Name,
 		},
