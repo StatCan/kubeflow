@@ -24,7 +24,7 @@ describe('Landing Page', () => {
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > div > #namespaceDisplay').find('span').should('exist').and('have.text', 'user-name');
   });
 
-  // Ig the email is cloud statcan (or any not statcan.gc.ca) expect to see error with logout
+  // If the email is cloud statcan (or any not statcan.gc.ca) expect to see error with logout
   it('should show wrong email page', ()=>{
     cy.intercept('GET', `/api/workgroup/exists`, {
       "hasAuth":true,
@@ -43,21 +43,5 @@ describe('Landing Page', () => {
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > h2').should('have.text', 'Welcome');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > p').should('have.text', 'You are currently logged in using user.name@cloud.statcan.gc.ca, this domain is not supported. Please log out and log in using your “@statcan.gc.ca” email.');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > paper-button').should('have.text', 'Logout');
-  })
-
-  //Should retrieve namespace 
-
-  //Error while creating namespace
-  it('should show wrong email page', ()=>{
-      cy.intercept('GET', `/api/workgroup/create`, {
-        "hasAuth":true,
-        "user":"user.name@cloud.statcan.gc.ca",
-        "email": "user.name@cloud.statcan.gc.ca"
-      }).as('mockWorkgroupRequest');
-      cy.visit('/');
-  
-      cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest']);
-  
-      cy.get('main-page').shadow().find('landing-page').should('exist');
-  })
+  });
 });
