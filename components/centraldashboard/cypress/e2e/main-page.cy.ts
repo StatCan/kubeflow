@@ -23,6 +23,7 @@ describe('Main Page', () => {
 
   it('should access the dashboard', () => {
     cy.get('main-page').should('exist');
+    cy.get('main-page').shadow().find('blocked-user-view').should('not.be.visible');
     cy.get('main-page').shadow().find('dashboard-view').should('exist');
     // create new notebook link
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').should('exist');
