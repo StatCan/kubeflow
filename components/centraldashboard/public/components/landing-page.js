@@ -92,9 +92,8 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         if (success) this._successSetup();
 
         // Create the default notebook
-        const APICreateDefault = this.$.CreateDefaultNotebook;
-
-        APICreateDefault.generateRequest();
+        const APICreateDefaultNotebook = this.$.CreateDefaultNotebook;
+        APICreateDefaultNotebook.generateRequest();
     }
 
     async pollProfile(times, delay) {
