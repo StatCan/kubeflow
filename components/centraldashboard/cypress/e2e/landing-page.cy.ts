@@ -24,6 +24,26 @@ describe('Landing Page', () => {
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > div > #namespaceDisplay').find('span').should('exist').and('have.text', 'user-name');
   });
 
+  it('should email keep number', ()=>{
+    cy.intercept('GET', `/api/workgroup/exists`, {
+      "hasAuth":true,
+      "user":"user.name1@statcan.gc.ca",
+      "email": "user.name1@statcan.gc.ca",
+      "hasWorkgroup":false,
+      "registrationFlowAllowed": true,
+      "isAllowed": true
+    }).as('mockWorkgroupRequest');
+    cy.visit('/');
+
+    cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest']);
+    cy.get('main-page').shadow().find('blocked-user-view').should('not.be.visible');
+    cy.get('main-page').shadow().find('landing-page').should('exist');
+    cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > h2').should('have.text', 'Welcome');
+    cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > p').find('a').should('exist').and('have.prop', 'href', 'https://zone.pages.cloud.statcan.ca/docs/en/');
+    cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > div > #emailDisplay').find('span').should('exist').and('have.text', 'user.name1@statcan.gc.ca');
+    cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > div > #namespaceDisplay').find('span').should('exist').and('have.text', 'user-name1');
+  });
+
   // If the email is cloud statcan (or any not statcan.gc.ca) expect to see error with logout
   it('should show wrong email page', ()=>{
     cy.intercept('GET', `/api/workgroup/exists`, {
