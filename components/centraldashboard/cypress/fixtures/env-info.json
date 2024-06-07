@@ -1,5 +1,5 @@
 {
-  "user": "user.name@cloud.statcan.ca",
+  "user": "user.name@statcan.gc.ca",
   "platform": {
     "kubeflowVersion": "v1beta1",
     "provider": "test_provider",
@@ -8,12 +8,12 @@
   },
   "namespaces": [
     {
-      "user": "user.name@cloud.statcan.ca",
+      "user": "user.name@statcan.gc.ca",
       "namespace": "test-namespace-2",
       "role": "contributor"
     },
     {
-      "user": "user.name@cloud.statcan.ca",
+      "user": "user.name@statcan.gc.ca",
       "namespace": "test-namespace",
       "role": "owner"
     }

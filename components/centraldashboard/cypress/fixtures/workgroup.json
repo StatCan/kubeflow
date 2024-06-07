@@ -1,6 +1,6 @@
 {
   "hasAuth":true,
-  "user":"user.name",
+  "user":"user.name@statcan.gc.ca",
   "email": "user.name@statcan.gc.ca",
   "hasWorkgroup":true,
   "registrationFlowAllowed":true,
