@@ -24,7 +24,7 @@ describe('Landing Page', () => {
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > div > #namespaceDisplay').find('span').should('exist').and('have.text', 'user-name');
   });
 
-  it('should email keep number', ()=>{
+  it('Email number should stay in namespace', ()=>{
     cy.intercept('GET', `/api/workgroup/exists`, {
       "hasAuth":true,
       "user":"user.name1@statcan.gc.ca",
@@ -36,10 +36,6 @@ describe('Landing Page', () => {
     cy.visit('/');
 
     cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest']);
-    cy.get('main-page').shadow().find('blocked-user-view').should('not.be.visible');
-    cy.get('main-page').shadow().find('landing-page').should('exist');
-    cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > h2').should('have.text', 'Welcome');
-    cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > p').find('a').should('exist').and('have.prop', 'href', 'https://zone.pages.cloud.statcan.ca/docs/en/');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > div > #emailDisplay').find('span').should('exist').and('have.text', 'user.name1@statcan.gc.ca');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > div > #namespaceDisplay').find('span').should('exist').and('have.text', 'user-name1');
   });

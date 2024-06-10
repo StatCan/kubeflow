@@ -42,7 +42,6 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
             emailAddress: {type: String, observer: '_onEmailAddress'},
             namespaceName: String,
             errorText: {type: String, value: ''},
-            errorDetail: {type: String, value: ''},
             flowComplete: {type: Boolean, value: false},
             loading: {type: Boolean, value: false},
             isStatcanEmail: {type: Boolean, value: false},
@@ -117,12 +116,10 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     showError(err) {
         this.loading = false;
         this.errorText = err;
-        this.errorDetail = '';
     }
 
     closeError() {
         this.errorText = '';
-        this.errorDetail = '';
     }
 
     _onCreateNamespaceError() {
