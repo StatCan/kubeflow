@@ -36,5 +36,6 @@ paper-card#MainCard
             .actions
             paper-button#Logout(on-click='logout') {{localize('landingPage.btnLogout')}}
 paper-toast#ErrorLandingPageToast(duration=0, opened='[[!empty(errorText)]]', on-click='closeError') {{localize(errorText)}}
-    strong [[errorDetail]] 
+    template(is='dom-if', if="[[errorDetail]]")
+        strong [[errorDetail]]
     paper-icon-button(icon='close')
