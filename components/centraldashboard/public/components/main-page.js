@@ -587,8 +587,14 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
                 nb.labels['notebook.statcan.gc.ca/default-notebook'] &&
                 nb.status.phase === 'stopped'
             );
-            if (defaultnotebook) {
+
+            // if user comes from login page for first time
+            if (defaultnotebook && document.referrer !== '' &&
+                !sessionStorage.getItem('referrer')) {
+                // eslint-disable-next-line no-console
+                console.log('starting default notebook...');
                 this.startNotebook(defaultnotebook);
+                sessionStorage.setItem('referrer', document.referrer);
             }
         } catch (err) {
             this._onNotebookServersError(err);
