@@ -87,7 +87,7 @@ jobs:
       run:  |
         sudo curl -L https://github.com/hadolint/hadolint/releases/download/v${{ env.HADOLINT_VERSION }}/hadolint-Linux-x86_64 --output hadolint
         sudo chmod +x hadolint
-        ./hadolint localhost:5000/kubeflow --no-fail
+        ./hadolint localhost:5000/kubeflow/centraldashboard-aaw2 --no-fail
       
 
 
