@@ -42,10 +42,8 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
             emailAddress: {type: String, observer: '_onEmailAddress'},
             namespaceName: String,
             errorText: {type: String, value: ''},
-            errorDetail: {type: String, value: ''},
             flowComplete: {type: Boolean, value: false},
             loading: {type: Boolean, value: false},
-            showAPIText: {type: Boolean, value: false},
             isStatcanEmail: {type: Boolean, value: false},
         };
     }
@@ -67,41 +65,8 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
         ns = ns
             .replace(/[^\w]|\./g, '-')
             .replace(/^-+|-+$|_/g, '')
-            .replace(/[0-9]/g, '')
             .toLowerCase();
-
-        this.getNamespaces(ns);
-    }
-
-    async getNamespaces(ns) {
-        await fetch(
-            `/api/namespaces/`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-        )
-            .then((res) => res.json())
-            .then((data) => {
-                const namespaceNames = [];
-                data.forEach((element) => {
-                    namespaceNames.push(element.metadata.name);
-                });
-                let counter = 1;
-                // Remove any numbers at the end
-                const originalNs = ns.replace(/\d+/g, '');
-                if (namespaceNames.includes(originalNs)) {
-                    while (namespaceNames.includes(originalNs + counter)) {
-                        counter++;
-                    }
-                    ns = originalNs + counter;
-                }
-                this.namespaceName = ns;
-            }).catch((e)=> {
-                this.showError('landingPage.errGeneral');
-                this.errorDetail= e;
-            });
+        this.namespaceName = ns;
     }
 
     logout() {
@@ -119,17 +84,15 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
 
     async handleMakeNamespace() {
         /*
-            * Poll for profile over a span of 20 seconds (every 300ms)
-            * Waits for the new profile to be available
-            * if still not there, let the user click next again!
-            */
+        * Poll for profile over a span of 20 seconds (every 300ms* max 66 times)
+        * Waits for the new profile to be available
+        */
         const success = await this.pollProfile(66, 300);
         if (success) this._successSetup();
 
         // Create the default notebook
-        const APICreateDefault = this.$.CreateDefaultNotebook;
-
-        APICreateDefault.generateRequest();
+        const APICreateDefaultNotebook = this.$.CreateDefaultNotebook;
+        APICreateDefaultNotebook.generateRequest();
     }
 
     async pollProfile(times, delay) {
@@ -153,12 +116,10 @@ export class LandingPage extends mixinBehaviors([AppLocalizeBehavior], utilities
     showError(err) {
         this.loading = false;
         this.errorText = err;
-        this.errorDetail = '';
     }
 
     closeError() {
         this.errorText = '';
-        this.errorDetail = '';
     }
 
     _onCreateNamespaceError() {

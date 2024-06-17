@@ -23,6 +23,21 @@ describe('Landing Page', () => {
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > div > #emailDisplay').find('span').should('exist').and('have.text', 'user.name@statcan.gc.ca');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > div > #namespaceDisplay').find('span').should('exist').and('have.text', 'user-name');
   });
+  it('Email number should stay in namespace', ()=>{
+    cy.intercept('GET', `/api/workgroup/exists`, {
+      "hasAuth":true,
+      "user":"user.name1@statcan.gc.ca",
+      "email": "user.name1@statcan.gc.ca",
+      "hasWorkgroup":false,
+      "registrationFlowAllowed": true,
+      "isAllowed": true
+    }).as('mockWorkgroupRequest');
+    cy.visit('/');
+
+    cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest']);
+    cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > div > #emailDisplay').find('span').should('exist').and('have.text', 'user.name1@statcan.gc.ca');
+    cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > div > #namespaceDisplay').find('span').should('exist').and('have.text', 'user-name1');
+  });
 
   it('should create new namespace and notebook', ()=>{
     //Not asserting landing page username and namespace values since it's asserted in the test above
