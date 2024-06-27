@@ -22,6 +22,7 @@ env:
   CLUSTER_RESOURCE_GROUP: k8s-cancentral-01-covid-aks
   TRIVY_VERSION: "v0.43.1"
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  HADOLINT_VERSION: "2.12.0"
 
 jobs:
   build-push:
@@ -56,6 +57,12 @@ jobs:
         login-server: ${{ env.DEV_REGISTRY_NAME }}.azurecr.io
         username: ${{ secrets.DEV_REGISTRY_USERNAME }}
         password: ${{ secrets.DEV_REGISTRY_PASSWORD }}
+
+    - name: Run Hadolint
+      run:  |
+        sudo curl -L https://github.com/hadolint/hadolint/releases/download/v${{ env.HADOLINT_VERSION }}/hadolint-Linux-x86_64 --output hadolint
+        sudo chmod +x hadolint
+        ./hadolint ./Dockerfile --no-fail
 
     # Container build to a Azure Container registry (ACR)
     - name: Docker build
