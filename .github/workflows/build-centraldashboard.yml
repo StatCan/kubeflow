@@ -60,7 +60,7 @@ jobs:
       run:  |
         sudo curl -L https://github.com/hadolint/hadolint/releases/download/v${{ env.HADOLINT_VERSION }}/hadolint-Linux-x86_64 --output hadolint
         sudo chmod +x hadolint
-        ./hadolint ./Dockerfile --no-fail
+        ./hadolint ./components/centraldashboard/Dockerfile --no-fail
 
     # Container build to a Azure Container registry (ACR)
     - name: Docker build
