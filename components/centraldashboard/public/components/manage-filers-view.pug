@@ -17,25 +17,35 @@ section#Main-Content
         .content.small
             template(is='dom-if', if="[[isLoading(filersLoading, userFilersLoading)]]")
                 paper-spinner-lite(active)
-            form#filersForm
+            div
                 table#filersTable
                     template(is='dom-repeat', items='[[formatUserFilers(userFilers)]]')
                         tr 
                             td {{item}}
                             td
-                                button(type="button", on-click="deleteFilerShare") Delete
-                select#filersSelect(name="filersSelect", on-change="onChangeFilers", value="", required)
-                    option(value="") Select a filer
-                    template(is='dom-repeat', items='[[formatFilers(filers)]]')
-                        option(value="{{item.key}}") {{item.name}}
-                select#sharesSelect(name="sharesSelect", disabled="[[!filersFormValue]]", on-change="onChangeShares", value="", required)
-                    option(value="") Select a share
-                    template(is='dom-repeat', items='[[getShares(filersFormValue)]]')
-                        option {{item}}
-                aside.Error {{validateError}}
+                                button(type="button", on-click="deleteFilerShare") {{localize('manageFilersView.btnDelete')}}
+            div
+                h2 {{localize('manageFilersView.headerAddFiler')}}
+                form#filersForm
+                    div.formInputDiv
+                        label(for="filersSelect") {{localize('manageFilersView.lblFiler')}}
+                        select#filersSelect(name="filersSelect", on-change="onChangeFilers", value="", required)
+                            option(value="") {{localize('manageFilersView.optionFiler')}}
+                            template(is='dom-repeat', items='[[formatFilers(filers)]]')
+                                option(value="{{item.key}}") {{item.name}}
+                    div.formInputDiv
+                        label(for="sharesSelect") {{localize('manageFilersView.lblShare')}}
+                        select#sharesSelect(name="sharesSelect", disabled="[[!filersFormValue]]", on-change="onChangeShares", value="", required)
+                            option(value="") {{localize('manageFilersView.optionShare')}}
+                            template(is='dom-repeat', items='[[getShares(filersFormValue)]]')
+                                option {{item}}
+                    div.formInputDiv
+                        label(for="sharesInput") {{localize('manageFilersView.lblExtraShare')}}
+                        input#sharesInput(name="sharesInput", disabled="[[!filersFormValue]]", value="", placeholder="{{localize('manageFilersView.placeholderExtraShare')}}")
+                    aside.Error {{validateError}}
 
-                template(is='dom-if', if="[[filers]]")
-                    button#filersSubmit(type="button", on-click="updateFilers") {{localize('manageFilersView.btnSubmit')}}
+                    template(is='dom-if', if="[[filers]]")
+                        button#filersSubmit(type="button", on-click="updateFilers") {{localize('manageFilersView.btnSubmit')}}
 
     paper-toast#FilersErrorToast(duration=8000, horizontal-align="center")
         strong [[errorText]]

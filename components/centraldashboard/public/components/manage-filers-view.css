@@ -46,11 +46,12 @@ h2 .icon {
 }
 
 #filersTable{
-  margin-bottom: .5em;
+  margin-bottom: 1.5em;
 }
 
 #filersSubmit{
   padding: .5em;
+  margin: .5em;
 }
 
 [hidden] {display: none !important}
@@ -65,4 +66,11 @@ paper-toast#FilersSuccessToast {
 
 .Error{
   color: #F44336
+}
+
+label {
+  padding: .25em;
+}
+.formInputDiv{
+  margin-bottom: .5em;
 }
