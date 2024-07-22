@@ -133,13 +133,26 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         // cloning to avoid assigning by reference
         const newUserData = _.clone(userData);
 
-        let sharesInputValue = formData.get('sharesInput').startsWith('/') ?
-            formData.get('sharesInput') : '/' + formData.get('sharesInput');
-        sharesInputValue = sharesInputValue.endsWith('/') ?
-            sharesInputValue : sharesInputValue + '/';
+        let newValue = formData.get('filersSelect') + '/' +
+            formData.get('sharesSelect')+ '/';
 
-        const newValue = formData.get('filersSelect') + '/' +
-            formData.get('sharesSelect')+ sharesInputValue;
+        if (formData.get('sharesInput') !== '') {
+            // Trim slashes for regex matching
+            let sharesInputValue = formData.get('sharesInput').startsWith('/') ?
+                formData.get('sharesInput').slice(1) :
+                formData.get('sharesInput');
+            sharesInputValue = sharesInputValue.endsWith('/') ?
+                sharesInputValue : sharesInputValue + '/';
+
+            // Error if the path doesn't look like a dir path
+            if (!sharesInputValue.match(/^([^\\/:|<>*?]+\/?)*$/)) {
+                this.validateError =
+                    this.localize('manageFilersView.invalidSharePath');
+                return;
+            }
+
+            newValue = newValue + sharesInputValue;
+        }
 
         if (newUserData.includes(newValue)) {
             this.validateError =
