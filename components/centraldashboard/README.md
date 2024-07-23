@@ -31,7 +31,7 @@ kubectl --record deployment.apps/centraldashboard \
 ## Development
 
 ### Getting Started
-Make sure you have the latest LTS version of `node` installed along with `npm`.
+Make sure you have `node v16` installed along with `npm`.
 
 1. Clone the repository and change directories to `components/centraldashboard`
 2. Run `make build-local`. This will install all of the project dependencies and

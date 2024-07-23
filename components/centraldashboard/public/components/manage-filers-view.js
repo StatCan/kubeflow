@@ -108,6 +108,7 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
     onChangeFilers(e) {
         this.filersFormValue = e.target.value;
         this.$.sharesSelect.value = '';
+        this.$.sharesInput.value = '';
         this.validateError = '';
     }
 
@@ -122,18 +123,40 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
             JSON.parse(this.userFilers.filerShares);
         // validate mandatory inputs
         if (formData.get('filersSelect')==='') {
-            this.validateError = 'Please select a filer';
+            this.validateError = this.localize('manageFilersView.missingFiler');
             return;
         } else if (formData.get('sharesSelect')==='') {
-            this.validateError = 'Please select a share';
+            this.validateError = this.localize('manageFilersView.missingShare');
             return;
         }
+
         // cloning to avoid assigning by reference
         const newUserData = _.clone(userData);
-        const newValue = formData.get('filersSelect') + '/' +
-            formData.get('sharesSelect')+'/';
+
+        let newValue = formData.get('filersSelect') + '/' +
+            formData.get('sharesSelect')+ '/';
+
+        if (formData.get('sharesInput') !== '') {
+            // Trim slashes for regex matching
+            let sharesInputValue = formData.get('sharesInput').startsWith('/') ?
+                formData.get('sharesInput').slice(1) :
+                formData.get('sharesInput');
+            sharesInputValue = sharesInputValue.endsWith('/') ?
+                sharesInputValue : sharesInputValue + '/';
+
+            // Error if the path doesn't look like a dir path
+            if (!sharesInputValue.match(/^([^\\/:|<>*?]+\/?)*$/)) {
+                this.validateError =
+                    this.localize('manageFilersView.invalidSharePath');
+                return;
+            }
+
+            newValue = newValue + sharesInputValue;
+        }
+
         if (newUserData.includes(newValue)) {
-            this.validateError = 'User already has filer share';
+            this.validateError =
+                this.localize('manageFilersView.duplicateFiler');
             return;
         }
 
@@ -160,7 +183,13 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
             JSON.parse(this.userFilers.filerShares);
         const index = userData.indexOf(filerShare);
         if (index===-1) {
-            this.showError(`User does not have filer share ${filerShare}`);
+            this.showError(
+                this.localize(
+                    'manageFilersView.missingDeleteError',
+                    'filerShare',
+                    filerShare
+                )
+            );
             return;
         }
         if (userData.length===1) {
@@ -198,6 +227,7 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         this.filersFormValue = '';
         this.$.filersSelect.value = '';
         this.$.sharesSelect.value = '';
+        this.$.sharesInput.value = '';
 
         if (e.detail.error) {
             const error = this._isolateErrorFromIronRequest(e);
