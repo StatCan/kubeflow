@@ -73,7 +73,7 @@ data:
         {
         "text": "Advanced Analytics Workspace Docs",
         "desc": "Helpful guides about our data and analysis tools",
-        "link": "https://statcan.github.io/daaas/"
+        "link": "https://statcan.github.io/aaw/"
         },
         {
         "text": "Video Tutorial Series",
@@ -189,7 +189,7 @@ data:
         {
         "text": "Documents de l'espace d'analyses avancées",
         "desc": "Guides utiles pour nos données et outils d'analyse",
-        "link": "https://statcan.github.io/daaas/"
+        "link": "https://statcan.github.io/aaw/"
         },
         {
         "text": "Série de didacticiels vidéos",
