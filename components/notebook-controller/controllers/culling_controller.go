@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"time"
@@ -65,6 +66,26 @@ type KernelStatus struct {
 	LastActivity   string `json:"last_activity"`
 	ExecutionState string `json:"execution_state"`
 	Connections    int    `json:"connections"`
+}
+
+type NotebookMetricsDataResultsMetric struct {
+	Container string `json:"container"`
+}
+
+type NotebookMetricsDataResults struct {
+	Metric NotebookMetricsDataResultsMetric `json:"metric"`
+	Value  []float32                        `json:"value"` //first value is unix_time, second value is the result
+}
+
+type NotebookMetricsData struct {
+	ResultType string                       `json:"resultType"`
+	Result     []NotebookMetricsDataResults `json:"result"`
+}
+
+// NotebookMetrics struct:
+type NotebookMetrics struct {
+	Status string              `json:"status"`
+	Data   NotebookMetricsData `json:"data"`
 }
 
 // CullingReconciler : Type of a reconciler that will be culling idle notebooks
@@ -240,6 +261,45 @@ func getNotebookApiKernels(nm, ns string, log logr.Logger) []KernelStatus {
 	return kernels
 }
 
+func getNotebookMetrics(nb string, ns string, query string, log logr.Logger) *NotebookMetrics {
+	// Get the Kernels' status from the Server's `/api/kernels` endpoint
+	client := &http.Client{
+		Timeout: time.Second * 10,
+	}
+
+	domain := GetEnvDefault("CLUSTER_DOMAIN", DEFAULT_CLUSTER_DOMAIN)
+	metricsUrl := fmt.Sprintf(
+		"http://kube-prometheus-stack-prometheus.prometheus-system.svc.%s/api/v1/query?query="+query,
+		domain)
+	if GetEnvDefault("DEV", DEFAULT_DEV) != "false" {
+		metricsUrl = "http://localhost:9090/api/v1/query?query=" + query
+	}
+
+	resp, err := client.Get(metricsUrl)
+	if err != nil {
+		log.Error(err, fmt.Sprintf("Error talking to %s", metricsUrl))
+		return nil
+	}
+
+	// Decode the body
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		log.Info(fmt.Sprintf(
+			"Warning: GET to %s: %d", metricsUrl, resp.StatusCode))
+		return nil
+	}
+
+	var metrics NotebookMetrics
+
+	err = json.NewDecoder(resp.Body).Decode(&metrics)
+	if err != nil {
+		log.Error(err, "Error parsing JSON response for Notebook Metrics.")
+		return nil
+	}
+
+	return &metrics
+}
+
 func allKernelsAreIdle(kernels []KernelStatus, log logr.Logger) bool {
 	// Iterate on the list of kernels' status.
 	// If all kernels are on execution_state=idle then this function returns true.
@@ -262,13 +322,36 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 	kernels := getNotebookApiKernels(nm, ns, log)
 	if kernels == nil {
 		log.Info("Could not GET the kernels status. Will not update last-activity.")
-		return
 	} else if len(kernels) == 0 {
 		log.Info("Notebook has no kernels. Will not update last-activity")
+	} else {
+		updateTimestampFromKernelsActivity(meta, kernels, log)
 		return
 	}
 
-	updateTimestampFromKernelsActivity(meta, kernels, log)
+	cpuQuery := fmt.Sprintf("sum by(container) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"%s\", container=\"%s\"})",
+		ns, nm)
+	cpuMetrics := getNotebookMetrics(nm, ns, url.QueryEscape(cpuQuery), log)
+	if cpuMetrics == nil {
+		log.Info("Could not GET the CPU usage metrics. Will not update last-activity.")
+	} else if len(cpuMetrics.Data.Result) == 0 {
+		log.Info("Notebook has no CPU usage metrics. Will not update last-activity.")
+	} else {
+		updateTimestampFromMetrics(meta, "CPU ssage", *cpuMetrics, 0.09, log)
+		return
+	}
+
+	ioQuery := fmt.Sprintf("ceil(sum by(container) (rate(container_fs_reads_total{device=~\"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)\", namespace=\"%s\", container=\"%s\"}[2m]) + rate(container_fs_writes_total{device=~\"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)\", namespace=\"%s\", container=\"%s\"}[2m])))",
+		ns, nm, ns, nm)
+	ioMetrics := getNotebookMetrics(nm, ns, url.QueryEscape(ioQuery), log)
+	if ioMetrics == nil {
+		log.Info("Could not GET the disk IO metrics. Will not update last-activity.")
+	} else if len(ioMetrics.Data.Result) == 0 {
+		log.Info("Notebook has no disk IO metrics. Will not update last-activity.")
+	} else {
+		updateTimestampFromMetrics(meta, "Disk IO", *ioMetrics, 0, log)
+		return
+	}
 }
 
 func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []KernelStatus, log logr.Logger) {
@@ -305,6 +388,25 @@ func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []Kerne
 
 	meta.Annotations[LAST_ACTIVITY_ANNOTATION] = t
 	log.Info(fmt.Sprintf("Successfully updated last-activity from latest kernel action, %s", t))
+}
+
+func updateTimestampFromMetrics(meta *metav1.ObjectMeta, metricsName string, metrics NotebookMetrics, threshold float32, log logr.Logger) {
+	// Metrics Data Result should always be only one value.
+	// Result Value should always be 2 values, first value is unix_time, second value is the result
+	if !(metrics.Data.Result[0].Value[1] > threshold) {
+		// if metrics don't pass the threshold, don't update the recent activity
+		return
+	}
+
+	recentTime, err := time.Parse(time.UnixDate, strconv.FormatFloat(float64(metrics.Data.Result[0].Value[0]), 'g', -1, 32))
+	if err != nil {
+		log.Error(err, fmt.Sprintf("Error parsing the last-activity from the %s metrics results", metricsName))
+		return
+	}
+
+	t := recentTime.Format(time.RFC3339)
+	meta.Annotations[LAST_ACTIVITY_ANNOTATION] = t
+	log.Info(fmt.Sprintf("Successfully updated last-activity from thev %s metrics, %s", metricsName, t))
 }
 
 func updateLastCullingCheckTimestampAnnotation(meta *metav1.ObjectMeta, log logr.Logger) {
