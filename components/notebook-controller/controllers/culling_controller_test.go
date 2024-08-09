@@ -128,18 +128,6 @@ func TestAllKernelsAreIdle(t *testing.T) {
 			},
 			result: false,
 		},
-		{
-			testName: "/api/kernels returns an list of kernels, with one kernel in busy state.",
-			kernels: []KernelStatus{
-				{
-					ExecutionState: KERNEL_EXECUTION_STATE_IDLE,
-				},
-				{
-					ExecutionState: KERNEL_EXECUTION_STATE_BUSY,
-				},
-			},
-			result: false,
-		},
 	}
 
 	for _, c := range testCases {

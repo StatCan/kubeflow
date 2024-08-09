@@ -281,19 +281,6 @@ func createNotebookStatus(r *NotebookReconciler, nb *v1beta1.Notebook,
 		notebookContainerFound = true
 		break
 	}
-	return ctrl.Result{RequeueAfter: culler.GetRequeueTime()}, nil
-}
-
-func updateNotebookStatus(r *NotebookReconciler, nb *v1beta1.Notebook,
-	sts *appsv1.StatefulSet, pod *corev1.Pod, req ctrl.Request) error {
-
-	log := r.Log.WithValues("notebook", req.NamespacedName)
-	ctx := context.Background()
-
-	status, err := createNotebookStatus(r, nb, sts, pod, req)
-	if err != nil {
-		return err
-	}
 
 	if !notebookContainerFound {
 		log.Error(nil, "Could not find container with the same name as Notebook "+
