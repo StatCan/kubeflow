@@ -269,7 +269,7 @@ func getNotebookMetrics(nb string, ns string, query string, log logr.Logger) *No
 
 	domain := GetEnvDefault("CLUSTER_DOMAIN", DEFAULT_CLUSTER_DOMAIN)
 	metricsUrl := fmt.Sprintf(
-		"http://kube-prometheus-stack-prometheus.prometheus-system.svc.%s/api/v1/query?query="+query,
+		"http://kube-prometheus-stack-prometheus.prometheus-system.svc.%s:9090/api/v1/query?query="+query,
 		domain)
 	if GetEnvDefault("DEV", DEFAULT_DEV) != "false" {
 		metricsUrl = "http://localhost:9090/api/v1/query?query=" + query
@@ -329,6 +329,14 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 		return
 	}
 
+	//test metrics
+	testMetrics := getNotebookMetrics(nm, ns, "up", log)
+	if testMetrics == nil {
+		log.Info("Could not GET the TEST usage metrics. Will not update last-activity.")
+	} else {
+		log.Info("TestMetricsFound. Will not update last-activity.")
+	}
+	//end test metrics
 	cpuQuery := fmt.Sprintf("sum by(container) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"%s\", container=\"%s\"})",
 		ns, nm)
 	cpuMetrics := getNotebookMetrics(nm, ns, url.QueryEscape(cpuQuery), log)
