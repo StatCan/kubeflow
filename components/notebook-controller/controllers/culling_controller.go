@@ -74,7 +74,7 @@ type NotebookMetricsDataResultsMetric struct {
 
 type NotebookMetricsDataResults struct {
 	Metric NotebookMetricsDataResultsMetric `json:"metric"`
-	Value  []float32                        `json:"value"` //first value is unix_time, second value is the result
+	Value  []string                         `json:"value"` //first value is unix_time, second value is the result
 }
 
 type NotebookMetricsData struct {
@@ -345,7 +345,7 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 	} else if len(cpuMetrics.Data.Result) == 0 {
 		log.Info("Notebook has no CPU usage metrics. Will not update last-activity.")
 	} else {
-		updateTimestampFromMetrics(meta, "CPU ssage", *cpuMetrics, 0.09, log)
+		updateTimestampFromMetrics(meta, "CPU usage", *cpuMetrics, 0.09, log)
 		return
 	}
 
@@ -401,20 +401,26 @@ func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []Kerne
 func updateTimestampFromMetrics(meta *metav1.ObjectMeta, metricsName string, metrics NotebookMetrics, threshold float32, log logr.Logger) {
 	// Metrics Data Result should always be only one value.
 	// Result Value should always be 2 values, first value is unix_time, second value is the result
-	if !(metrics.Data.Result[0].Value[1] > threshold) {
+	parseValue, err := strconv.ParseFloat(metrics.Data.Result[0].Value[1], 32)
+	if err != nil {
+		log.Error(err, fmt.Sprintf("Error parsing the value from the %s metrics results", metricsName))
+		return
+	}
+	if !(float32(parseValue) > threshold) {
 		// if metrics don't pass the threshold, don't update the recent activity
+		log.Info(fmt.Sprintf("%s of %s doesn't exceed the threshold %s. Not updating the last-activity", metricsName, metrics.Data.Result[0].Value[1], threshold))
 		return
 	}
 
-	recentTime, err := time.Parse(time.UnixDate, strconv.FormatFloat(float64(metrics.Data.Result[0].Value[0]), 'g', -1, 32))
+	recentTime, err := time.Parse(time.UnixDate, metrics.Data.Result[0].Value[0])
 	if err != nil {
-		log.Error(err, fmt.Sprintf("Error parsing the last-activity from the %s metrics results", metricsName))
+		log.Error(err, fmt.Sprintf("Error parsing the last-activity time from the %s metrics results", metricsName))
 		return
 	}
 
 	t := recentTime.Format(time.RFC3339)
 	meta.Annotations[LAST_ACTIVITY_ANNOTATION] = t
-	log.Info(fmt.Sprintf("Successfully updated last-activity from thev %s metrics, %s", metricsName, t))
+	log.Info(fmt.Sprintf("Successfully updated last-activity from the %s metrics, %s", metricsName, t))
 }
 
 func updateLastCullingCheckTimestampAnnotation(meta *metav1.ObjectMeta, log logr.Logger) {
