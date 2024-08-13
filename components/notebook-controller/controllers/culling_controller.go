@@ -275,6 +275,8 @@ func getNotebookMetrics(nb string, ns string, query string, log logr.Logger) *No
 		metricsUrl = "http://localhost:9090/api/v1/query?query=" + query
 	}
 
+	log.Info(fmt.Sprintf(
+		"Printing query %s", metricsUrl))
 	resp, err := client.Get(metricsUrl)
 	if err != nil {
 		log.Error(err, fmt.Sprintf("Error talking to %s", metricsUrl))
@@ -334,7 +336,7 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 	if testMetrics == nil {
 		log.Info("Could not GET the TEST usage metrics. Will not update last-activity.")
 	} else {
-		log.Info(fmt.Sprintf("TestMetricsFound %s. Will not update last-activity.", testMetrics.Data.Result))
+		//log.Info(fmt.Sprintf("TestMetricsFound %s. Will not update last-activity.", testMetrics.Data.Result))
 	}
 	//end test metrics
 	cpuQuery := fmt.Sprintf("sum by(container) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"%s\", container=\"%s\"})",
