@@ -394,7 +394,7 @@ func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []Kerne
 		log.Error(err, "Error parsing the last-activity from the annotation")
 		return
 	}
-	log.Info(fmt.Sprintf("test times, %s, %s", oldTime.Format(time.RFC3339), recentTime.Format(time.RFC3339)))
+	log.Info(fmt.Sprintf("test times, %s, %s, %s", oldTime.Format(time.RFC3339), recentTime.Format(time.RFC3339), recentTime.After(oldTime)))
 	if !recentTime.After(oldTime) {
 		log.Info("No new activity detected on the kernels. Not updating last-activity")
 		return
