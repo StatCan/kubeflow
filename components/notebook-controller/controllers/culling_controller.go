@@ -275,8 +275,6 @@ func getNotebookMetrics(nb string, ns string, query string, log logr.Logger) *No
 		metricsUrl = fmt.Sprintf("http://localhost:9090/api/v1/query?query=%s", query)
 	}
 
-	log.Info(fmt.Sprintf(
-		"Printing query %s", metricsUrl))
 	resp, err := client.Get(metricsUrl)
 	if err != nil {
 		log.Error(err, fmt.Sprintf("Error talking to %s", metricsUrl))
