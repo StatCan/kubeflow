@@ -334,11 +334,12 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 	if testMetrics == nil {
 		log.Info("Could not GET the TEST usage metrics. Will not update last-activity.")
 	} else {
-		log.Info("TestMetricsFound. Will not update last-activity.")
+		log.Info(fmt.Sprintf("TestMetricsFound %s. Will not update last-activity.", testMetrics.Data.Result))
 	}
 	//end test metrics
 	cpuQuery := fmt.Sprintf("sum by(container) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"%s\", container=\"%s\"})",
 		ns, nm)
+	log.Info(fmt.Sprintf("Test query %s. test 2 %s", cpuQuery, url.QueryEscape(cpuQuery)))
 	cpuMetrics := getNotebookMetrics(nm, ns, url.QueryEscape(cpuQuery), log)
 	if cpuMetrics == nil {
 		log.Info("Could not GET the CPU usage metrics. Will not update last-activity.")
