@@ -404,8 +404,12 @@ func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []Kerne
 func updateTimestampFromMetrics(meta *metav1.ObjectMeta, metricsName string, metrics NotebookMetrics, threshold float64, log logr.Logger) {
 	// Metrics Data Result should always be only one value.
 	// Result Value should always be 2 values, first value is unix_time, second value is the result
-
-	if !(metrics.Data.Result[0].Value[1].(float64) > threshold) {
+	parseValue, err := strconv.ParseFloat(metrics.Data.Result[0].Value[1].(string), 64)
+	if err != nil {
+		log.Error(err, fmt.Sprintf("Error parsing the value from the %s metrics results", metricsName))
+		return
+	}
+	if !(parseValue > threshold) {
 		// if metrics don't pass the threshold, don't update the recent activity
 		log.Info(fmt.Sprintf("%s of %s doesn't exceed the threshold %s. Not updating the last-activity", metricsName, metrics.Data.Result[0].Value[1], threshold))
 		return
