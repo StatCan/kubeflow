@@ -318,7 +318,7 @@ func allKernelsAreIdle(kernels []KernelStatus, log logr.Logger) bool {
 
 // Update LAST_ACTIVITY_ANNOTATION
 func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logger) {
-
+	updated := false
 	log.Info("Updating the last-activity annotation. Checking /api/kernels")
 	nm, ns := meta.GetName(), meta.GetNamespace()
 	kernels := getNotebookApiKernels(nm, ns, log)
@@ -327,8 +327,10 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 	} else if len(kernels) == 0 {
 		log.Info("Notebook has no kernels. Will not update last-activity")
 	} else {
-		updateTimestampFromKernelsActivity(meta, kernels, log)
-		return
+		updateTimestampFromKernelsActivity(meta, kernels, log, &updated)
+		if updated {
+			return
+		}
 	}
 
 	//test metrics
@@ -348,8 +350,10 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 	} else if len(cpuMetrics.Data.Result) == 0 {
 		log.Info("Notebook has no CPU usage metrics. Will not update last-activity.")
 	} else {
-		updateTimestampFromMetrics(meta, "CPU usage", *cpuMetrics, 0.09, log)
-		return
+		updateTimestampFromMetrics(meta, "CPU usage", *cpuMetrics, 0.09, log, &updated)
+		if updated {
+			return
+		}
 	}
 
 	ioQuery := fmt.Sprintf("ceil(sum by(container) (rate(container_fs_reads_total{device=~\"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)\", namespace=\"%s\", container=\"%s\"}[2m]) + rate(container_fs_writes_total{device=~\"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)\", namespace=\"%s\", container=\"%s\"}[2m])))",
@@ -360,12 +364,11 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 	} else if len(ioMetrics.Data.Result) == 0 {
 		log.Info("Notebook has no disk IO metrics. Will not update last-activity.")
 	} else {
-		updateTimestampFromMetrics(meta, "Disk IO", *ioMetrics, 0, log)
-		return
+		updateTimestampFromMetrics(meta, "Disk IO", *ioMetrics, 0, log, &updated)
 	}
 }
 
-func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []KernelStatus, log logr.Logger) {
+func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []KernelStatus, log logr.Logger, updated *bool) {
 
 	if !allKernelsAreIdle(kernels, log) {
 		// At least on kernel is "busy" so the last-activity annotation should
@@ -374,6 +377,7 @@ func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []Kerne
 		log.Info(fmt.Sprintf("Found a busy kernel. Updating the last-activity to %s", t))
 
 		meta.Annotations[LAST_ACTIVITY_ANNOTATION] = t
+		*updated = true
 		return
 	}
 
@@ -399,9 +403,10 @@ func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []Kerne
 
 	meta.Annotations[LAST_ACTIVITY_ANNOTATION] = t
 	log.Info(fmt.Sprintf("Successfully updated last-activity from latest kernel action, %s", t))
+	*updated = true
 }
 
-func updateTimestampFromMetrics(meta *metav1.ObjectMeta, metricsName string, metrics NotebookMetrics, threshold float64, log logr.Logger) {
+func updateTimestampFromMetrics(meta *metav1.ObjectMeta, metricsName string, metrics NotebookMetrics, threshold float64, log logr.Logger, updated *bool) {
 	// Metrics Data Result should always be only one value.
 	// Result Value should always be 2 values, first value is unix_time, second value is the result
 	parseValue, err := strconv.ParseFloat(metrics.Data.Result[0].Value[1].(string), 64)
@@ -424,6 +429,7 @@ func updateTimestampFromMetrics(meta *metav1.ObjectMeta, metricsName string, met
 	t := recentTime.Format(time.RFC3339)
 	meta.Annotations[LAST_ACTIVITY_ANNOTATION] = t
 	log.Info(fmt.Sprintf("Successfully updated last-activity from the %s metrics, %s", metricsName, t))
+	*updated = true
 }
 
 func updateLastCullingCheckTimestampAnnotation(meta *metav1.ObjectMeta, log logr.Logger) {
