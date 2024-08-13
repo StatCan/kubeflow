@@ -409,24 +409,21 @@ func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []Kerne
 func updateTimestampFromMetrics(meta *metav1.ObjectMeta, metricsName string, metrics NotebookMetrics, threshold float64, log logr.Logger, updated *bool) {
 	// Metrics Data Result should always be only one value.
 	// Result Value should always be 2 values, first value is unix_time, second value is the result
-	parseValue, err := strconv.ParseFloat(metrics.Data.Result[0].Value[1].(string), 64)
+	metricsTime := metrics.Data.Result[0].Value[0].(float64)
+	metricsValue := metrics.Data.Result[0].Value[1].(string)
+
+	parseValue, err := strconv.ParseFloat(metricsValue, 64)
 	if err != nil {
 		log.Error(err, fmt.Sprintf("Error parsing the value from the %s metrics results", metricsName))
 		return
 	}
 	if !(parseValue > threshold) {
 		// if metrics don't pass the threshold, don't update the recent activity
-		log.Info(fmt.Sprintf("%s of %s doesn't exceed the threshold %s. Not updating the last-activity", metricsName, metrics.Data.Result[0].Value[1], threshold))
+		log.Info(fmt.Sprintf("%s of %s doesn't exceed the threshold %s. Not updating the last-activity", metricsName, metricsValue, threshold))
 		return
 	}
 
-	recentTime, err := time.Parse(time.UnixDate, metrics.Data.Result[0].Value[0].(string))
-	if err != nil {
-		log.Error(err, fmt.Sprintf("Error parsing the last-activity time from the %s metrics results", metricsName))
-		return
-	}
-
-	t := recentTime.Format(time.RFC3339)
+	t := time.Unix(int64(metricsTime), 0).Format(time.RFC3339)
 	meta.Annotations[LAST_ACTIVITY_ANNOTATION] = t
 	log.Info(fmt.Sprintf("Successfully updated last-activity from the %s metrics, %s", metricsName, t))
 	*updated = true
