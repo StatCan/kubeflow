@@ -74,7 +74,7 @@ type NotebookMetricsDataResultsMetric struct {
 
 type NotebookMetricsDataResults struct {
 	Metric NotebookMetricsDataResultsMetric `json:"metric"`
-	Value  []string                         `json:"value"` //first value is unix_time, second value is the result
+	Value  [2]interface{}                   `json:"value"` //first value is unix_time, second value is the result
 }
 
 type NotebookMetricsData struct {
@@ -82,7 +82,7 @@ type NotebookMetricsData struct {
 	Result     []NotebookMetricsDataResults `json:"result"`
 }
 
-// NotebookMetrics struct:
+// NotebookMetrics struct
 type NotebookMetrics struct {
 	Status string              `json:"status"`
 	Data   NotebookMetricsData `json:"data"`
@@ -398,21 +398,17 @@ func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []Kerne
 	log.Info(fmt.Sprintf("Successfully updated last-activity from latest kernel action, %s", t))
 }
 
-func updateTimestampFromMetrics(meta *metav1.ObjectMeta, metricsName string, metrics NotebookMetrics, threshold float32, log logr.Logger) {
+func updateTimestampFromMetrics(meta *metav1.ObjectMeta, metricsName string, metrics NotebookMetrics, threshold float64, log logr.Logger) {
 	// Metrics Data Result should always be only one value.
 	// Result Value should always be 2 values, first value is unix_time, second value is the result
-	parseValue, err := strconv.ParseFloat(metrics.Data.Result[0].Value[1], 32)
-	if err != nil {
-		log.Error(err, fmt.Sprintf("Error parsing the value from the %s metrics results", metricsName))
-		return
-	}
-	if !(float32(parseValue) > threshold) {
+
+	if !(metrics.Data.Result[0].Value[1].(float64) > threshold) {
 		// if metrics don't pass the threshold, don't update the recent activity
 		log.Info(fmt.Sprintf("%s of %s doesn't exceed the threshold %s. Not updating the last-activity", metricsName, metrics.Data.Result[0].Value[1], threshold))
 		return
 	}
 
-	recentTime, err := time.Parse(time.UnixDate, metrics.Data.Result[0].Value[0])
+	recentTime, err := time.Parse(time.UnixDate, metrics.Data.Result[0].Value[0].(string))
 	if err != nil {
 		log.Error(err, fmt.Sprintf("Error parsing the last-activity time from the %s metrics results", metricsName))
 		return
