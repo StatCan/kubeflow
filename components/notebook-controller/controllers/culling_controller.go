@@ -392,7 +392,19 @@ func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []Kerne
 	t := recentTime.Format(time.RFC3339)
 
 	// Comparing against the current annotation to see if there was any new acivity
-	if t == meta.Annotations[LAST_ACTIVITY_ANNOTATION] {
+	oldTime, err := time.Parse(time.RFC3339, meta.Annotations[LAST_ACTIVITY_ANNOTATION])
+	if err != nil {
+		log.Error(err, "Error parsing the last-activity from the annotation")
+		return
+	}
+	// re-parsing the recentTime to just remove nanoseconds
+	newTime, err := time.Parse(time.RFC3339, t)
+	if err != nil {
+		log.Error(err, "Error parsing the last-activity from the recentTime")
+		return
+	}
+
+	if !newTime.After(oldTime) {
 		log.Info("No new activity detected on the kernels. Not updating last-activity")
 		return
 	}
