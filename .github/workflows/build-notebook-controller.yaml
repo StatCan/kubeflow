@@ -12,8 +12,6 @@ on:
       - 'opened'
       - 'synchronize'
       - 'reopened'
-  schedule: 
-    - cron: '0 22 * * *'
 # Environment variables available to all jobs and steps in this workflow
 env:
   REGISTRY_NAME: k8scc01covidacr

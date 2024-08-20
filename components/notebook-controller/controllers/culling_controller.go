@@ -317,14 +317,10 @@ func allKernelsAreIdle(kernels []KernelStatus, log logr.Logger) bool {
 // Update LAST_ACTIVITY_ANNOTATION
 func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logger) {
 	updated := false
-	log.Info("Updating the last-activity annotation. Checking /api/kernels")
+
 	nm, ns := meta.GetName(), meta.GetNamespace()
 	kernels := getNotebookApiKernels(nm, ns, log)
-	if kernels == nil {
-		log.Info("Could not GET the kernels status. Will not update last-activity.")
-	} else if len(kernels) == 0 {
-		log.Info("Notebook has no kernels. Will not update last-activity")
-	} else {
+	if kernels != nil && len(kernels) > 0 {
 		updateTimestampFromKernelsActivity(meta, kernels, log, &updated)
 		if updated {
 			return
@@ -334,11 +330,7 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 	cpuQuery := fmt.Sprintf("sum by(container) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"%s\", container=\"%s\"})",
 		ns, nm)
 	cpuMetrics := getNotebookMetrics(nm, ns, url.QueryEscape(cpuQuery), log)
-	if cpuMetrics == nil {
-		log.Info("Could not GET the CPU usage metrics. Will not update last-activity.")
-	} else if len(cpuMetrics.Data.Result) == 0 {
-		log.Info("Notebook has no CPU usage metrics. Will not update last-activity.")
-	} else {
+	if cpuMetrics != nil && len(cpuMetrics.Data.Result) > 0 {
 		updateTimestampFromMetrics(meta, "CPU usage", *cpuMetrics, 0.09, log, &updated)
 		if updated {
 			return
@@ -348,13 +340,15 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 	ioQuery := fmt.Sprintf("ceil(sum by(container) (rate(container_fs_reads_total{device=~\"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)\", namespace=\"%s\", container=\"%s\"}[2m]) + rate(container_fs_writes_total{device=~\"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)\", namespace=\"%s\", container=\"%s\"}[2m])))",
 		ns, nm, ns, nm)
 	ioMetrics := getNotebookMetrics(nm, ns, url.QueryEscape(ioQuery), log)
-	if ioMetrics == nil {
-		log.Info("Could not GET the disk IO metrics. Will not update last-activity.")
-	} else if len(ioMetrics.Data.Result) == 0 {
-		log.Info("Notebook has no disk IO metrics. Will not update last-activity.")
-	} else {
+	if ioMetrics != nil && len(ioMetrics.Data.Result) > 0 {
 		updateTimestampFromMetrics(meta, "Disk IO", *ioMetrics, 0, log, &updated)
+		if updated {
+			return
+		}
 	}
+
+	//else
+	log.Info("Will not update last-activity")
 }
 
 func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []KernelStatus, log logr.Logger, updated *bool) {
@@ -405,7 +399,7 @@ func updateTimestampFromKernelsActivity(meta *metav1.ObjectMeta, kernels []Kerne
 	}
 
 	if !newTime.After(oldTime) {
-		log.Info("No new activity detected on the kernels. Not updating last-activity")
+		// No new activity detected on the kernels. Not updating last-activity
 		return
 	}
 
@@ -427,8 +421,6 @@ func updateTimestampFromMetrics(meta *metav1.ObjectMeta, metricsName string, met
 	}
 	if !(parseValue > threshold) {
 		// if metrics don't pass the threshold, don't update the recent activity
-		log.Info(fmt.Sprintf("%s of %s doesn't exceed the threshold %s. Not updating the last-activity",
-			metricsName, metricsValue, strconv.FormatFloat(threshold, 'g', -1, 64)))
 		return
 	}
 
