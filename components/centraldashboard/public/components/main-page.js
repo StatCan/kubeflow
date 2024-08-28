@@ -395,6 +395,18 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
             this.set('subRouteData.path',
                 this.namespacedItemTemplete.replace('{ns}', namespace));
         }
+
+        // We need to deep-copy and re-assign in order to trigger the
+        // re-rendering of the component
+        this.externalLinks = JSON.parse(JSON.stringify(this.externalLinks));
+    }
+
+    replaceNamespacedLink(link) {
+        if (this.namespace === '') {
+            return link;
+        }
+
+        return link.replace('{ns}', this.namespace);
     }
 
     _buildHref(href, queryParamsChange) {
