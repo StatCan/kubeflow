@@ -1,9 +1,8 @@
 name: Run Notebook Controller unit tests
-# AAW: commented out because it was always failing
-# on:
-#   pull_request:
-#     paths:
-#       - components/notebook-controller/**
+on:
+  pull_request:
+    paths:
+      - components/notebook-controller/**
 
 jobs:
   build:
