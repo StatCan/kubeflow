@@ -44,10 +44,11 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                             iron-icon(icon='[[item.icon]]')
                             | [[item.text]]
                 template(is='dom-if', if='[[!item.iframe]]')
-                    a(href$="[[item.link]]",tabindex='-1', target="_blank")
+                    a(href$="[[replaceNamespacedLink(item.link)]]",tabindex='-1', target="_blank")
                         paper-item.menu-item
                             iron-icon(icon='[[item.icon]]')
                             | [[item.text]]
+                            iron-icon.external(icon="launch")
             aside.divider
             a(href$='[[_buildHref("/manage-filers", queryParams.*)]]', tabindex='-1')
                 paper-item.menu-item#filers {{localize('mainPage.menuManageFilers')}}
