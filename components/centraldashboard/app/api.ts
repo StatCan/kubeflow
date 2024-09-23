@@ -9,8 +9,8 @@ export const ERRORS = {
   invalid_links_config: 'Cannot load dashboard menu link',
   invalid_settings: 'Cannot load dashboard settings',
   invalid_get_filers: 'Failed to load filers',
-  invalid_get_user_filers: 'Failed to load user filers',
-  invalid_update_filer: 'Failed to update filers'
+  invalid_get_user_filers: 'Failed to load user filer shares',
+  invalid_update_filer: 'Failed to update user filers'
 };
 
 export function apiError(a: {res: Response, error: string, code?: number}) {
@@ -107,18 +107,18 @@ export class Api {
           })
         .get(
           '/filers',
-          async (req: Request, res: Response) => {
-            try{
-              const filePath = resolve('./filerShares.json');
-              const contents = await readFile(filePath, {encoding: 'utf8'});
-              const filers = JSON.parse(contents);
-              res.json(filers);
+          async (_: Request, res: Response) => {
+            const cm = await this.k8sService.getFilersListConfigMap();
+            let filers = [];
+            try {
+              filers=JSON.parse(cm.data["filers"]);
             }catch(e){
               return apiError({
-                  res, code: 500,
-                  error: ERRORS.invalid_get_filers,
-                });
+                res, code: 500,
+                error: ERRORS.invalid_get_filers,
+              });
             }
+            res.json(filers);
           })
           .post(
             '/create-filer/:namespace',

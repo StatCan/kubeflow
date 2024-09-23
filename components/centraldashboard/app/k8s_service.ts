@@ -106,6 +106,17 @@ export class KubernetesService {
     }
   }
 
+  /** Retrieves the configmap data for the list of filers. */
+  async getFilersListConfigMap(): Promise<k8s.V1ConfigMap> {
+    try {
+      const { body } = await this.coreAPI.readNamespacedConfigMap("filers-list", "das");
+      return body;
+    } catch (err) {
+      console.error('Unable to fetch fielrs list ConfigMap:', err.response?.body || err.body || err);
+      return null;
+    }
+  }
+
   /** Creates the user filers configmap for the central dashboard. */
   async createUserFilerConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
     try {

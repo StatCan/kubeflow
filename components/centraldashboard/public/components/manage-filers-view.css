@@ -71,6 +71,24 @@ paper-toast#FilersSuccessToast {
 label {
   padding: .25em;
 }
-.formInputDiv{
+
+.formInputDiv {
   margin-bottom: .5em;
+}
+
+.formInputDiv label{
+  float: left;
+}
+
+.formInputDiv span{
+  overflow: hidden;
+  display: block;
+}
+
+.formInputDiv span input{
+  width: 95%;
+}
+
+.formInputDiv span select{
+  width: 97%;
 }

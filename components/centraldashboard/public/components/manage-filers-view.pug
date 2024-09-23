@@ -29,19 +29,15 @@ section#Main-Content
                 form#filersForm
                     div.formInputDiv
                         label(for="filersSelect") {{localize('manageFilersView.lblFiler')}}
-                        select#filersSelect(name="filersSelect", on-change="onChangeFilers", value="", required)
-                            option(value="") {{localize('manageFilersView.optionFiler')}}
-                            template(is='dom-repeat', items='[[formatFilers(filers)]]')
-                                option(value="{{item.key}}") {{item.name}}
+                        span 
+                            select#filersSelect(name="filersSelect", on-change="onChangeFilers", value="", required)
+                                option(value="") {{localize('manageFilersView.optionFiler')}}
+                                template(is='dom-repeat', items='{{filers}}')
+                                    option(value="{{item.vserver}}") {{item.name}}
                     div.formInputDiv
-                        label(for="sharesSelect") {{localize('manageFilersView.lblShare')}}
-                        select#sharesSelect(name="sharesSelect", disabled="[[!filersFormValue]]", on-change="onChangeShares", value="", required)
-                            option(value="") {{localize('manageFilersView.optionShare')}}
-                            template(is='dom-repeat', items='[[getShares(filersFormValue)]]')
-                                option {{item}}
-                    div.formInputDiv
-                        label(for="sharesInput") {{localize('manageFilersView.lblExtraShare')}}
-                        input#sharesInput(name="sharesInput", disabled="[[!filersFormValue]]", value="", placeholder="{{localize('manageFilersView.placeholderExtraShare')}}")
+                        label(for="sharesInput" style="float: left") {{localize('manageFilersView.lblShare')}}
+                        span
+                            input#sharesInput(name="sharesInput", disabled="[[!filersFormValue]]", value="", placeholder="{{localize('manageFilersView.placeholderShare')}}")
                     aside.Error {{validateError}}
 
                     template(is='dom-if', if="[[filers]]")

@@ -88,31 +88,9 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         return result;
     }
 
-    /**
-     * Returns filers
-     * @param {Object} filers Set of filers to format
-     * @return {[[string]]} rows for filers table.
-     */
-    formatFilers(filers) {
-        if (filers === null) return [];
-        return Object.keys(filers).map((key)=>{
-            return {key: key, name: filers[key].name,
-                shares: filers[key].shares};
-        });
-    }
-
-    getShares(filer) {
-        return this.filersFormValue === ''? [] : this.filers[filer].shares;
-    }
-
     onChangeFilers(e) {
         this.filersFormValue = e.target.value;
-        this.$.sharesSelect.value = '';
         this.$.sharesInput.value = '';
-        this.validateError = '';
-    }
-
-    onChangeShares() {
         this.validateError = '';
     }
 
@@ -125,34 +103,30 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         if (formData.get('filersSelect')==='') {
             this.validateError = this.localize('manageFilersView.missingFiler');
             return;
-        } else if (formData.get('sharesSelect')==='') {
-            this.validateError = this.localize('manageFilersView.missingShare');
+        } else if (formData.get('sharesInput')==='') {
+            this.validateError =
+                this.localize('manageFilersView.invalidSharePath');
+            return;
+        }
+
+        // Trim slashes for regex matching
+        let sharesInputValue = formData.get('sharesInput').startsWith('/') ?
+            formData.get('sharesInput').slice(1) :
+            formData.get('sharesInput');
+        sharesInputValue = sharesInputValue.endsWith('/') ?
+            sharesInputValue : sharesInputValue + '/';
+
+        // Error if the path doesn't look like a dir path
+        if (!sharesInputValue.match(/^([^\\/:|<>*?]+\/?)*$/)) {
+            this.validateError =
+                this.localize('manageFilersView.invalidSharePath');
             return;
         }
 
         // cloning to avoid assigning by reference
         const newUserData = _.clone(userData);
 
-        let newValue = formData.get('filersSelect') + '/' +
-            formData.get('sharesSelect')+ '/';
-
-        if (formData.get('sharesInput') !== '') {
-            // Trim slashes for regex matching
-            let sharesInputValue = formData.get('sharesInput').startsWith('/') ?
-                formData.get('sharesInput').slice(1) :
-                formData.get('sharesInput');
-            sharesInputValue = sharesInputValue.endsWith('/') ?
-                sharesInputValue : sharesInputValue + '/';
-
-            // Error if the path doesn't look like a dir path
-            if (!sharesInputValue.match(/^([^\\/:|<>*?]+\/?)*$/)) {
-                this.validateError =
-                    this.localize('manageFilersView.invalidSharePath');
-                return;
-            }
-
-            newValue = newValue + sharesInputValue;
-        }
+        const newValue = formData.get('filersSelect') + '/' + sharesInputValue;
 
         if (newUserData.includes(newValue)) {
             this.validateError =
@@ -226,7 +200,6 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
     handleUpdateFilers(e) {
         this.filersFormValue = '';
         this.$.filersSelect.value = '';
-        this.$.sharesSelect.value = '';
         this.$.sharesInput.value = '';
 
         if (e.detail.error) {
