@@ -9,8 +9,12 @@ export const ERRORS = {
   invalid_links_config: 'Cannot load dashboard menu link',
   invalid_settings: 'Cannot load dashboard settings',
   invalid_get_filers: 'Failed to load filers',
-  invalid_get_user_filers: 'Failed to load user filer shares',
-  invalid_update_filer: 'Failed to update user filers'
+  invalid_get_existing_shares: 'Failed to load existing shares',
+  invalid_get_requesting_shares: 'Failed to load requesting shares',
+  invalid_create_requesting_shares: 'Failed to create requesting shares configmap',
+  invalid_update_requesting_shares: 'Failed to update requesting shares configmap',
+  invalid_update_existing_shares: 'Failed to update existing shares configmap',
+  invalid_delete_existing_shares: 'Failed to delete existing shares configmap' 
 };
 
 export function apiError(a: {res: Response, error: string, code?: number}) {
@@ -120,58 +124,84 @@ export class Api {
             }
             res.json(filers);
           })
-          .post(
-            '/create-filer/:namespace',
+        .post(
+            '/create-requesting-shares/:namespace',
             async (req: Request, res: Response) => {
               try {
-                const cm = await this.k8sService.createUserFilerConfigMap(req.params.namespace, req.body);
+                const cm = await this.k8sService.createRequestingSharesConfigMap(req.params.namespace, req.body);
                 res.json(cm.data);
               }catch(e){
                 return apiError({
                   res, code: 500,
-                  error: ERRORS.invalid_update_filer,
+                  error: ERRORS.invalid_create_requesting_shares,
                 });
               }
             })
-            .get(
-              '/get-filer/:namespace',
-              async (req: Request, res: Response) => {
-                try {
-                  const cm = await this.k8sService.getUserFilerConfigMap(req.params.namespace);
-                  res.json(cm.data);
-                }catch(e){
-                  return apiError({
+        .get(
+            '/get-existing-shares/:namespace',
+            async (req: Request, res: Response) => {
+            try {
+                const cm = await this.k8sService.getExistingSharesConfigMap(req.params.namespace);
+                res.json(cm.data);
+            }catch(e){
+                return apiError({
                     res, code: 500,
-                    error: ERRORS.invalid_get_user_filers,
-                  });
-                }
-              })
-            .patch(
-              '/update-filer/:namespace',
-              async (req: Request, res: Response) => {
-                try {
-                  const cm = await this.k8sService.updateUserFilerConfigMap(req.params.namespace, req.body);
-                  res.json(cm.data);
-                }catch(e){
-                  return apiError({
-                    res, code: 500,
-                    error: ERRORS.invalid_update_filer,
-                  });
-                }
-              })
-              .delete(
-                '/delete-filer/:namespace',
-                async (req: Request, res: Response) => {
-                  try {
-                    await this.k8sService.deleteUserFilerConfigMap(req.params.namespace);
-                    res.json({});
-                  }catch(e){
-                    return apiError({
-                      res, code: 500,
-                      error: ERRORS.invalid_update_filer,
-                    });
-                  }
+                    error: ERRORS.invalid_get_existing_shares,
                 });
+            }
+            })
+        .get(
+            '/get-requesting-shares/:namespace',
+            async (req: Request, res: Response) => {
+                try {
+                    const cm = await this.k8sService.getRequestingSharesConfigMap(req.params.namespace);
+                    res.json(cm.data);
+                }catch(e){
+                    return apiError({
+                        res, code: 500,
+                        error: ERRORS.invalid_get_requesting_shares,
+                    });
+                }
+            })
+        .patch(
+            '/update-requesting-shares/:namespace',
+            async (req: Request, res: Response) => {
+                try {
+                    const cm = await this.k8sService.updateRequestingSharesConfigMap(req.params.namespace, req.body);
+                    res.json(cm.data);
+                }catch(e){
+                    return apiError({
+                        res, code: 500,
+                        error: ERRORS.invalid_update_requesting_shares,
+                    });
+                }
+            })
+        .patch(
+            '/update-existing-shares/:namespace',
+            async (req: Request, res: Response) => {
+                try {
+                    const cm = await this.k8sService.updateExistingSharesConfigMap(req.params.namespace, req.body);
+                    res.json(cm.data);
+                }catch(e){
+                    return apiError({
+                        res, code: 500,
+                        error: ERRORS.invalid_update_existing_shares,
+                    });
+                }
+            })
+        .delete(
+            '/delete-existing-shares/:namespace',
+            async (req: Request, res: Response) => {
+                try {
+                    await this.k8sService.deleteExistingSharesConfigMap(req.params.namespace);
+                    res.json({});
+                }catch(e){
+                    return apiError({
+                        res, code: 500,
+                        error: ERRORS.invalid_delete_existing_shares,
+                    });
+                }
+            });
   }
 
   resolveLanguage(requested: string[], supported: string[], defaultLang: string) {

@@ -47,7 +47,8 @@ interface V1BetaApplicationList {
 const APP_API_GROUP = 'app.k8s.io';
 const APP_API_VERSION = 'v1beta1';
 const APP_API_NAME = 'applications';
-const USER_FILERS_CM_NAME = 'user-filers';
+const REQUESTING_SHARES_CM_NAME = 'requesting-shares';
+const EXISTING_SHARES_CM_NAME = 'existing-shares';
 
 /** Wrap Kubernetes API calls in a simpler interface for use in routes. */
 export class KubernetesService {
@@ -117,27 +118,27 @@ export class KubernetesService {
     }
   }
 
-  /** Creates the user filers configmap for the central dashboard. */
-  async createUserFilerConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
+  /** Creates the requesting shares configmap for the central dashboard. */
+  async createRequestingSharesConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
     try {
       const config = {
         metadata: {
-          name: USER_FILERS_CM_NAME
+          name: REQUESTING_SHARES_CM_NAME
         },
         data
       } as k8s.V1ConfigMap;
       const { body } = await this.coreAPI.createNamespacedConfigMap(namespace, config);
       return body;
     } catch (err) {
-      console.error('Unable to create ConfigMap:', err.response?.body || err.body || err);
+      console.error('Unable to create requesting shares ConfigMap:', err.response?.body || err.body || err);
       throw err;
     }
   }
 
-  /** Retrieves the user filers configmap data for the central dashboard. */
-  async getUserFilerConfigMap(namespace: string): Promise<k8s.V1ConfigMap> {
+  /** Retrieves the existing shares configmap data for the central dashboard. */
+  async getExistingSharesConfigMap(namespace: string): Promise<k8s.V1ConfigMap> {
     try {
-      const { body } = await this.coreAPI.readNamespacedConfigMap(USER_FILERS_CM_NAME, namespace);
+      const { body } = await this.coreAPI.readNamespacedConfigMap(EXISTING_SHARES_CM_NAME, namespace);
       return body;
     } catch (err) {
       if(err.statusCode === 404){
@@ -149,16 +150,31 @@ export class KubernetesService {
     }
   }
 
-  /** Updates the user filers configmap for the central dashboard. */
-  async updateUserFilerConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
+  /** Retrieves the requesting shares configmap data for the central dashboard. */
+  async getRequestingSharesConfigMap(namespace: string): Promise<k8s.V1ConfigMap> {
+    try {
+      const { body } = await this.coreAPI.readNamespacedConfigMap(REQUESTING_SHARES_CM_NAME, namespace);
+      return body;
+    } catch (err) {
+      if(err.statusCode === 404){
+        //user has no user-filers yet
+        return new k8s.V1ConfigMap();
+      }
+      console.error('Unable to fetch ConfigMap:', err.response?.body || err.body || err);
+      throw err;
+    }
+  }
+
+  /** Updates the requesting shares configmap for the central dashboard. */
+  async updateRequestingSharesConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
     try {
       const config = {
         metadata: {
-          name: USER_FILERS_CM_NAME
+          name: REQUESTING_SHARES_CM_NAME
         },
         data
       } as k8s.V1ConfigMap;
-      const { body } = await this.coreAPI.replaceNamespacedConfigMap(USER_FILERS_CM_NAME, namespace, config);
+      const { body } = await this.coreAPI.replaceNamespacedConfigMap(REQUESTING_SHARES_CM_NAME, namespace, config);
       return body;
     } catch (err) {
       console.error('Unable to patch ConfigMap:', err.response?.body || err.body || err);
@@ -166,10 +182,27 @@ export class KubernetesService {
     }
   }
 
-  /** Deletes the user filers configmap for the central dashboard. */
-  async deleteUserFilerConfigMap(namespace: string): Promise<k8s.V1Status> {
+  /** Updates the existing shares configmap for the central dashboard. */
+  async updateExistingSharesConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
     try {
-      const { body } = await this.coreAPI.deleteNamespacedConfigMap(USER_FILERS_CM_NAME, namespace);
+      const config = {
+        metadata: {
+          name: EXISTING_SHARES_CM_NAME
+        },
+        data
+      } as k8s.V1ConfigMap;
+      const { body } = await this.coreAPI.replaceNamespacedConfigMap(EXISTING_SHARES_CM_NAME, namespace, config);
+      return body;
+    } catch (err) {
+      console.error('Unable to patch ConfigMap:', err.response?.body || err.body || err);
+      throw err;
+    }
+  }
+
+  /** Deletes the existing shares configmap for the central dashboard. */
+  async deleteExistingSharesConfigMap(namespace: string): Promise<k8s.V1Status> {
+    try {
+      const { body } = await this.coreAPI.deleteNamespacedConfigMap(EXISTING_SHARES_CM_NAME, namespace);
       return body;
     } catch (err) {
       console.error('Unable to delete ConfigMap:', err.response?.body || err.body || err);

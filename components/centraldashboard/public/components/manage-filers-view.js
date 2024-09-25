@@ -48,8 +48,10 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         return userFilers ? userFilers.includes(filer) : false;
     }
 
-    isLoading(filersLoading, userFilersLoading) {
-        return filersLoading || userFilersLoading;
+    isLoading(filersLoading, existingSharesLoading, requestingSharesLoading) {
+        return filersLoading ||
+            existingSharesLoading ||
+            requestingSharesLoading;
     }
 
     /**
@@ -81,9 +83,17 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         this.$.FilersSuccessToast.show();
     }
 
-    formatUserFilers(userFilers) {
-        if (userFilers === null) return [];
-        const result = JSON.parse(userFilers.filerShares);
+    formatUserShares(userShares) {
+        if (userShares === null) return [];
+
+        const result = [];
+        Object.keys(userShares).forEach((key)=>{
+            result[key] = JSON.parse(userShares[key]);
+            result.push({
+                svm: key,
+                shares: JSON.parse(userShares[key]),
+            });
+        });
 
         return result;
     }
@@ -94,11 +104,12 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         this.validateError = '';
     }
 
-    updateFilers() {
+    updateShares() {
         this.validateError = '';
         const formData = new FormData(this.$.filersForm);
-        const userData = this.userFilers === null ? [] :
-            JSON.parse(this.userFilers.filerShares);
+        const requestingData = this.requestingShares === null ? {} :
+            this.requestingShares;
+
         // validate mandatory inputs
         if (formData.get('filersSelect')==='') {
             this.validateError = this.localize('manageFilersView.missingFiler');
@@ -114,7 +125,7 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
             formData.get('sharesInput').slice(1) :
             formData.get('sharesInput');
         sharesInputValue = sharesInputValue.endsWith('/') ?
-            sharesInputValue : sharesInputValue + '/';
+            sharesInputValue.slice(0, -1) : sharesInputValue;
 
         // Error if the path doesn't look like a dir path
         if (!sharesInputValue.match(/^([^\\/:|<>*?]+\/?)*$/)) {
@@ -124,38 +135,48 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         }
 
         // cloning to avoid assigning by reference
-        const newUserData = _.clone(userData);
+        const newRequestingData = _.clone(requestingData);
 
-        const newValue = formData.get('filersSelect') + '/' + sharesInputValue;
-
-        if (newUserData.includes(newValue)) {
+        const newRequestingDataValue =
+            newRequestingData[formData.get('filersSelect')] ?
+                JSON.parse(newRequestingData[formData.get('filersSelect')]) :
+                [];
+        // checking for duplicates
+        // TODO: compare between both requesting and existing CM,
+        //  not just requesting CM
+        if (newRequestingDataValue.includes(sharesInputValue)) {
             this.validateError =
                 this.localize('manageFilersView.duplicateFiler');
             return;
         }
 
-        newUserData.push(newValue);
-        const newConfigmap = {filerShares: JSON.stringify(newUserData)};
+        newRequestingDataValue.push(sharesInputValue);
 
-        if (Object.keys(userData).length===0) {
+        newRequestingData[formData.get('filersSelect')] =
+            JSON.stringify(newRequestingData);
+        // if no requesting CM, create it
+        if (Object.key(requestingData).length===0) {
             // new configmap to create
-            const api = this.$.CreateFilerAjax;
-            api.body = newConfigmap;
+            const api = this.$.CreateRequestingSharesAjax;
+            api.body = newRequestingData;
             api.generateRequest();
             return;
         }
-        // else is update the config map
-        const api = this.$.UpdateFilerAjax;
-        api.body = newConfigmap;
+        // else update the config map
+        const api = this.$.UpdateRequestingSharesAjax;
+        api.body = newRequestingData;
         api.generateRequest();
         return;
     }
 
-    deleteFilerShare(e) {
-        const filerShare = e.model.item;
-        const userData = this.userFilers === null ? [] :
-            JSON.parse(this.userFilers.filerShares);
-        const index = userData.indexOf(filerShare);
+    deleteExistingShare(e) {
+        const filer = e.model.svm.svm;
+        const filerShare = e.model.share;
+        const existingData = this.existingShares === null ? {} :
+            this.existingShares;
+
+        const existingDataValue = JSON.parse(existingData[filer]);
+        const index = existingDataValue.indexOf(filerShare);
         if (index===-1) {
             this.showError(
                 this.localize(
@@ -166,18 +187,28 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
             );
             return;
         }
-        if (userData.length===1) {
-            // delete the configmap if only contains this filershare
-            const api = this.$.DeleteFilerAjax;
+
+        // delete the configmap if only contains this filershare
+        if (existingDataValue.length===1 &&
+                Object.keys(existingData).length===1) {
+            const api = this.$.DeleteExistingSharesAjax;
             api.generateRequest();
             return;
         }
 
-        userData.splice(index, 1);
-        const newConfigmap = {filerShares: JSON.stringify(userData)};
-        // else is update the config map
-        const api = this.$.UpdateFilerAjax;
-        api.body = newConfigmap;
+        // cloning to avoid assigning by reference
+        const newExistingData = _.clone(existingData);
+
+        existingDataValue.splice(index, 1);
+        // remove filer from configmap if it contains no more values
+        if (existingDataValue.length===0) {
+            delete newExistingData[filer];
+        } else {
+            newExistingData[filer] = JSON.stringify(existingDataValue);
+        }
+
+        const api = this.$.UpdateExistingSharesAjax;
+        api.body = newExistingData;
         api.generateRequest();
         return;
     }
@@ -197,7 +228,7 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
      * Iron-Ajax response / error handler for updateFilers
      * @param {IronAjaxEvent} e
      */
-    handleUpdateFilers(e) {
+    handleUpdateRequestingShares(e) {
         this.filersFormValue = '';
         this.$.filersSelect.value = '';
         this.$.sharesInput.value = '';
@@ -207,10 +238,54 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
             this.showError(error);
             return;
         }
+
         this.showResponse(this.localize('manageFilersView.successUpdate'));
-        this.userFilers = _.isEmpty(e.detail.response) ? null :
+        // TODO: maybe just retrigger the ajax calls to GET
+        // the configmaps instead of updating the JS object.
+        this.requestingShares = _.isEmpty(e.detail.response) ? null :
             e.detail.response;
         return;
+    }
+
+    /**
+     * Iron-Ajax response / error handler for updateFilers
+     * @param {IronAjaxEvent} e
+     */
+    handleUpdateExistingShares(e) {
+        this.filersFormValue = '';
+        this.$.filersSelect.value = '';
+        this.$.sharesInput.value = '';
+
+        if (e.detail.error) {
+            const error = this._isolateErrorFromIronRequest(e);
+            this.showError(error);
+            return;
+        }
+
+        this.showResponse(this.localize('manageFilersView.successUpdate'));
+        // TODO: maybe just retrigger the ajax calls to GET
+        // the configmaps instead of updating the JS object.
+        this.existingShares = _.isEmpty(e.detail.response) ? null :
+            e.detail.response;
+        return;
+    }
+
+    /*
+    for the filers table.
+    Determines if the header should be displayed
+    polymer templating requires this to be a function as just inputing
+    the boolean comparaison does not work
+    */
+    renderHeader(i) {
+        return i === 0;
+    }
+
+    /*
+    for the filers table.
+    Determines if the count of the items, returning a string
+    */
+    getRowspan(items) {
+        return items.length;
     }
 }
 
