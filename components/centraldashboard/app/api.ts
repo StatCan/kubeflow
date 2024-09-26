@@ -128,7 +128,7 @@ export class Api {
             '/create-requesting-shares/:namespace',
             async (req: Request, res: Response) => {
               try {
-                const cm = await this.k8sService.createRequestingSharesConfigMap(req.params.namespace, req.body);
+                const cm = await this.k8sService.createRequestingSharesConfigMap(req.params.namespace, req.body, req.user.email);
                 res.json(cm.data);
               }catch(e){
                 return apiError({
@@ -167,7 +167,7 @@ export class Api {
             '/update-requesting-shares/:namespace',
             async (req: Request, res: Response) => {
                 try {
-                    const cm = await this.k8sService.updateRequestingSharesConfigMap(req.params.namespace, req.body);
+                    const cm = await this.k8sService.updateRequestingSharesConfigMap(req.params.namespace, req.body, req.user.email);
                     res.json(cm.data);
                 }catch(e){
                     return apiError({

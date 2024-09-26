@@ -119,14 +119,21 @@ export class KubernetesService {
   }
 
   /** Creates the requesting shares configmap for the central dashboard. */
-  async createRequestingSharesConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
+  async createRequestingSharesConfigMap(namespace: string, data: {[key:string]:string}, email: string): Promise<k8s.V1ConfigMap> {
     try {
       const config = {
         metadata: {
-          name: REQUESTING_SHARES_CM_NAME
+          name: REQUESTING_SHARES_CM_NAME,
+          labels: {
+            "for-ontap": "true"
+          },
+          annotations: {
+            "user-email": email
+          }
         },
         data
       } as k8s.V1ConfigMap;
+      console.log("c", config)
       const { body } = await this.coreAPI.createNamespacedConfigMap(namespace, config);
       return body;
     } catch (err) {
@@ -166,11 +173,17 @@ export class KubernetesService {
   }
 
   /** Updates the requesting shares configmap for the central dashboard. */
-  async updateRequestingSharesConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
+  async updateRequestingSharesConfigMap(namespace: string, data: {[key:string]:string}, email: string): Promise<k8s.V1ConfigMap> {
     try {
       const config = {
         metadata: {
-          name: REQUESTING_SHARES_CM_NAME
+          name: REQUESTING_SHARES_CM_NAME,
+          labels: {
+            "for-ontap": "true"
+          },
+          annotations: {
+            "user-email": email
+          }
         },
         data
       } as k8s.V1ConfigMap;

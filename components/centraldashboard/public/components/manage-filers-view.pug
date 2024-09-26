@@ -12,6 +12,7 @@ iron-ajax#UpdateExistingSharesAjax(method='PATCH', url='/api/update-existing-sha
     on-response='handleUpdateShares', on-error='handleUpdateShares', handle-as='json', content-type='application/json')
 iron-ajax#DeleteExistingSharesAjax(method='DELETE', url='/api/delete-existing-shares/[[namespace]]',
     on-response='handleUpdateShares', on-error='handleUpdateShares')
+
 h1 {{localize('manageFilersView.lblManageFilers')}}
 section#Main-Content
     article.Filers
@@ -22,7 +23,7 @@ section#Main-Content
             template(is='dom-if', if="[[isLoading(filersLoading, existingSharesLoading, requestingSharesLoading)]]")
                 paper-spinner-lite(active)
             div
-                span Existing Shares
+                span {{localize('manageFilersView.lblExistingSharesTable')}}
                 table.filersTable
                     template(is='dom-repeat', items='[[formatUserShares(existingShares)]]' index-as="i" as="svm")
                         template(is='dom-repeat', items='{{svm.shares}}' index-as="j" as='share')
@@ -33,7 +34,7 @@ section#Main-Content
                                 td
                                     button(type="button", on-click="deleteExistingShare") {{localize('manageFilersView.btnDelete')}}
             div
-                span Requesting shares
+                span {{localize('manageFilersView.lblRequestingSharesTable')}}
                 table.filersTable
                     template(is='dom-repeat', items='[[formatUserShares(requestingShares)]]' index-as="i" as="svm")
                         template(is='dom-repeat', items='{{svm.shares}}' index-as="j" as='share')
