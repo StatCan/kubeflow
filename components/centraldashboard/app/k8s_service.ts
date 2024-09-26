@@ -133,7 +133,6 @@ export class KubernetesService {
         },
         data
       } as k8s.V1ConfigMap;
-      console.log("c", config)
       const { body } = await this.coreAPI.createNamespacedConfigMap(namespace, config);
       return body;
     } catch (err) {
