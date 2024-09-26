@@ -33,8 +33,6 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
             responseText: {type: String, value: ''},
             validateError: {type: String, value: ''},
             namespace: String,
-            // helps to trigger changes for the shares list
-            filersFormValue: {type: String, value: ''},
         };
     }
     /**
@@ -99,7 +97,6 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
     }
 
     onChangeFilers(e) {
-        this.filersFormValue = e.target.value;
         this.$.sharesInput.value = '';
         this.validateError = '';
     }
@@ -109,21 +106,25 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         const formData = new FormData(this.$.filersForm);
         const requestingData = this.requestingShares === null ? {} :
             this.requestingShares;
+        const existingData = this.existingShares === null ? {} :
+            this.existingShares;
 
+        const filersSelectValue = formData.get('filersSelect');
+        let sharesInputValue = formData.get('sharesInput').trim();
         // validate mandatory inputs
-        if (formData.get('filersSelect')==='') {
+        if (filersSelectValue==='') {
             this.validateError = this.localize('manageFilersView.missingFiler');
             return;
-        } else if (formData.get('sharesInput')==='') {
+        } else if (sharesInputValue==='') {
             this.validateError =
                 this.localize('manageFilersView.invalidSharePath');
             return;
         }
 
         // Trim slashes for regex matching
-        let sharesInputValue = formData.get('sharesInput').startsWith('/') ?
-            formData.get('sharesInput').slice(1) :
-            formData.get('sharesInput');
+        sharesInputValue = sharesInputValue.startsWith('/') ?
+            sharesInputValue.slice(1) :
+            sharesInputValue;
         sharesInputValue = sharesInputValue.endsWith('/') ?
             sharesInputValue.slice(0, -1) : sharesInputValue;
 
@@ -138,13 +139,17 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         const newRequestingData = _.clone(requestingData);
 
         const newRequestingDataValue =
-            newRequestingData[formData.get('filersSelect')] ?
-                JSON.parse(newRequestingData[formData.get('filersSelect')]) :
+            newRequestingData[filersSelectValue] ?
+                JSON.parse(newRequestingData[filersSelectValue]) :
                 [];
+
+
+        const existingFilerData = existingData[filersSelectValue] ?
+            JSON.parse(existingData[filersSelectValue]) :
+            [];
         // checking for duplicates
-        // TODO: compare between both requesting and existing CM,
-        //  not just requesting CM
-        if (newRequestingDataValue.includes(sharesInputValue)) {
+        if (newRequestingDataValue.includes(sharesInputValue) ||
+            existingFilerData.includes(sharesInputValue)) {
             this.validateError =
                 this.localize('manageFilersView.duplicateFiler');
             return;
@@ -152,10 +157,11 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
 
         newRequestingDataValue.push(sharesInputValue);
 
-        newRequestingData[formData.get('filersSelect')] =
-            JSON.stringify(newRequestingData);
+        newRequestingData[filersSelectValue] =
+            JSON.stringify(newRequestingDataValue);
+
         // if no requesting CM, create it
-        if (Object.key(requestingData).length===0) {
+        if (Object.keys(requestingData).length===0) {
             // new configmap to create
             const api = this.$.CreateRequestingSharesAjax;
             api.body = newRequestingData;
@@ -228,8 +234,7 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
      * Iron-Ajax response / error handler for updateFilers
      * @param {IronAjaxEvent} e
      */
-    handleUpdateRequestingShares(e) {
-        this.filersFormValue = '';
+    handleUpdateShares(e) {
         this.$.filersSelect.value = '';
         this.$.sharesInput.value = '';
 
@@ -240,33 +245,10 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         }
 
         this.showResponse(this.localize('manageFilersView.successUpdate'));
-        // TODO: maybe just retrigger the ajax calls to GET
-        // the configmaps instead of updating the JS object.
-        this.requestingShares = _.isEmpty(e.detail.response) ? null :
-            e.detail.response;
-        return;
-    }
 
-    /**
-     * Iron-Ajax response / error handler for updateFilers
-     * @param {IronAjaxEvent} e
-     */
-    handleUpdateExistingShares(e) {
-        this.filersFormValue = '';
-        this.$.filersSelect.value = '';
-        this.$.sharesInput.value = '';
-
-        if (e.detail.error) {
-            const error = this._isolateErrorFromIronRequest(e);
-            this.showError(error);
-            return;
-        }
-
-        this.showResponse(this.localize('manageFilersView.successUpdate'));
-        // TODO: maybe just retrigger the ajax calls to GET
-        // the configmaps instead of updating the JS object.
-        this.existingShares = _.isEmpty(e.detail.response) ? null :
-            e.detail.response;
+        // updates the data
+        this.$.GetRequestingSharesAjax.generateRequest();
+        this.$.GetExistingSharesAjax.generateRequest();
         return;
     }
 
