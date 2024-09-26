@@ -112,8 +112,6 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         let sharesInputValue = formData.get('sharesInput')
             .trim().replaceAll('\\', '/');
 
-        // eslint-disable-next-line
-        console.log("ss", sharesInputValue)
         // validate mandatory inputs
         if (filersSelectValue==='') {
             this.validateError = this.localize('manageFilersView.missingFiler');
