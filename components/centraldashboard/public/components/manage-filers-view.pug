@@ -1,13 +1,18 @@
 iron-ajax(auto, url='/api/filers', handle-as='json',
     last-response='{{filers}}', on-error='onHasFilersError', loading='{{filersLoading}}')
-iron-ajax(auto, url='/api/get-filer/[[namespace]]', handle-as='json',
-    last-response='{{userFilers}}', on-error='onHasFilersError', loading='{{userFilersLoading}}')
-iron-ajax#CreateFilerAjax(method='POST', url='/api/create-filer/[[namespace]]',
-    on-response='handleUpdateFilers', on-error='handleUpdateFilers', handle-as='json', content-type='application/json')
-iron-ajax#UpdateFilerAjax(method='PATCH', url='/api/update-filer/[[namespace]]',
-    on-response='handleUpdateFilers', on-error='handleUpdateFilers', handle-as='json', content-type='application/json')
-iron-ajax#DeleteFilerAjax(method='DELETE', url='/api/delete-filer/[[namespace]]',
-    on-response='handleUpdateFilers', on-error='handleUpdateFilers')
+iron-ajax#GetExistingSharesAjax(auto, url='/api/get-existing-shares/[[namespace]]', handle-as='json',
+    last-response='{{existingShares}}', on-error='onHasFilersError', loading='{{existingSharesLoading}}')
+iron-ajax#GetRequestingSharesAjax(auto, url='/api/get-requesting-shares/[[namespace]]', handle-as='json',
+    last-response='{{requestingShares}}', on-error='onHasFilersError', loading='{{requestingSharesLoading}}')
+iron-ajax#CreateRequestingSharesAjax(method='POST', url='/api/create-requesting-shares/[[namespace]]',
+    on-response='handleUpdateShares', on-error='handleUpdateShares', handle-as='json', content-type='application/json')
+iron-ajax#UpdateRequestingSharesAjax(method='PATCH', url='/api/update-requesting-shares/[[namespace]]',
+    on-response='handleUpdateShares', on-error='handleUpdateShares', handle-as='json', content-type='application/json')
+iron-ajax#UpdateExistingSharesAjax(method='PATCH', url='/api/update-existing-shares/[[namespace]]',
+    on-response='handleUpdateShares', on-error='handleUpdateShares', handle-as='json', content-type='application/json')
+iron-ajax#DeleteExistingSharesAjax(method='DELETE', url='/api/delete-existing-shares/[[namespace]]',
+    on-response='handleUpdateShares', on-error='handleUpdateShares')
+
 h1 {{localize('manageFilersView.lblManageFilers')}}
 section#Main-Content
     article.Filers
@@ -15,37 +20,47 @@ section#Main-Content
             iron-icon.icon(icon='kubeflow:namespace')
             span.text {{localize('manageFilersView.lblFilers')}}
         .content.small
-            template(is='dom-if', if="[[isLoading(filersLoading, userFilersLoading)]]")
+            template(is='dom-if', if="[[isLoading(filersLoading, existingSharesLoading, requestingSharesLoading)]]")
                 paper-spinner-lite(active)
             div
-                table#filersTable
-                    template(is='dom-repeat', items='[[formatUserFilers(userFilers)]]')
-                        tr 
-                            td {{item}}
-                            td
-                                button(type="button", on-click="deleteFilerShare") {{localize('manageFilersView.btnDelete')}}
+                span {{localize('manageFilersView.lblExistingSharesTable')}}
+                table.filersTable
+                    template(is='dom-repeat', items='[[formatUserShares(existingShares)]]' index-as="i" as="svm")
+                        template(is='dom-repeat', items='{{svm.shares}}' index-as="j" as='share')
+                            tr
+                                template(is='dom-if', if="[[renderHeader(j)]]")
+                                    th(rowspan$='[[getRowspan(svm.shares)]]') {{svm.svm}}
+                                td {{share}}
+                                td
+                                    button(type="button", on-click="deleteExistingShare") {{localize('manageFilersView.btnDelete')}}
+            div
+                span {{localize('manageFilersView.lblRequestingSharesTable')}}
+                table.filersTable
+                    template(is='dom-repeat', items='[[formatUserShares(requestingShares)]]' index-as="i" as="svm")
+                        template(is='dom-repeat', items='{{svm.shares}}' index-as="j" as='share')
+                            tr
+                                template(is='dom-if', if="[[renderHeader(j)]]")
+                                    th(rowspan$='[[getRowspan(svm.shares)]]') {{svm.svm}}
+                                td {{share}}
+                                
             div
                 h2 {{localize('manageFilersView.headerAddFiler')}}
                 form#filersForm
                     div.formInputDiv
                         label(for="filersSelect") {{localize('manageFilersView.lblFiler')}}
-                        select#filersSelect(name="filersSelect", on-change="onChangeFilers", value="", required)
-                            option(value="") {{localize('manageFilersView.optionFiler')}}
-                            template(is='dom-repeat', items='[[formatFilers(filers)]]')
-                                option(value="{{item.key}}") {{item.name}}
+                        span 
+                            select#filersSelect(name="filersSelect", on-change="onChangeFilers", value="", required)
+                                option(value="") {{localize('manageFilersView.optionFiler')}}
+                                template(is='dom-repeat', items='{{filers}}')
+                                    option(value="{{item.vserver}}") {{item.name}}
                     div.formInputDiv
-                        label(for="sharesSelect") {{localize('manageFilersView.lblShare')}}
-                        select#sharesSelect(name="sharesSelect", disabled="[[!filersFormValue]]", on-change="onChangeShares", value="", required)
-                            option(value="") {{localize('manageFilersView.optionShare')}}
-                            template(is='dom-repeat', items='[[getShares(filersFormValue)]]')
-                                option {{item}}
-                    div.formInputDiv
-                        label(for="sharesInput") {{localize('manageFilersView.lblExtraShare')}}
-                        input#sharesInput(name="sharesInput", disabled="[[!filersFormValue]]", value="", placeholder="{{localize('manageFilersView.placeholderExtraShare')}}")
+                        label(for="sharesInput" style="float: left") {{localize('manageFilersView.lblShare')}}
+                        span
+                            input#sharesInput(name="sharesInput", value="", placeholder="{{localize('manageFilersView.placeholderShare')}}")
                     aside.Error {{validateError}}
 
                     template(is='dom-if', if="[[filers]]")
-                        button#filersSubmit(type="button", on-click="updateFilers") {{localize('manageFilersView.btnSubmit')}}
+                        button#shareSubmit(type="button", on-click="updateShares") {{localize('manageFilersView.btnSubmit')}}
 
     paper-toast#FilersErrorToast(duration=8000, horizontal-align="center")
         strong [[errorText]]

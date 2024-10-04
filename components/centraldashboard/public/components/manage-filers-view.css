@@ -45,11 +45,20 @@ h2 .icon {
   max-width: 640px;
 }
 
-#filersTable{
+.filersTable{
   margin-bottom: 1.5em;
+  border-collapse: collapse;
 }
 
-#filersSubmit{
+table, th, td {
+  border: 1px solid gray;
+}
+
+th, td{
+  padding: 2px;
+}
+
+#shareSubmit{
   padding: .5em;
   margin: .5em;
 }
@@ -71,6 +80,24 @@ paper-toast#FilersSuccessToast {
 label {
   padding: .25em;
 }
-.formInputDiv{
+
+.formInputDiv {
   margin-bottom: .5em;
+}
+
+.formInputDiv label{
+  float: left;
+}
+
+.formInputDiv span{
+  overflow: hidden;
+  display: block;
+}
+
+.formInputDiv span input{
+  width: 95%;
+}
+
+.formInputDiv span select{
+  width: 97%;
 }
