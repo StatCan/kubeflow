@@ -161,15 +161,7 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         newRequestingData[filersSelectValue] =
             JSON.stringify(newRequestingDataValue);
 
-        // if no requesting CM, create it
-        if (Object.keys(requestingData).length===0) {
-            // new configmap to create
-            const api = this.$.CreateRequestingSharesAjax;
-            api.body = newRequestingData;
-            api.generateRequest();
-            return;
-        }
-        // else update the config map
+        // updates the configmap if it exists. Creates it if it doesn't.
         const api = this.$.UpdateRequestingSharesAjax;
         api.body = newRequestingData;
         api.generateRequest();
@@ -250,6 +242,8 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         // updates the data
         this.$.GetRequestingSharesAjax.generateRequest();
         this.$.GetExistingSharesAjax.generateRequest();
+        // eslint-disable-next-line
+        console.log('here', this.requestingShares);
         return;
     }
 

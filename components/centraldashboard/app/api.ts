@@ -124,19 +124,6 @@ export class Api {
             }
             res.json(filers);
           })
-        .post(
-            '/create-requesting-shares/:namespace',
-            async (req: Request, res: Response) => {
-              try {
-                const cm = await this.k8sService.createRequestingSharesConfigMap(req.params.namespace, req.body, req.user.email);
-                res.json(cm.data);
-              }catch(e){
-                return apiError({
-                  res, code: 500,
-                  error: ERRORS.invalid_create_requesting_shares,
-                });
-              }
-            })
         .get(
             '/get-existing-shares/:namespace',
             async (req: Request, res: Response) => {
@@ -163,7 +150,7 @@ export class Api {
                     });
                 }
             })
-        .patch(
+        .post(
             '/update-requesting-shares/:namespace',
             async (req: Request, res: Response) => {
                 try {

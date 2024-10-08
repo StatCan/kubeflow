@@ -118,29 +118,6 @@ export class KubernetesService {
     }
   }
 
-  /** Creates the requesting shares configmap for the central dashboard. */
-  async createRequestingSharesConfigMap(namespace: string, data: {[key:string]:string}, email: string): Promise<k8s.V1ConfigMap> {
-    try {
-      const config = {
-        metadata: {
-          name: REQUESTING_SHARES_CM_NAME,
-          labels: {
-            "for-ontap": "true"
-          },
-          annotations: {
-            "user-email": email
-          }
-        },
-        data
-      } as k8s.V1ConfigMap;
-      const { body } = await this.coreAPI.createNamespacedConfigMap(namespace, config);
-      return body;
-    } catch (err) {
-      console.error('Unable to create requesting shares ConfigMap:', err.response?.body || err.body || err);
-      throw err;
-    }
-  }
-
   /** Retrieves the existing shares configmap data for the central dashboard. */
   async getExistingSharesConfigMap(namespace: string): Promise<k8s.V1ConfigMap> {
     try {
@@ -163,7 +140,7 @@ export class KubernetesService {
       return body;
     } catch (err) {
       if(err.statusCode === 404){
-        //user has no user-filers yet
+        //user has no requesting-shares yet
         return new k8s.V1ConfigMap();
       }
       console.error('Unable to fetch ConfigMap:', err.response?.body || err.body || err);
@@ -171,25 +148,35 @@ export class KubernetesService {
     }
   }
 
-  /** Updates the requesting shares configmap for the central dashboard. */
+  /** Updates the requesting shares configmap for the central dashboard. Creates the configmap if it is not created.*/
   async updateRequestingSharesConfigMap(namespace: string, data: {[key:string]:string}, email: string): Promise<k8s.V1ConfigMap> {
-    try {
-      const config = {
-        metadata: {
-          name: REQUESTING_SHARES_CM_NAME,
-          labels: {
-            "for-ontap": "true"
-          },
-          annotations: {
-            "user-email": email
-          }
+    const config = {
+      metadata: {
+        name: REQUESTING_SHARES_CM_NAME,
+        labels: {
+          "for-ontap": "true"
         },
-        data
-      } as k8s.V1ConfigMap;
+        annotations: {
+          "user-email": email
+        }
+      },
+      data
+    } as k8s.V1ConfigMap;
+
+    try {
+      //try to get the configmap to see if it exists
+      await this.coreAPI.readNamespacedConfigMap(REQUESTING_SHARES_CM_NAME, namespace);
+      
+      //if no error, it means the configmap exists already
       const { body } = await this.coreAPI.replaceNamespacedConfigMap(REQUESTING_SHARES_CM_NAME, namespace, config);
       return body;
     } catch (err) {
-      console.error('Unable to patch ConfigMap:', err.response?.body || err.body || err);
+      if(err.statusCode === 404){
+        //user has no requesting-shares yet
+        const { body } = await this.coreAPI.createNamespacedConfigMap(namespace, config);
+        return body;
+      }
+      console.error('Unable to update ConfigMap:', err.response?.body || err.body || err);
       throw err;
     }
   }
