@@ -143,8 +143,9 @@
             "manageFilersView.successUpdate": "Filers updated!",
             "manageFilersView.missingFiler": "Please select a filer",
             "manageFilersView.invalidSharePath": "Please input a valid share path",
-            "manageFilersView.duplicateFiler": "Filer has already been selected",
-            "manageFilersView.missingDeleteError": "User does not have filer {filerShare}",
+            "manageFilersView.duplicateFiler": "Filer share has already been selected",
+            "manageFilersView.missingDeleteError": "User does not have filer share {filerShare}",
+            "manageFilersView.removeErrorError": "Failed to remove error",
             "s3Proxy.defaultMessage": "This workspace does not include S3 proxy. To start using S3 proxy, please opt in to the service."
         },
         "fr": {
@@ -291,8 +292,9 @@
             "manageFilersView.successUpdate": "Classeurs mis à jour!",
             "manageFilersView.missingFiler": "Veuillez sélectionner un classeur",
             "manageFilersView.invalidSharePath": "Veuillez saisir un chemin de partage valide",
-            "manageFilersView.duplicateFiler": "Le classeur a déjà été sélectionné",
-            "manageFilersView.missingDeleteError": "L'utilisateur n'a pas le classeur {filerShare}",
+            "manageFilersView.duplicateFiler": "Le chemin de partage a déjà été sélectionné",
+            "manageFilersView.missingDeleteError": "L'utilisateur n'a pas le chemin de partage {filerShare}",
+            "manageFilersView.removeErrorError": "Échec de la suppression de l'erreur",
             "s3Proxy.defaultMessage": "Cet espace de travail n'inclue pas S3 proxy. Pour commencer à utiliser S3 proxy, veuilliez choisir de participer au service."
         }
     }

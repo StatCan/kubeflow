@@ -49,6 +49,7 @@ const APP_API_VERSION = 'v1beta1';
 const APP_API_NAME = 'applications';
 const REQUESTING_SHARES_CM_NAME = 'requesting-shares';
 const EXISTING_SHARES_CM_NAME = 'existing-shares';
+const SHARES_ERRORS_CM_NAME = 'shares-errors';
 
 /** Wrap Kubernetes API calls in a simpler interface for use in routes. */
 export class KubernetesService {
@@ -125,7 +126,7 @@ export class KubernetesService {
       return body;
     } catch (err) {
       if(err.statusCode === 404){
-        //user has no user-filers yet
+        //user has no existing-shares yet
         return new k8s.V1ConfigMap();
       }
       console.error('Unable to fetch ConfigMap:', err.response?.body || err.body || err);
@@ -141,6 +142,21 @@ export class KubernetesService {
     } catch (err) {
       if(err.statusCode === 404){
         //user has no requesting-shares yet
+        return new k8s.V1ConfigMap();
+      }
+      console.error('Unable to fetch ConfigMap:', err.response?.body || err.body || err);
+      throw err;
+    }
+  }
+
+  /** Retrieves the shares errors configmap data for the central dashboard. */
+  async getSharesErrorsConfigMap(namespace: string): Promise<k8s.V1ConfigMap> {
+    try {
+      const { body } = await this.coreAPI.readNamespacedConfigMap(SHARES_ERRORS_CM_NAME, namespace);
+      return body;
+    } catch (err) {
+      if(err.statusCode === 404){
+        //user has no shares-errors yet
         return new k8s.V1ConfigMap();
       }
       console.error('Unable to fetch ConfigMap:', err.response?.body || err.body || err);
@@ -205,6 +221,33 @@ export class KubernetesService {
       return body;
     } catch (err) {
       console.error('Unable to delete ConfigMap:', err.response?.body || err.body || err);
+      throw err;
+    }
+  }
+
+  /** Updates the requesting shares configmap for the central dashboard. Creates the configmap if it is not created.*/
+  async updateSharesErrorsConfigMap(namespace: string, data: Object[]): Promise<k8s.V1ConfigMap> {
+    try {
+      //delete the configmap if no values would be added
+      if(data.length===0){
+        const { body } = await this.coreAPI.deleteNamespacedConfigMap(SHARES_ERRORS_CM_NAME, namespace);
+        return body;
+      }
+
+      const config = {
+        metadata: {
+          name: SHARES_ERRORS_CM_NAME
+        },
+        data: {
+          errors: JSON.stringify(data)
+        }
+      } as k8s.V1ConfigMap;
+      
+      //if no error, it means the configmap exists already
+      const { body } = await this.coreAPI.replaceNamespacedConfigMap(SHARES_ERRORS_CM_NAME, namespace, config);
+      return body;
+    } catch (err) {
+      console.error('Unable to update ConfigMap:', err.response?.body || err.body || err);
       throw err;
     }
   }

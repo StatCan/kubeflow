@@ -14,7 +14,9 @@ export const ERRORS = {
   invalid_create_requesting_shares: 'Failed to create requesting shares configmap',
   invalid_update_requesting_shares: 'Failed to update requesting shares configmap',
   invalid_update_existing_shares: 'Failed to update existing shares configmap',
-  invalid_delete_existing_shares: 'Failed to delete existing shares configmap' 
+  invalid_delete_existing_shares: 'Failed to delete existing shares configmap' ,
+  invalid_get_shares_errors: 'Failed to load shares errors',
+  invalid_post_shares_errors: 'Failed to update shares errors',
 };
 
 export function apiError(a: {res: Response, error: string, code?: number}) {
@@ -188,7 +190,33 @@ export class Api {
                         error: ERRORS.invalid_delete_existing_shares,
                     });
                 }
-            });
+            })
+        .get(
+          '/get-shares-errors/:namespace',
+          async (req: Request, res: Response) => {
+              try {
+                  const cm = await this.k8sService.getSharesErrorsConfigMap(req.params.namespace);
+                  res.json(cm.data);
+              }catch(e){
+                  return apiError({
+                      res, code: 500,
+                      error: ERRORS.invalid_get_shares_errors,
+                  });
+              }
+          })
+        .post(
+          '/update-shares-errors/:namespace',
+          async (req: Request, res: Response) => {
+              try {
+                  const cm = await this.k8sService.updateSharesErrorsConfigMap(req.params.namespace, req.body);
+                  res.json(cm.data);
+              }catch(e){
+                  return apiError({
+                      res, code: 500,
+                      error: ERRORS.invalid_post_shares_errors,
+                  });
+              }
+          });
   }
 
   resolveLanguage(requested: string[], supported: string[], defaultLang: string) {

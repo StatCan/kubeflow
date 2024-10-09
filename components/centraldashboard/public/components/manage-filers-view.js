@@ -3,6 +3,7 @@ import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/paper-ripple/paper-ripple.js';
 import '@polymer/paper-item/paper-icon-item.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-spinner/paper-spinner-lite.js';
 
 // eslint-disable-next-line max-len
@@ -94,6 +95,12 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         });
 
         return result;
+    }
+
+    formatErrors(errors) {
+        // eslint-disable-next-line
+        console.log(JSON.parse(errors.errors));
+        return JSON.parse(errors.errors);
     }
 
     onChangeFilers(e) {
@@ -188,6 +195,7 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         }
 
         // delete the configmap if only contains this filershare
+        // TODO Move this logic to the api service layer
         if (existingDataValue.length===1 &&
                 Object.keys(existingData).length===1) {
             const api = this.$.DeleteExistingSharesAjax;
@@ -212,6 +220,42 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         return;
     }
 
+    deleteShareError(e) {
+        const deleteIndex = e.model.itemsIndex;
+        // TODO: maybe move this logic to the service layer.
+        //   We should just send the value that needs to be
+        //   deleted to the service
+        //  The service can then get the CM on the
+        //  spot and remove the right value
+        //  this would be to avoid unexpected changes in the data
+        //  since the data could be changed without warning by the controller
+        // and the UI page would not be aware of this change.
+        // basically, make sure the source of truth is from the cluster
+        //  and not the UI (if we just send the index, that index might be
+        //   different on the cluster when this api call resolves)
+        const sharesErrorsData = this.sharesErrors === null ? [] :
+            JSON.parse(this.sharesErrors.errors);
+
+        if (!sharesErrorsData[deleteIndex]) {
+            this.showError(
+                this.localize(
+                    'manageFilersView.removeErrorError'
+                )
+            );
+            return;
+        }
+
+        // cloning to avoid assigning by reference
+        const newSharesErrorsData = _.clone(sharesErrorsData);
+
+        newSharesErrorsData.splice(deleteIndex, 1);
+
+        const api = this.$.UpdateSharesErrorsAjax;
+        api.body = newSharesErrorsData;
+        api.generateRequest();
+        return;
+    }
+
     /**
      * Takes an event from iron-ajax and isolates the error from a request that
      * failed
@@ -228,8 +272,11 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
      * @param {IronAjaxEvent} e
      */
     handleUpdateShares(e) {
-        this.$.filersSelect.value = '';
-        this.$.sharesInput.value = '';
+        // eslint-disable-next-line
+        if(e.originalTarget.id==="UpdateRequestingSharesAjax"){
+            this.$.filersSelect.value = '';
+            this.$.sharesInput.value = '';
+        }
 
         if (e.detail.error) {
             const error = this._isolateErrorFromIronRequest(e);
@@ -242,8 +289,7 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         // updates the data
         this.$.GetRequestingSharesAjax.generateRequest();
         this.$.GetExistingSharesAjax.generateRequest();
-        // eslint-disable-next-line
-        console.log('here', this.requestingShares);
+        this.$.GetSharesErrorsAjax.generateRequest();
         return;
     }
 
