@@ -164,7 +164,7 @@ export class KubernetesService {
     }
   }
 
-  /** Updates the requesting shares configmap for the central dashboard. Creates the configmap if it is not created.*/
+  /** Updates the requesting shares configmap for the central dashboard; Creates the configmap if it is not created. */
   async updateRequestingSharesConfigMap(namespace: string, data: {[key:string]:string}, email: string): Promise<k8s.V1ConfigMap> {
     const config = {
       metadata: {
@@ -225,8 +225,8 @@ export class KubernetesService {
     }
   }
 
-  /** Updates the requesting shares configmap for the central dashboard. Creates the configmap if it is not created.*/
-  async updateSharesErrorsConfigMap(namespace: string, data: Object[]): Promise<k8s.V1ConfigMap> {
+  /** Updates the requesting shares configmap for the central dashboard; Creates the configmap if it is not created. */
+  async updateSharesErrorsConfigMap(namespace: string, data: Array<{ErrorMessage: string, Svm: string, Share: string, Timestamp: string}>): Promise<k8s.V1ConfigMap> {
     try {
       //delete the configmap if no values would be added
       if(data.length===0){
