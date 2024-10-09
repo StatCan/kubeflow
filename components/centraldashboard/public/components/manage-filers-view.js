@@ -98,8 +98,6 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
     }
 
     formatErrors(errors) {
-        // eslint-disable-next-line
-        console.log(JSON.parse(errors.errors));
         return JSON.parse(errors.errors);
     }
 
