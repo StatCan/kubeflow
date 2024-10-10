@@ -211,9 +211,9 @@ export class KubernetesService {
       const getPromise = await this.coreAPI.readNamespacedConfigMap(EXISTING_SHARES_CM_NAME, namespace);
       const existingCM = getPromise.body; 
 
-      const svmSharesData: string[] = JSON.parse(existingCM.data[data.svm])
+      const svmSharesData: string[] = JSON.parse(existingCM.data[data.svm]);
 
-      const deleteIndex = svmSharesData.indexOf(data.share)
+      const deleteIndex = svmSharesData.indexOf(data.share);
       svmSharesData.splice(deleteIndex, 1);
 
       //if CM would be empty, just delete it
@@ -237,7 +237,7 @@ export class KubernetesService {
     try {
       const getPromise = await this.coreAPI.readNamespacedConfigMap(SHARES_ERRORS_CM_NAME, namespace);
       
-      const errorsData:Array<{ErrorMessage: string, Svm: string, Share: string, Timestamp: string}> = JSON.parse(getPromise.body.data.errors)
+      const errorsData:Array<{ErrorMessage: string, Svm: string, Share: string, Timestamp: string}> = JSON.parse(getPromise.body.data.errors);
 
       //find the index of the element to delete
       const deleteIndex = errorsData.findIndex(d => 
@@ -248,7 +248,7 @@ export class KubernetesService {
       );
 
       //delete element
-      errorsData.splice(deleteIndex, 1)
+      errorsData.splice(deleteIndex, 1);
 
       //delete the CM if the value would be empty
       if(errorsData.length===0){
