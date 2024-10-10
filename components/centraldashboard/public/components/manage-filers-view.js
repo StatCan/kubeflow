@@ -141,34 +141,28 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
             return;
         }
 
-        // cloning to avoid assigning by reference
-        const newRequestingData = _.clone(requestingData);
-
-        const newRequestingDataValue =
-            newRequestingData[filersSelectValue] ?
-                JSON.parse(newRequestingData[filersSelectValue]) :
+        const requestingSharesData =
+            requestingData[filersSelectValue] ?
+                JSON.parse(requestingData[filersSelectValue]) :
                 [];
 
-
-        const existingFilerData = existingData[filersSelectValue] ?
+        const existingSharesData = existingData[filersSelectValue] ?
             JSON.parse(existingData[filersSelectValue]) :
             [];
         // checking for duplicates
-        if (newRequestingDataValue.includes(sharesInputValue) ||
-            existingFilerData.includes(sharesInputValue)) {
+        if (requestingSharesData.includes(sharesInputValue) ||
+        existingSharesData.includes(sharesInputValue)) {
             this.validateError =
                 this.localize('manageFilersView.duplicateFiler');
             return;
         }
 
-        newRequestingDataValue.push(sharesInputValue);
-
-        newRequestingData[filersSelectValue] =
-            JSON.stringify(newRequestingDataValue);
-
         // updates the configmap if it exists. Creates it if it doesn't.
         const api = this.$.UpdateRequestingSharesAjax;
-        api.body = newRequestingData;
+        api.body = {
+            svm: filersSelectValue,
+            share: sharesInputValue,
+        };
         api.generateRequest();
         return;
     }

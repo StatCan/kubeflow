@@ -165,30 +165,38 @@ export class KubernetesService {
   }
 
   /** Updates the requesting shares configmap for the central dashboard; Creates the configmap if it is not created. */
-  async updateRequestingSharesConfigMap(namespace: string, data: {[key:string]:string}, email: string): Promise<k8s.V1ConfigMap> {
-    const config = {
-      metadata: {
-        name: REQUESTING_SHARES_CM_NAME,
-        labels: {
-          "for-ontap": "true"
-        },
-        annotations: {
-          "user-email": email
-        }
-      },
-      data
-    } as k8s.V1ConfigMap;
-
+  async updateRequestingSharesConfigMap(namespace: string, data: {svm: string, share: string}, email: string): Promise<k8s.V1ConfigMap> {
     try {
       //try to get the configmap to see if it exists
-      await this.coreAPI.readNamespacedConfigMap(REQUESTING_SHARES_CM_NAME, namespace);
+      const getPromise = await this.coreAPI.readNamespacedConfigMap(REQUESTING_SHARES_CM_NAME, namespace);
+      const requestingCM = getPromise.body; 
+
+      const svmSharesData: string[] = JSON.parse(requestingCM.data[data.svm]);
+      svmSharesData.push(data.share);
+
+      requestingCM.data[data.svm] = JSON.stringify(svmSharesData);
       
-      //if no error, it means the configmap exists already
-      const { body } = await this.coreAPI.replaceNamespacedConfigMap(REQUESTING_SHARES_CM_NAME, namespace, config);
+      const { body } = await this.coreAPI.replaceNamespacedConfigMap(REQUESTING_SHARES_CM_NAME, namespace, requestingCM);
       return body;
     } catch (err) {
       if(err.statusCode === 404){
-        //user has no requesting-shares yet
+        //user has no requesting-shares yet, so we create it
+        const dataValue:{[key:string]:string} = {};
+        dataValue[data.svm]=JSON.stringify([data.share]);
+
+        const config = {
+          metadata: {
+            name: REQUESTING_SHARES_CM_NAME,
+            labels: {
+              "for-ontap": "true"
+            },
+            annotations: {
+              "user-email": email
+            }
+          },
+          data: dataValue
+        } as k8s.V1ConfigMap;
+
         const { body } = await this.coreAPI.createNamespacedConfigMap(namespace, config);
         return body;
       }
@@ -197,29 +205,12 @@ export class KubernetesService {
     }
   }
 
-  /** Updates the existing shares configmap for the central dashboard. */
-  async updateExistingSharesConfigMap(namespace: string, data: {[key:string]:string}): Promise<k8s.V1ConfigMap> {
-    try {
-      const config = {
-        metadata: {
-          name: EXISTING_SHARES_CM_NAME
-        },
-        data
-      } as k8s.V1ConfigMap;
-      const { body } = await this.coreAPI.replaceNamespacedConfigMap(EXISTING_SHARES_CM_NAME, namespace, config);
-      return body;
-    } catch (err) {
-      console.error('Unable to patch ConfigMap:', err.response?.body || err.body || err);
-      throw err;
-    }
-  }
-
-  /** Deletes the existing shares configmap for the central dashboard. */
+  /** Deletes from the existing shares configmap for the central dashboard. */
   async deleteFromExistingSharesConfigMap(namespace: string, data: {svm: string, share: string}): Promise<k8s.V1Status> {
     try {
       const getPromise = await this.coreAPI.readNamespacedConfigMap(EXISTING_SHARES_CM_NAME, namespace);
       const existingCM = getPromise.body; 
-      
+
       const svmSharesData: string[] = JSON.parse(existingCM.data[data.svm])
 
       const deleteIndex = svmSharesData.indexOf(data.share)
