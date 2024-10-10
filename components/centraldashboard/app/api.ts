@@ -204,11 +204,11 @@ export class Api {
                   });
               }
           })
-        .post(
-          '/update-shares-errors/:namespace',
+        .delete(
+          '/delete-shares-error/:namespace',
           async (req: Request, res: Response) => {
               try {
-                  const cm = await this.k8sService.updateSharesErrorsConfigMap(req.params.namespace, req.body);
+                  const cm = await this.k8sService.deleteFromSharesErrorsConfigMap(req.params.namespace, req.body);
                   res.json(cm.data);
               }catch(e){
                   return apiError({

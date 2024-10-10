@@ -12,7 +12,7 @@ iron-ajax#DeleteExistingSharesAjax(method='DELETE', url='/api/delete-existing-sh
     on-response='handleUpdateShares', on-error='handleUpdateShares')
 iron-ajax#GetSharesErrorsAjax(auto, url='/api/get-shares-errors/[[namespace]]', handle-as='json',
     last-response='{{sharesErrors}}', on-error='onHasFilersError', loading='{{sharesErrorsLoading}}')
-iron-ajax#UpdateSharesErrorsAjax(method='POST', url='/api/update-shares-errors/[[namespace]]',
+iron-ajax#DeleteSharesErrorAjax(method='DELETE', url='/api/delete-shares-error/[[namespace]]',
     on-response='handleUpdateShares', on-error='handleUpdateShares', handle-as='json', content-type='application/json')
 
 h1 {{localize('manageFilersView.lblManageFilers')}}

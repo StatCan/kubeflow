@@ -225,13 +225,28 @@ export class KubernetesService {
     }
   }
 
-  /** Updates the requesting shares configmap for the central dashboard; Creates the configmap if it is not created. */
-  async updateSharesErrorsConfigMap(namespace: string, data: Array<{ErrorMessage: string, Svm: string, Share: string, Timestamp: string}>): Promise<k8s.V1ConfigMap> {
+  /** Removes a value from the shares-errors configmap; Deletes the configmap if it would be empty */
+  async deleteFromSharesErrorsConfigMap(namespace: string, data: {ErrorMessage: string, Svm: string, Share: string, Timestamp: string}): Promise<k8s.V1ConfigMap> {
     try {
-      //delete the configmap if no values would be added
-      if(data.length===0){
-        const { body } = await this.coreAPI.deleteNamespacedConfigMap(SHARES_ERRORS_CM_NAME, namespace);
-        return body;
+      const getPromise = await this.coreAPI.readNamespacedConfigMap(SHARES_ERRORS_CM_NAME, namespace);
+      
+      const errorsData:Array<{ErrorMessage: string, Svm: string, Share: string, Timestamp: string}> = JSON.parse(getPromise.body.data.errors)
+      
+      //find the index of the element to delete
+      const deleteIndex = errorsData.findIndex(d => 
+        d.ErrorMessage === data.ErrorMessage &&
+        d.Share === data.Share &&
+        d.Svm === data.Svm &&
+        d.Timestamp === data.Timestamp
+      )
+
+      //delete element
+      errorsData.splice(deleteIndex, 1)
+
+      //delete the CM if the value would be empty
+      if(errorsData.length===0){
+        const deletePromise = await this.coreAPI.deleteNamespacedConfigMap(SHARES_ERRORS_CM_NAME, namespace);
+        return deletePromise.body;
       }
 
       const config = {
@@ -239,11 +254,11 @@ export class KubernetesService {
           name: SHARES_ERRORS_CM_NAME
         },
         data: {
-          errors: JSON.stringify(data)
+          errors: JSON.stringify(errorsData)
         }
       } as k8s.V1ConfigMap;
       
-      //if no error, it means the configmap exists already
+      //Update the configmap
       const { body } = await this.coreAPI.replaceNamespacedConfigMap(SHARES_ERRORS_CM_NAME, namespace, config);
       return body;
     } catch (err) {

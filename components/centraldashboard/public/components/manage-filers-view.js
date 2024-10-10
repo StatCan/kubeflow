@@ -219,37 +219,12 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
     }
 
     deleteShareError(e) {
-        const deleteIndex = e.model.itemsIndex;
-        // TODO: maybe move this logic to the service layer.
-        //   We should just send the value that needs to be
-        //   deleted to the service
-        //  The service can then get the CM on the
-        //  spot and remove the right value
-        //  this would be to avoid unexpected changes in the data
-        //  since the data could be changed without warning by the controller
-        // and the UI page would not be aware of this change.
-        // basically, make sure the source of truth is from the cluster
-        //  and not the UI (if we just send the index, that index might be
-        //   different on the cluster when this api call resolves)
-        const sharesErrorsData = this.sharesErrors === null ? [] :
-            JSON.parse(this.sharesErrors.errors);
+        const deleteItem = e.model.item;
+        // eslint-disable-next-line
+        console.log(deleteItem);
 
-        if (!sharesErrorsData[deleteIndex]) {
-            this.showError(
-                this.localize(
-                    'manageFilersView.removeErrorError'
-                )
-            );
-            return;
-        }
-
-        // cloning to avoid assigning by reference
-        const newSharesErrorsData = _.clone(sharesErrorsData);
-
-        newSharesErrorsData.splice(deleteIndex, 1);
-
-        const api = this.$.UpdateSharesErrorsAjax;
-        api.body = newSharesErrorsData;
+        const api = this.$.DeleteSharesErrorAjax;
+        api.body = deleteItem;
         api.generateRequest();
         return;
     }
@@ -282,7 +257,9 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
             return;
         }
 
-        this.showResponse(this.localize('manageFilersView.successUpdate'));
+        if (e.originalTarget.id!=='DeleteSharesErrorAjax') {
+            this.showResponse(this.localize('manageFilersView.successUpdate'));
+        }
 
         // updates the data
         this.$.GetRequestingSharesAjax.generateRequest();
