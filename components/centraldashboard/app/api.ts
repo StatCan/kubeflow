@@ -16,7 +16,7 @@ export const ERRORS = {
   invalid_update_existing_shares: 'Failed to update existing shares configmap',
   invalid_delete_existing_shares: 'Failed to delete existing shares configmap' ,
   invalid_get_shares_errors: 'Failed to load shares errors',
-  invalid_post_shares_errors: 'Failed to update shares errors',
+  invalid_delete_shares_errors: 'Failed to delete from shares errors',
 };
 
 export function apiError(a: {res: Response, error: string, code?: number}) {
@@ -165,24 +165,11 @@ export class Api {
                     });
                 }
             })
-        .patch(
-            '/update-existing-shares/:namespace',
-            async (req: Request, res: Response) => {
-                try {
-                    const cm = await this.k8sService.updateExistingSharesConfigMap(req.params.namespace, req.body);
-                    res.json(cm.data);
-                }catch(e){
-                    return apiError({
-                        res, code: 500,
-                        error: ERRORS.invalid_update_existing_shares,
-                    });
-                }
-            })
         .delete(
-            '/delete-existing-shares/:namespace',
+            '/delete-existing-share/:namespace',
             async (req: Request, res: Response) => {
                 try {
-                    await this.k8sService.deleteExistingSharesConfigMap(req.params.namespace);
+                    await this.k8sService.deleteFromExistingSharesConfigMap(req.params.namespace, req.body);
                     res.json({});
                 }catch(e){
                     return apiError({
@@ -208,12 +195,12 @@ export class Api {
           '/delete-shares-error/:namespace',
           async (req: Request, res: Response) => {
               try {
-                  const cm = await this.k8sService.deleteFromSharesErrorsConfigMap(req.params.namespace, req.body);
-                  res.json(cm.data);
+                  await this.k8sService.deleteFromSharesErrorsConfigMap(req.params.namespace, req.body);
+                  res.json({});
               }catch(e){
                   return apiError({
                       res, code: 500,
-                      error: ERRORS.invalid_post_shares_errors,
+                      error: ERRORS.invalid_delete_shares_errors,
                   });
               }
           });

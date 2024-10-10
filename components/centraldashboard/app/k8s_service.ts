@@ -215,12 +215,28 @@ export class KubernetesService {
   }
 
   /** Deletes the existing shares configmap for the central dashboard. */
-  async deleteExistingSharesConfigMap(namespace: string): Promise<k8s.V1Status> {
+  async deleteFromExistingSharesConfigMap(namespace: string, data: {svm: string, share: string}): Promise<k8s.V1Status> {
     try {
-      const { body } = await this.coreAPI.deleteNamespacedConfigMap(EXISTING_SHARES_CM_NAME, namespace);
+      const getPromise = await this.coreAPI.readNamespacedConfigMap(EXISTING_SHARES_CM_NAME, namespace);
+      const existingCM = getPromise.body; 
+      
+      const svmSharesData: string[] = JSON.parse(existingCM.data[data.svm])
+
+      const deleteIndex = svmSharesData.indexOf(data.share)
+      svmSharesData.splice(deleteIndex, 1);
+
+      //if CM would be empty, just delete it
+      if (svmSharesData.length === 0 && Object.keys(existingCM.data).length===1){
+        const deletePromise = await this.coreAPI.deleteNamespacedConfigMap(EXISTING_SHARES_CM_NAME, namespace);
+        return deletePromise.body;
+      }
+
+      existingCM.data[data.svm] = JSON.stringify(svmSharesData);
+      
+      const { body } = await this.coreAPI.replaceNamespacedConfigMap(EXISTING_SHARES_CM_NAME, namespace, existingCM);
       return body;
     } catch (err) {
-      console.error('Unable to delete ConfigMap:', err.response?.body || err.body || err);
+      console.error('Unable to delete from ConfigMap:', err.response?.body || err.body || err);
       throw err;
     }
   }
@@ -231,14 +247,14 @@ export class KubernetesService {
       const getPromise = await this.coreAPI.readNamespacedConfigMap(SHARES_ERRORS_CM_NAME, namespace);
       
       const errorsData:Array<{ErrorMessage: string, Svm: string, Share: string, Timestamp: string}> = JSON.parse(getPromise.body.data.errors)
-      
+
       //find the index of the element to delete
       const deleteIndex = errorsData.findIndex(d => 
         d.ErrorMessage === data.ErrorMessage &&
         d.Share === data.Share &&
         d.Svm === data.Svm &&
         d.Timestamp === data.Timestamp
-      )
+      );
 
       //delete element
       errorsData.splice(deleteIndex, 1)
@@ -262,7 +278,7 @@ export class KubernetesService {
       const { body } = await this.coreAPI.replaceNamespacedConfigMap(SHARES_ERRORS_CM_NAME, namespace, config);
       return body;
     } catch (err) {
-      console.error('Unable to update ConfigMap:', err.response?.body || err.body || err);
+      console.error('Unable to delete from ConfigMap:', err.response?.body || err.body || err);
       throw err;
     }
   }

@@ -176,52 +176,18 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
     deleteExistingShare(e) {
         const filer = e.model.svm.svm;
         const filerShare = e.model.share;
-        const existingData = this.existingShares === null ? {} :
-            this.existingShares;
 
-        const existingDataValue = JSON.parse(existingData[filer]);
-        const index = existingDataValue.indexOf(filerShare);
-        if (index===-1) {
-            this.showError(
-                this.localize(
-                    'manageFilersView.missingDeleteError',
-                    'filerShare',
-                    filerShare
-                )
-            );
-            return;
-        }
-
-        // delete the configmap if only contains this filershare
-        // TODO Move this logic to the api service layer
-        if (existingDataValue.length===1 &&
-                Object.keys(existingData).length===1) {
-            const api = this.$.DeleteExistingSharesAjax;
-            api.generateRequest();
-            return;
-        }
-
-        // cloning to avoid assigning by reference
-        const newExistingData = _.clone(existingData);
-
-        existingDataValue.splice(index, 1);
-        // remove filer from configmap if it contains no more values
-        if (existingDataValue.length===0) {
-            delete newExistingData[filer];
-        } else {
-            newExistingData[filer] = JSON.stringify(existingDataValue);
-        }
-
-        const api = this.$.UpdateExistingSharesAjax;
-        api.body = newExistingData;
+        const api = this.$.DeleteExistingShareAjax;
+        api.body = {
+            svm: filer,
+            share: filerShare,
+        };
         api.generateRequest();
         return;
     }
 
     deleteShareError(e) {
         const deleteItem = e.model.item;
-        // eslint-disable-next-line
-        console.log(deleteItem);
 
         const api = this.$.DeleteSharesErrorAjax;
         api.body = deleteItem;
@@ -240,16 +206,19 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         return bd.error || e.detail.error || e.detail;
     }
 
+    updateCMData() {
+        this.$.GetRequestingSharesAjax.generateRequest();
+        this.$.GetExistingSharesAjax.generateRequest();
+        this.$.GetSharesErrorsAjax.generateRequest();
+    }
+
     /**
      * Iron-Ajax response / error handler for updateFilers
      * @param {IronAjaxEvent} e
      */
     handleUpdateShares(e) {
-        // eslint-disable-next-line
-        if(e.originalTarget.id==="UpdateRequestingSharesAjax"){
-            this.$.filersSelect.value = '';
-            this.$.sharesInput.value = '';
-        }
+        this.$.filersSelect.value = '';
+        this.$.sharesInput.value = '';
 
         if (e.detail.error) {
             const error = this._isolateErrorFromIronRequest(e);
@@ -257,14 +226,36 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
             return;
         }
 
-        if (e.originalTarget.id!=='DeleteSharesErrorAjax') {
-            this.showResponse(this.localize('manageFilersView.successUpdate'));
+        this.showResponse(this.localize('manageFilersView.successUpdate'));
+
+        // updates the data
+        this.updateCMData();
+        return;
+    }
+
+    handleDeleteShare(e) {
+        if (e.detail.error) {
+            const error = this._isolateErrorFromIronRequest(e);
+            this.showError(error);
+            return;
+        }
+
+        this.showResponse(this.localize('manageFilersView.successUpdate'));
+
+        // updates the data
+        this.updateCMData();
+        return;
+    }
+
+    handleDeleteError(e) {
+        if (e.detail.error) {
+            const error = this._isolateErrorFromIronRequest(e);
+            this.showError(error);
+            return;
         }
 
         // updates the data
-        this.$.GetRequestingSharesAjax.generateRequest();
-        this.$.GetExistingSharesAjax.generateRequest();
-        this.$.GetSharesErrorsAjax.generateRequest();
+        this.updateCMData();
         return;
     }
 
