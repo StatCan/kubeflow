@@ -4,14 +4,14 @@ iron-ajax#GetExistingSharesAjax(auto, url='/api/get-existing-shares/[[namespace]
     last-response='{{existingShares}}', on-error='onHasFilersError', loading='{{existingSharesLoading}}')
 iron-ajax#GetRequestingSharesAjax(auto, url='/api/get-requesting-shares/[[namespace]]', handle-as='json',
     last-response='{{requestingShares}}', on-error='onHasFilersError', loading='{{requestingSharesLoading}}')
-iron-ajax#CreateRequestingSharesAjax(method='POST', url='/api/create-requesting-shares/[[namespace]]',
+iron-ajax#UpdateRequestingSharesAjax(method='POST', url='/api/update-requesting-shares/[[namespace]]',
     on-response='handleUpdateShares', on-error='handleUpdateShares', handle-as='json', content-type='application/json')
-iron-ajax#UpdateRequestingSharesAjax(method='PATCH', url='/api/update-requesting-shares/[[namespace]]',
-    on-response='handleUpdateShares', on-error='handleUpdateShares', handle-as='json', content-type='application/json')
-iron-ajax#UpdateExistingSharesAjax(method='PATCH', url='/api/update-existing-shares/[[namespace]]',
-    on-response='handleUpdateShares', on-error='handleUpdateShares', handle-as='json', content-type='application/json')
-iron-ajax#DeleteExistingSharesAjax(method='DELETE', url='/api/delete-existing-shares/[[namespace]]',
-    on-response='handleUpdateShares', on-error='handleUpdateShares')
+iron-ajax#DeleteExistingShareAjax(method='DELETE', url='/api/delete-existing-share/[[namespace]]',
+    on-response='handleDeleteShare', on-error='handleDeleteShare', handle-as='json', content-type='application/json')
+iron-ajax#GetSharesErrorsAjax(auto, url='/api/get-shares-errors/[[namespace]]', handle-as='json',
+    last-response='{{sharesErrors}}', on-error='onHasFilersError', loading='{{sharesErrorsLoading}}')
+iron-ajax#DeleteSharesErrorAjax(method='DELETE', url='/api/delete-shares-error/[[namespace]]',
+    on-response='handleDeleteError', on-error='handleDeleteError', handle-as='json', content-type='application/json')
 
 h1 {{localize('manageFilersView.lblManageFilers')}}
 section#Main-Content
@@ -41,8 +41,7 @@ section#Main-Content
                             tr
                                 template(is='dom-if', if="[[renderHeader(j)]]")
                                     th(rowspan$='[[getRowspan(svm.shares)]]') {{svm.svm}}
-                                td {{share}}
-                                
+                                td {{share}}                 
             div
                 h2 {{localize('manageFilersView.headerAddFiler')}}
                 form#filersForm
@@ -61,6 +60,15 @@ section#Main-Content
 
                     template(is='dom-if', if="[[filers]]")
                         button#shareSubmit(type="button", on-click="updateShares") {{localize('manageFilersView.btnSubmit')}}
+            template(is='dom-if', if="[[sharesErrors]]")
+                div.errorDiv
+                    b Latest Errors
+                    table
+                        template(is='dom-repeat', items='[[formatErrors(sharesErrors)]]')
+                            tr 
+                                td [{{item.Timestamp}}] - {{item.Svm}}/{{item.Share}}: {{item.ErrorMessage}}
+                                td 
+                                    paper-icon-button(icon='icons:clear', on-click="deleteShareError")
 
     paper-toast#FilersErrorToast(duration=8000, horizontal-align="center")
         strong [[errorText]]

@@ -3,6 +3,7 @@ import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/paper-ripple/paper-ripple.js';
 import '@polymer/paper-item/paper-icon-item.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-spinner/paper-spinner-lite.js';
 
 // eslint-disable-next-line max-len
@@ -96,6 +97,10 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         return result;
     }
 
+    formatErrors(errors) {
+        return JSON.parse(errors.errors);
+    }
+
     onChangeFilers(e) {
         this.validateError = '';
     }
@@ -136,42 +141,28 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
             return;
         }
 
-        // cloning to avoid assigning by reference
-        const newRequestingData = _.clone(requestingData);
-
-        const newRequestingDataValue =
-            newRequestingData[filersSelectValue] ?
-                JSON.parse(newRequestingData[filersSelectValue]) :
+        const requestingSharesData =
+            requestingData[filersSelectValue] ?
+                JSON.parse(requestingData[filersSelectValue]) :
                 [];
 
-
-        const existingFilerData = existingData[filersSelectValue] ?
+        const existingSharesData = existingData[filersSelectValue] ?
             JSON.parse(existingData[filersSelectValue]) :
             [];
         // checking for duplicates
-        if (newRequestingDataValue.includes(sharesInputValue) ||
-            existingFilerData.includes(sharesInputValue)) {
+        if (requestingSharesData.includes(sharesInputValue) ||
+        existingSharesData.includes(sharesInputValue)) {
             this.validateError =
                 this.localize('manageFilersView.duplicateFiler');
             return;
         }
 
-        newRequestingDataValue.push(sharesInputValue);
-
-        newRequestingData[filersSelectValue] =
-            JSON.stringify(newRequestingDataValue);
-
-        // if no requesting CM, create it
-        if (Object.keys(requestingData).length===0) {
-            // new configmap to create
-            const api = this.$.CreateRequestingSharesAjax;
-            api.body = newRequestingData;
-            api.generateRequest();
-            return;
-        }
-        // else update the config map
+        // updates the configmap if it exists. Creates it if it doesn't.
         const api = this.$.UpdateRequestingSharesAjax;
-        api.body = newRequestingData;
+        api.body = {
+            svm: filersSelectValue,
+            share: sharesInputValue,
+        };
         api.generateRequest();
         return;
     }
@@ -179,43 +170,21 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
     deleteExistingShare(e) {
         const filer = e.model.svm.svm;
         const filerShare = e.model.share;
-        const existingData = this.existingShares === null ? {} :
-            this.existingShares;
 
-        const existingDataValue = JSON.parse(existingData[filer]);
-        const index = existingDataValue.indexOf(filerShare);
-        if (index===-1) {
-            this.showError(
-                this.localize(
-                    'manageFilersView.missingDeleteError',
-                    'filerShare',
-                    filerShare
-                )
-            );
-            return;
-        }
+        const api = this.$.DeleteExistingShareAjax;
+        api.body = {
+            svm: filer,
+            share: filerShare,
+        };
+        api.generateRequest();
+        return;
+    }
 
-        // delete the configmap if only contains this filershare
-        if (existingDataValue.length===1 &&
-                Object.keys(existingData).length===1) {
-            const api = this.$.DeleteExistingSharesAjax;
-            api.generateRequest();
-            return;
-        }
+    deleteShareError(e) {
+        const deleteItem = e.model.item;
 
-        // cloning to avoid assigning by reference
-        const newExistingData = _.clone(existingData);
-
-        existingDataValue.splice(index, 1);
-        // remove filer from configmap if it contains no more values
-        if (existingDataValue.length===0) {
-            delete newExistingData[filer];
-        } else {
-            newExistingData[filer] = JSON.stringify(existingDataValue);
-        }
-
-        const api = this.$.UpdateExistingSharesAjax;
-        api.body = newExistingData;
+        const api = this.$.DeleteSharesErrorAjax;
+        api.body = deleteItem;
         api.generateRequest();
         return;
     }
@@ -229,6 +198,12 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
     _isolateErrorFromIronRequest(e) {
         const bd = e.detail.request.response||{};
         return bd.error || e.detail.error || e.detail;
+    }
+
+    updateCMData() {
+        this.$.GetRequestingSharesAjax.generateRequest();
+        this.$.GetExistingSharesAjax.generateRequest();
+        this.$.GetSharesErrorsAjax.generateRequest();
     }
 
     /**
@@ -248,8 +223,33 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
         this.showResponse(this.localize('manageFilersView.successUpdate'));
 
         // updates the data
-        this.$.GetRequestingSharesAjax.generateRequest();
-        this.$.GetExistingSharesAjax.generateRequest();
+        this.updateCMData();
+        return;
+    }
+
+    handleDeleteShare(e) {
+        if (e.detail.error) {
+            const error = this._isolateErrorFromIronRequest(e);
+            this.showError(error);
+            return;
+        }
+
+        this.showResponse(this.localize('manageFilersView.successUpdate'));
+
+        // updates the data
+        this.updateCMData();
+        return;
+    }
+
+    handleDeleteError(e) {
+        if (e.detail.error) {
+            const error = this._isolateErrorFromIronRequest(e);
+            this.showError(error);
+            return;
+        }
+
+        // updates the data
+        this.updateCMData();
         return;
     }
 
