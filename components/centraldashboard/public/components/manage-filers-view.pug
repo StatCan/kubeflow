@@ -55,11 +55,11 @@ section#Main-Content
                     div.formInputDiv
                         label(for="sharesInput" style="float: left") {{localize('manageFilersView.lblShare')}}
                         span
-                            input#sharesInput(name="sharesInput", value="", placeholder="{{localize('manageFilersView.placeholderShare')}}")
+                            input#sharesInput(name="sharesInput", value="", placeholder="{{localize('manageFilersView.placeholderShare')}}", required)
                     aside.Error {{validateError}}
 
                     template(is='dom-if', if="[[filers]]")
-                        button#shareSubmit(type="button", on-click="updateShares") {{localize('manageFilersView.btnSubmit')}}
+                        button#shareSubmit(type="submit", on-click="updateShares") {{localize('manageFilersView.btnSubmit')}}
             template(is='dom-if', if="[[sharesErrors]]")
                 div.errorDiv
                     b Latest Errors
