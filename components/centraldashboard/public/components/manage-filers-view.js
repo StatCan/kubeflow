@@ -107,7 +107,7 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
 
     updateShares(event) {
         event.preventDefault();
-        
+
         this.validateError = '';
         const formData = new FormData(this.$.filersForm);
         const requestingData = this.requestingShares === null ? {} :
