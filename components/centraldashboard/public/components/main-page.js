@@ -259,6 +259,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      */
     _onHasWorkgroupError(ev) {
         this.showError('mainPage.errGeneric');
+        this.isAllowed = true;
         return;
     }
 
