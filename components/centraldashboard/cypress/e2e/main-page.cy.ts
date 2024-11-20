@@ -23,7 +23,7 @@ describe('Main Page', () => {
 
   it('should access the dashboard', () => {
     cy.get('main-page').should('exist');
-    cy.get('main-page').shadow().find('blocked-user-view').should('not.be.visible');
+    cy.get('main-page').shadow().find('blocked-user-view').should('not.exist');
     cy.get('main-page').shadow().find('dashboard-view').should('exist');
     // create new notebook link
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').should('exist');
@@ -166,6 +166,23 @@ describe('Main Page', () => {
 
     cy.get('main-page').shadow().find('a[href="https://zone.pages.cloud.statcan.ca/docs/en/"]').should('exist');
     cy.get('main-page').shadow().find('a[href="https://zone.pages.cloud.statcan.ca/docs/en/"]').find('paper-item').should('have.text', 'Documentation');
+  });
+
+  it('should block access to user', () =>{
+    cy.intercept('GET', `/api/workgroup/exists`, {
+      "hasAuth":true,
+      "user":"user.name@statcan.gc.ca",
+      "email": "user.name@statcan.gc.ca",
+      "hasWorkgroup":true,
+      "registrationFlowAllowed":true,
+      "isAllowed": false
+    }).as('mockWorkgroupRequest');
+    cy.visit('/');
+
+    cy.wait('@mockWorkgroupRequest');
+
+    cy.get('main-page').should('exist');
+    cy.get('main-page').shadow().find('blocked-user-view').should('exist');
   });
 
   describe('Notebook Default Card', () => {

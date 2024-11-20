@@ -105,7 +105,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
             allNamespaces: {type: Boolean, value: false, readOnly: true},
             notFoundInIframe: {type: Boolean, value: false, readOnly: true},
             registrationFlow: {type: Boolean, value: false, readOnly: true},
-            isAllowed: {type: Boolean, value: false, readOnly: true},
+            isAllowed: {type: Boolean, value: true, readOnly: true},
             workgroupStatusHasLoaded: {
                 type: Boolean,
                 value: false,
@@ -259,7 +259,6 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      */
     _onHasWorkgroupError(ev) {
         this.showError('mainPage.errGeneric');
-        this.isAllowed = true;
         return;
     }
 
