@@ -16,7 +16,7 @@ describe('Landing Page', () => {
   });
 
   it('should access the landing page', ()=>{
-    cy.get('main-page').shadow().find('blocked-user-view').should('not.be.visible');
+    cy.get('main-page').shadow().find('blocked-user-view').should('not.exist');
     cy.get('main-page').shadow().find('landing-page').should('exist');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > h2').should('have.text', 'Welcome');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > p').find('a').should('exist').and('have.prop', 'href', 'https://zone.pages.cloud.statcan.ca/docs/en/');
@@ -74,7 +74,7 @@ describe('Landing Page', () => {
 
     //assert the main page and that the default notebook shows up
     cy.get('main-page').shadow().find('landing-page').should('not.be.visible');
-    cy.get('main-page').shadow().find('blocked-user-view').should('not.be.visible');
+    cy.get('main-page').shadow().find('blocked-user-view').should('not.exist');
     cy.get('main-page').shadow().find('dashboard-view').should('exist');
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').shadow().find('paper-card#DefaultNotebookCard').should('exist');
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('notebook-default-card').shadow().find('paper-card#DefaultNotebookCard > .data-content > .button-div > paper-button#Details').should('exist');
@@ -146,7 +146,7 @@ describe('Landing Page', () => {
 
     cy.wait(['@mockWorkgroupRequest', '@mockDashboardLinksRequest']);
 
-    cy.get('main-page').shadow().find('blocked-user-view').should('not.be.visible');
+    cy.get('main-page').shadow().find('blocked-user-view').should('not.exist');
     cy.get('main-page').shadow().find('landing-page').should('exist');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > h2').should('have.text', 'Welcome');
     cy.get('main-page').shadow().find('landing-page').shadow().find('#MainCard > neon-animatable > p').should('have.text', 'You are currently logged in using user.name@cloud.statcan.gc.ca, this domain is not supported. Please log out and log in using your “@statcan.gc.ca” email.');
