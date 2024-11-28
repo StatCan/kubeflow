@@ -64,7 +64,7 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
             app-toolbar
                 template(is='dom-if', if='![[persistent]]')
                     aside#Narrow-Slider(hides, hidden$='[[!narrowMode]]')
-                        paper-icon-button#Menu(icon='menu', drawer-toggle)
+                        paper-icon-button#Menu(icon='menu', title="Menu", drawer-toggle)
                         figure.Logo
                             |!{logo}
                 namespace-selector#NamespaceSelector(
