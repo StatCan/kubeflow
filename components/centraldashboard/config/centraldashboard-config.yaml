@@ -3,7 +3,7 @@ data:
   defaultLanguage: "en"
   settings: |-
     {
-      DASHBOARD_FORCE_IFRAME: true
+      "DASHBOARD_FORCE_IFRAME": true
     }
   links: |-
     {
