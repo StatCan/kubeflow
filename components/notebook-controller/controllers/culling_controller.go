@@ -268,6 +268,7 @@ func getNotebookMetrics(nb string, ns string, query string, log logr.Logger) *No
 	}
 
 	test := 1
+	test = test + 1
 
 	domain := GetEnvDefault("CLUSTER_DOMAIN", DEFAULT_CLUSTER_DOMAIN)
 	metricsUrl := fmt.Sprintf(
