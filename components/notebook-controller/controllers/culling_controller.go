@@ -268,7 +268,6 @@ func getNotebookMetrics(nb string, ns string, query string, log logr.Logger) *No
 	}
 
 	domain := GetEnvDefault("CLUSTER_DOMAIN", DEFAULT_CLUSTER_DOMAIN)
-	
 	metricsUrl := fmt.Sprintf(
 		"http://kube-prometheus-stack-prometheus.prometheus-system.svc.%s:9090/api/v1/query?query=%s",
 		domain, query)
