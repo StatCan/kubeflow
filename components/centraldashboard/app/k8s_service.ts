@@ -53,7 +53,7 @@ const SHARES_ERRORS_CM_NAME = 'shares-errors';
 
 /** Wrap Kubernetes API calls in a simpler interface for use in routes. */
 export class KubernetesService {
-  private namespace = 'kubeflow';
+  private namespace = process.env.POD_NAMESPACE || 'kubeflow';
   private coreAPI: k8s.CoreV1Api;
   private customObjectsAPI: k8s.CustomObjectsApi;
   private dashboardConfigMap = DASHBOARD_CONFIGMAP;
@@ -275,7 +275,7 @@ export class KubernetesService {
   }
 
   /** Retrieves the list of events for the given Namespace from the Cluster. */
-  async getEventsForNamespace(namespace: string): Promise<k8s.V1Event[]> {
+  async getEventsForNamespace(namespace: string): Promise<k8s.CoreV1Event[]> {
     try {
       const {body} = await this.coreAPI.listNamespacedEvent(namespace);
       return body.items;
