@@ -45,6 +45,7 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
                 observer: '_namespaceChanged',
             },
             platformDetails: Object,
+            metrics: Object,
             platformInfo: {
                 type: Object,
                 observer: '_platformInfoChanged',

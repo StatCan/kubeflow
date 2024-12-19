@@ -1,5 +1,7 @@
 iron-ajax(auto, url='/api/workgroup/exists', handle-as='json',
     on-response='_onHasWorkgroupResponse', on-error='_onHasWorkgroupError', loading='{{pageLoading}}')
+iron-ajax(auto, url='/api/metrics', handle-as='json',
+    last-response='{{metrics}}', loading='{{pageLoading}}')
 iron-ajax(auto, id='ajax-dashboard-links', url='/api/dashboard-links', handle-as='json', params='[[_getLanguageParams()]]',
     on-response='_onHasDashboardLinksResponse', on-error='_onHasDashboardLinksError', loading='{{pageLoading}}')
 iron-ajax#envInfo(auto='[[_shouldFetchEnv]]', url='/api/workgroup/env-info', handle-as='json',
@@ -31,7 +33,8 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                     iron-collapse
                         template(is='dom-repeat', items='[[item.items]]')
                             iframe-link(href$="[[_buildHref(item.link, queryParams.*)]]")
-                                paper-item.menu-item.inner-menu-item [[item.text]]
+                                paper-item.menu-item.inner-menu-item
+                                    | [[item.text]]
                 template(is='dom-if', if='[[!equals(item.type, "section")]]')
                     iframe-link(href$="[[_buildHref(item.link, queryParams.*)]]")
                         paper-item.menu-item
@@ -44,7 +47,7 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                             iron-icon(icon='[[item.icon]]')
                             | [[item.text]]
                 template(is='dom-if', if='[[!item.iframe]]')
-                    a(href$="[[replaceNamespacedLink(item.link)]]",tabindex='-1', target="_blank")
+                    a(href$="[[_buildExternalHref(item.link, queryParams.*)]]", tabindex='-1', target="_blank")
                         paper-item.menu-item
                             iron-icon(icon='[[item.icon]]')
                             | [[item.text]]
@@ -89,7 +92,7 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                                 exit-animation='fade-out-animation')
                 neon-animatable(page='dashboard')
                     dashboard-view(namespace='[[queryParams.ns]]',
-                        platform-info='[[platformInfo]]', quick-links='[[quickLinks]]', documentation-items='[[documentationItems]]', 
+                        platform-info='[[platformInfo]]', quick-links='[[quickLinks]]', documentation-items='[[documentationItems]]', metrics='[[metrics]]'), 
                         security-messages='[[securityMessages]]', language='[[language]]', resources='[[resources]]')
                 neon-animatable(page='activity')
                     activity-view(namespace='[[queryParams.ns]]', language='[[language]]', resources='[[resources]]')
