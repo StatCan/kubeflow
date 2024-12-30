@@ -9,6 +9,13 @@ import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-b
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+export const ALL_NAMESPACES = 'All namespaces';
+// May not want all of these kf1.9.2
+export const ALL_NAMESPACES_ALLOWED_LIST = ['jupyter', 'volumes',
+    'tensorboards', 'katib', 'models'];
+
+const allNamespacesAllowedPaths = ALL_NAMESPACES_ALLOWED_LIST
+    .map(( p)=>`/_/${p}/`);
 
 /**
  * Component to retrieve and allow namespace selection. Bubbles the selected
@@ -114,6 +121,7 @@ export class NamespaceSelector extends mixinBehaviors([AppLocalizeBehavior], Pol
     static get properties() {
         return {
             queryParams: Object,
+            route: Object,
             namespaces: Array,
             selected: {
                 type: String,
@@ -122,6 +130,7 @@ export class NamespaceSelector extends mixinBehaviors([AppLocalizeBehavior], Pol
                 notify: true,
             },
             allNamespaces: {type: Boolean, value: false},
+            user: String,
             selectedNamespaceIsOwned: {
                 type: Boolean,
                 readOnly: true,
@@ -144,6 +153,7 @@ export class NamespaceSelector extends mixinBehaviors([AppLocalizeBehavior], Pol
             '_queryParamChanged(queryParams.ns)',
             '_ownedContextChanged(namespaces, selected)',
             'validate(selected, namespaces)',
+            'onRouteChange(route, queryParams)',
         ];
     }
 
@@ -184,23 +194,74 @@ export class NamespaceSelector extends mixinBehaviors([AppLocalizeBehavior], Pol
     /**
      * Validate internal state of the selector, and change selected state
      * if needed
+     * @param {string} selected
+     * @param {[object]} namespaces
      */
-    validate() {
-        const {namespaces} = this;
+    validate(selected, namespaces) {
         if (!namespaces) return;
-        const nsSet = new Set(namespaces.map((i) => i.namespace));
-        if (nsSet.has(this.selected)) return;
+        const allNs = namespaces.map((i) => i.namespace);
+        if (allNs.includes(selected)) return;
 
-        let owned = namespaces.find((n) => n.role == 'owner');
+        const owned = this.getDefaultNamespace();
+
+        if (selected === ALL_NAMESPACES
+            && allNamespacesAllowedPaths.includes(this.route.path)) {
+            return;
+        }
+
+        let newNamespace = '';
+        if (owned && owned.namespace) {
+            newNamespace = owned.namespace;
+        } else if (allNs.includes('kubeflow')) {
+            newNamespace = 'kubeflow';
+        }
+        this.selected = newNamespace;
+    }
+
+    /**
+     * Get the default namespace when needed by the namespace selector.
+     * @return {string}
+     */
+    getDefaultNamespace() {
+        // Restore the user's previous namespace choice
+        const localStorageKey = '/centraldashboard/selectedNamespace/' +
+            (this.user && '.' + this.user || '');
+        const previousNamespaceName = localStorage.getItem(localStorageKey);
+        if (previousNamespaceName) {
+            const previousNamespace = this.namespaces.find(
+                (n) => n.namespace === previousNamespaceName);
+            if (previousNamespace) {
+                return previousNamespace;
+            }
+        }
+
+        let owned = this.namespaces.find(
+            (n) => n.role == 'owner');
         // If no owner, select the first namespace
         if (owned === undefined && namespaces.length>0) {
             owned = namespaces[0];
         }
+        return owned;
+    }
 
-        this.selected = (owned && owned.namespace)
-            || (nsSet.has('kubeflow')
-                ? 'kubeflow'
-                : '');
+    /**
+     * Observe route and query parameter changes and ensure that the 'ns' query
+     * query parameter has the correct value when a user navigates to another
+     * page that the 'All namespace' selection is not allowed.
+     * @param {object} route
+     * @param {object} queryParams
+     */
+    onRouteChange(route, queryParams) {
+        if (route && !allNamespacesAllowedPaths.includes(route.path)
+            && this.selected === ALL_NAMESPACES) {
+            const ns = this.getDefaultNamespace();
+            // Fix in order to ensure that the 'ns' parameter is not being
+            // overwritten by iron-location.
+            // See:
+            setTimeout(() => {
+                this.set('queryParams.ns', ns.namespace);
+            });
+        }
     }
 
     /**
@@ -221,10 +282,10 @@ export class NamespaceSelector extends mixinBehaviors([AppLocalizeBehavior], Pol
      */
     _ownedContextChanged(namespaces, selected) {
         const namespace = (namespaces || []).find((i) =>
-            i.namespace == selected,
+            i.namespace == selected
         ) || this.selectedNamespaceIsOwned;
         this._setSelectedNamespaceIsOwned(
-            this.isOwner(namespace.role),
+            this.isOwner(namespace.role)
         );
     }
 

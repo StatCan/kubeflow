@@ -30,8 +30,8 @@ export class NotFoundView extends mixinBehaviors([AppLocalizeBehavior], PolymerE
     }
 
     /**
-     * Object describing property-related metadata used by Polymer features
-     */
+      * Object describing property-related metadata used by Polymer features
+      */
     static get properties() {
         return {
             path: String,
