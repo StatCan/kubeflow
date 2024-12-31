@@ -8,7 +8,10 @@ import {
     MESSAGE,
     NAMESPACE_SELECTED_EVENT,
     PARENT_CONNECTED_EVENT,
+    ALL_NAMESPACES_EVENT,
 } from '../library.js';
+
+import {ALL_NAMESPACES} from './namespace-selector';
 
 export class IframeContainer extends PolymerElement {
     static get template() {
@@ -91,11 +94,18 @@ export class IframeContainer extends PolymerElement {
      */
     _sendNamespaceMessage() {
         if (!(this._iframeOrigin && this.namespace)) return;
-
-        this.$.iframe.contentWindow.postMessage({
-            type: NAMESPACE_SELECTED_EVENT,
-            value: this.namespace,
-        }, this._iframeOrigin);
+        if (this.namespace === ALL_NAMESPACES) {
+            this.$.iframe.contentWindow.postMessage({
+                type: ALL_NAMESPACES_EVENT,
+                value: this.namespaces.map((n) => n.namespace)
+                    .filter((n) => n !== ALL_NAMESPACES),
+            }, this._iframeOrigin);
+        } else {
+            this.$.iframe.contentWindow.postMessage({
+                type: NAMESPACE_SELECTED_EVENT,
+                value: this.namespace,
+            }, this._iframeOrigin);
+        }
     }
 
     /**
