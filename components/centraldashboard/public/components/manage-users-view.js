@@ -9,18 +9,17 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@vaadin/vaadin-grid/vaadin-grid.js';
 import '@vaadin/vaadin-grid/vaadin-grid-selection-column.js';
 import '@vaadin/vaadin-grid/vaadin-grid-sort-column.js';
-// eslint-disable-next-line max-len
-import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-behavior.js';
-import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
+import '@vaadin/vaadin-grid/theme/material/vaadin-grid-styles.js';
+
 import {html, PolymerElement} from '@polymer/polymer';
 
-import './manage-users-view-contributor.js';
 import css from './manage-users-view.css';
 import template from './manage-users-view.pug';
+
+import './manage-users-view-contributor.js';
 import utilitiesMixin from './utilities-mixin.js';
 
-// eslint-disable-next-line max-len
-export class ManageUsersView extends mixinBehaviors([AppLocalizeBehavior], utilitiesMixin(PolymerElement)) {
+export class ManageUsersView extends utilitiesMixin(PolymerElement) {
     static get template() {
         return html([`
             <style>${css.toString()}</style>
@@ -36,7 +35,10 @@ export class ManageUsersView extends mixinBehaviors([AppLocalizeBehavior], utili
             user: {type: String, value: 'Loading...'},
             isClusterAdmin: {type: Boolean, value: false},
             namespaces: Array,
-            multiOwnedNamespaces: {type: Array, value: []},
+            hasNamespaces: {type: Boolean, value: false},
+            ownedNamespaces: {type: Array, value: []},
+            editNamespaces: {type: Array, value: []},
+            viewNamespaces: {type: Array, value: []},
         };
     }
     /**
@@ -46,25 +48,33 @@ export class ManageUsersView extends mixinBehaviors([AppLocalizeBehavior], utili
         super.ready();
     }
     /**
-     * Returns namespaces and roles
-     * @param {[object]} ns Namespaces array.
-     * @param {[object]} lang Language string.
-     * @return {[string, [string]]} rows for namespace table.
+     * Returns rows for the namespace roles table.
+     * Each row is an array with [Role, Namespaces],
+     * where Namespaces is a comma-separated string.
+     * @param {[object]} ownedNamespaces - List of namespaces the user owns.
+     * @param {[object]} editNamespaces - List of namespaces the user can edit.
+     * @param {[object]} viewNamespaces - List of namespaces the user can view.
+     * @return {[[string, string]]} - Array of rows.
      */
-    nsBreakdown(ns, lang) {
-        const {namespaces} = this;
-        if (!namespaces) return;
-        const roleStrings = {
-            'contributor': this.localize('manageUsersView.lblContributor'),
-            'owner': this.localize('manageUsersView.lblOwner'),
-            'other': this.localize('manageUsersView.lblOther'),
-        };
+    nsBreakdown(ownedNamespaces, editNamespaces, viewNamespaces) {
         const arr = [];
-        for (let i = 0; i < namespaces.length; i++) {
-            arr.push(
-                [namespaces[i].namespace,
-                    roleStrings[namespaces[i].role] || roleStrings['other']],
-            );
+        if (ownedNamespaces.length > 0) {
+            const ownedNamespacesList = ownedNamespaces
+                .map((n) => n.namespace)
+                .join(', ');
+            arr.push(['Owner', ownedNamespacesList]);
+        }
+        if (editNamespaces.length > 0) {
+            const editNamespacesList = editNamespaces
+                .map((n) => n.namespace)
+                .join(', ');
+            arr.push(['Contributor', editNamespacesList]);
+        }
+        if (viewNamespaces.length > 0) {
+            const viewNamespacesList = viewNamespaces
+                .map((n) => n.namespace)
+                .join(', ');
+            arr.push(['Viewer', viewNamespacesList]);
         }
         return arr;
     }
@@ -89,12 +99,11 @@ export class ManageUsersView extends mixinBehaviors([AppLocalizeBehavior], utili
     }
     /**
      * [ComputedProp] Should the ajax call for all namespaces run?
-     * @param {object} ownedNamespace
      * @param {boolean} isClusterAdmin
      * @return {boolean}
      */
-    shouldFetchAllNamespaces(ownedNamespace, isClusterAdmin) {
-        return isClusterAdmin && !this.empty(ownedNamespace);
+    shouldFetchAllNamespaces(isClusterAdmin) {
+        return isClusterAdmin;
     }
 }
 
