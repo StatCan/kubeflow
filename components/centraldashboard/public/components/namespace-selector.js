@@ -238,8 +238,8 @@ export class NamespaceSelector extends mixinBehaviors([AppLocalizeBehavior], Pol
         let owned = this.namespaces.find(
             (n) => n.role == 'owner');
         // If no owner, select the first namespace
-        if (owned === undefined && namespaces.length>0) {
-            owned = namespaces[0];
+        if (owned === undefined && this.namespaces.length>0) {
+            owned = this.namespaces[0];
         }
         return owned;
     }
