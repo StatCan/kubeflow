@@ -1,4 +1,4 @@
-import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
+import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-button/paper-button.js';
 import css from './logout-button.css';
 
@@ -21,7 +21,6 @@ export class LogoutButton extends PolymerElement {
                 </paper-button>
             </a>
         `]);
-        ;
     }
 
     /**
