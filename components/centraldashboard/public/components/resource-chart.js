@@ -10,17 +10,8 @@ import 'chartjs-plugin-crosshair';
 
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 import {Chart} from 'chart.js';
-// Explicitly loads the Chart.js CSS so it can be applied to the ShadowDOM
-// Necessary since third-party CSS would normally be vendored and applied
-// globally.
-import chartCss from '!css-loader!exports-loader!chart.js/dist/Chart.css';
 
 import './card-styles.js';
-
-Chart.defaults.global.defaultFontFamily = '"Google Sans", sans-serif';
-Chart.Tooltip.positioners.custom = (_, eventPosition) => (
-    {x: eventPosition.x, y: eventPosition.y}
-);
 
 // Preferred colors for Material Charts
 const LINE_COLORS = [
@@ -90,7 +81,6 @@ class ResourceChart extends PolymerElement {
                     text-transform: none;
                 };
             }
-            ${chartCss.toString()}
         </style>
         <iron-ajax id="ajax" auto url="[[metricUrl]]" handle-as="json"
             on-response="_onResponse"></iron-ajax>

@@ -105,11 +105,11 @@ export class PipelinesCard extends mixinBehaviors([AppLocalizeBehavior], utiliti
      */
     _getListPipelinesUrl(artifactType, namespace) {
         if (!VALID_ARTIFACT_TYPES.has(artifactType)) return null;
-        let link = `/pipeline/apis/v1beta1/${artifactType}?`
-            + 'page_size=5&sort_by=created_at%20desc';
+        let link = `/pipeline/apis/v1beta1/${artifactType}?` +
+            'page_size=5&sort_by=created_at%20desc';
         if (artifactType === RUNS) {
-            link += '&resource_reference_key.type=NAMESPACE'
-            + `&resource_reference_key.id=${namespace}`;
+            link += '&resource_reference_key.type=NAMESPACE' +
+            `&resource_reference_key.id=${namespace}`;
         }
         return link;
     }

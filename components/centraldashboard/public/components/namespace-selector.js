@@ -204,8 +204,8 @@ export class NamespaceSelector extends mixinBehaviors([AppLocalizeBehavior], Pol
 
         const owned = this.getDefaultNamespace();
 
-        if (selected === ALL_NAMESPACES
-            && allNamespacesAllowedPaths.includes(this.route.path)) {
+        if (selected === ALL_NAMESPACES &&
+            allNamespacesAllowedPaths.includes(this.route.path)) {
             return;
         }
 
@@ -252,8 +252,8 @@ export class NamespaceSelector extends mixinBehaviors([AppLocalizeBehavior], Pol
      * @param {object} queryParams
      */
     onRouteChange(route, queryParams) {
-        if (route && !allNamespacesAllowedPaths.includes(route.path)
-            && this.selected === ALL_NAMESPACES) {
+        if (route && !allNamespacesAllowedPaths.includes(route.path) &&
+            this.selected === ALL_NAMESPACES) {
             const ns = this.getDefaultNamespace();
             // Fix in order to ensure that the 'ns' parameter is not being
             // overwritten by iron-location.

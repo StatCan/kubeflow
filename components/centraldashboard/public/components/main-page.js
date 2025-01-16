@@ -546,9 +546,9 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
     compareLinks(link, matchingLink) {
         const url = new URL(link, window.location.origin);
         const matchingUrl = new URL(matchingLink, window.location.origin);
-        return url.pathname.replace(/\/$/, '')
-            === matchingUrl.pathname.replace(/\/$/, '')
-            && matchingUrl.hash.startsWith(url.hash);
+        return url.pathname.replace(/\/$/, '') ===
+            matchingUrl.pathname.replace(/\/$/, '') &&
+            matchingUrl.hash.startsWith(url.hash);
     }
 
     _toggleMenuSection(e) {
@@ -691,8 +691,8 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
     }
 
     _showManageUsers(isolationMode, ownedNamespace) {
-        return isolationMode==='multi-user'
-            && ownedNamespace!==undefined;
+        return isolationMode==='multi-user' &&
+            ownedNamespace!==undefined;
     }
 
     _changeLanguage() {

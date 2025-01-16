@@ -46,8 +46,8 @@ class CentralDashboardEventHandler_ {
                 .then((data) => {
                     if (data.DASHBOARD_FORCE_IFRAME) {
                         // pre-pend `/_/` to navigate to central dashboard
-                        const newLoc = this.window.location.origin
-                            + this.window.location.href.replace(
+                        const newLoc = this.window.location.origin +
+                            this.window.location.href.replace(
                                 this.window.location.origin, '/_');
                         this.window.location.replace(newLoc);
                     }
