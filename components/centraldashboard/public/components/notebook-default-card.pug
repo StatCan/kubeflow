@@ -5,6 +5,9 @@ iron-ajax#GetDefaultNotebook(method='GET', url='/jupyter/api/namespaces/[[namesp
 paper-card#DefaultNotebookCard(heading="{{localize('notebookDefaultCard.txtDefaultNotebook')}}")
     div.data-content
         paper-progress(indeterminate, class="slow", hidden$="[[!loading]]")
+        div#defaultNotebookWarning
+                p#defaultNotebookWarningMessage {{localize('notebookDefaultCard.warningDefaultNotebook')}}
+                    a#defaultCardLink(href$=`{{localize('notebookDefaultCard.docLink')}}`, tabindex='-1', target="_blank") {{localize('landingPage.doc')}}.
         template(is='dom-if', if='[[!defaultNotebook]]')
             p {{localize('notebookDefaultCard.helpText')}}
             p {{localize('notebookDefaultCard.txtNoDefaultNotebook')}}
