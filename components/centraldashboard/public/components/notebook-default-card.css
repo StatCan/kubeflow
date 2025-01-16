@@ -32,3 +32,18 @@ paper-toast#DefaultNotebookSuccess {
         left: 240px !important;
     }
 }
+#defaultNotebook{
+    display: flex;
+    padding: .75rem 1.25rem;
+    border: 1px solid #ffb714;
+    border-radius: .25rem;
+    background-color: #e7d7a3;
+    margin-top: 0;
+    align-self: center;
+}
+#defaultNotebookWarning {
+    position: relative;
+}
+#defaultCardLink {
+    text-decoration-line: underline;
+}
