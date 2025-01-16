@@ -87,7 +87,7 @@
             "notebookDefaultCard.txtDefaultNotReady": "The default notebook is not ready yet.",
             "notebookDefaultCard.errorDefaultNotebook": "Failed to do the current operation, because:",
             "notebookDefaultCard.successDefaultNotebook": "New default notebook successfully created!",
-            "notebookDefaultCard.warningDefaultNotebook": "The Default Notebook does not have presistent storage, it is purely to explore the Zone. When ready to work, please read this ",
+            "notebookDefaultCard.warningDefaultNotebook": "The Default Notebook does not have persistent storage, it is purely to explore the Zone. When ready to work, please read this ",
             "notebookDefaultCard.docLink": "https://zone.pages.cloud.statcan.ca/docs/en/5-Storage/KubeflowVolumes.html",
             "registrationPage.btnNext": "Next",
             "registrationPage.lblNamespace": "Workspace",
