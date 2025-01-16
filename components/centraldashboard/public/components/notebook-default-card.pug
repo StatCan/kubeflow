@@ -8,7 +8,7 @@ paper-card#DefaultNotebookCard(heading="{{localize('notebookDefaultCard.txtDefau
         template(is='dom-if', if='[[!defaultNotebook]]')
             div#defaultNotebook
                 p#defaultNotebookWarning {{localize('notebookDefaultCard.warningDefaultNotebook')}}
-                    a#defaultCardLink(href$=`{{localize('notebookDefaultCard.docLink')}}`, tabindex='-1', target="_blank") {{localize('landingPage.doc')}}
+                    a#defaultCardLink(href$=`{{localize('notebookDefaultCard.docLink')}}`, tabindex='-1', target="_blank") {{localize('landingPage.doc')}}.
             p {{localize('notebookDefaultCard.helpText')}}
             p {{localize('notebookDefaultCard.txtNoDefaultNotebook')}}
                 div.button-div
