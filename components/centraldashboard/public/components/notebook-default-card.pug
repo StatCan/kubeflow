@@ -6,8 +6,8 @@ paper-card#DefaultNotebookCard(heading="{{localize('notebookDefaultCard.txtDefau
     div.data-content
         paper-progress(indeterminate, class="slow", hidden$="[[!loading]]")
         template(is='dom-if', if='[[!defaultNotebook]]')
-            div#defaultNotebook
-                p#defaultNotebookWarning {{localize('notebookDefaultCard.warningDefaultNotebook')}}
+            div#defaultNotebookWarning
+                p#defaultNotebookWarningMessage {{localize('notebookDefaultCard.warningDefaultNotebook')}}
                     a#defaultCardLink(href$=`{{localize('notebookDefaultCard.docLink')}}`, tabindex='-1', target="_blank") {{localize('landingPage.doc')}}.
             p {{localize('notebookDefaultCard.helpText')}}
             p {{localize('notebookDefaultCard.txtNoDefaultNotebook')}}
