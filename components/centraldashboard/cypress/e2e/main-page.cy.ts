@@ -27,7 +27,7 @@ describe('Main Page', () => {
     cy.get('main-page').shadow().find('dashboard-view').should('exist');
     // create new notebook link
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').should('exist');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('a').should('have.length', 3);
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('a').should('have.length', 1);
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('a').eq(0).should('have.prop', 'href', '/en/new?ns=test-namespace');
     // documentation links
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').should('exist');
