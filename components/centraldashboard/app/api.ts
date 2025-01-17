@@ -99,7 +99,7 @@ export class Api {
             let langLinks = {};
             try {
               const links = JSON.parse(cm.data["links"]);
-              langLinks = links[req.query.lang];
+              langLinks = links[req.query.lang as string];
             }catch(e){
               return apiError({
                 res, code: 500,
