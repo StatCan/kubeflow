@@ -16,7 +16,7 @@ export class LogoutButton extends PolymerElement {
             <a href$="{{logoutUrl}}" on-tap="logout">
                 <paper-button id="logout-button">
                     <iron-icon icon="kubeflow:logout" 
-                               title="Logout">
+                               title="{{localize('landingPage.btnLogout')}}">
                     </iron-icon>
                 </paper-button>
             </a>
