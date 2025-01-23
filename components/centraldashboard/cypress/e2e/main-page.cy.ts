@@ -5,7 +5,6 @@ describe('Main Page', () => {
     cy.mockEnvInfoRequest();
     cy.mockActivitiesRequest('test-namespace');
     cy.mockGetNotebooksRequest('test-namespace');
-    cy.mockGetContributorsRequest('test-namespace');
     cy.mockDefaultNotebook('test-namespace');
     
     cy.visit('/');
@@ -15,8 +14,7 @@ describe('Main Page', () => {
       '@mockDashboardLinksRequest', 
       '@mockEnvInfoRequest', 
       '@mockActivitiesRequest', 
-      '@mockGetNotebooksRequest', 
-      '@mockGetContributorsRequest',
+      '@mockGetNotebooksRequest',
       '@mockDefaultNotebook'
     ]);
   });

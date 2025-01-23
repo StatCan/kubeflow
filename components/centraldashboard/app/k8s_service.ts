@@ -114,7 +114,7 @@ export class KubernetesService {
       const { body } = await this.coreAPI.readNamespacedConfigMap("filers-list", "das");
       return body;
     } catch (err) {
-      console.error('Unable to fetch fielrs list ConfigMap:', err.response?.body || err.body || err);
+      console.error('Unable to fetch filers list ConfigMap:', err.response?.body || err.body || err);
       return null;
     }
   }

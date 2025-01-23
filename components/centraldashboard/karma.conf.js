@@ -5,8 +5,7 @@ webpackConfig.module.rules.push({
     enforce: 'post',
     test: /\.js$/,
     use: {
-        loader: 'babel-plugin-istanbul', // Updating loader since istanbul not used 7 years
-        options: {esModules: true},
+        loader: 'babel-loader',
     },
     exclude: /node_modules|_test\.js$/,
 });
