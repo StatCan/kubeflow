@@ -123,7 +123,7 @@
         "karma-webpack": "^4.0.2",
         "mini-css-extract-plugin": "^0.5.0",
         "nodemon": "^1.19.3",
-        "nyc": "^14.1.1",
+        "nyc": "^15.1.0",
         "pug": "^3.0.1",
         "pug-loader": "^2.4.0",
         "puppeteer": "^3.0.0",
