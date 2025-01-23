@@ -140,6 +140,9 @@
     "overrides": {
         "pug-loader": {
             "pug": "^3.0.1"
+        },
+        "@kubernetes/client-node": {
+            "jsonpath-plus": "10.0.7"
         }
     }
 }
