@@ -138,6 +138,8 @@
         "webpack-dev-server": "^4.15.2"
     },
     "overrides": {
+        "minimist": "1.2.7",
+        "mkdirp": "0.5.6",
         "pug-loader": {
             "pug": "^3.0.1"
         },
