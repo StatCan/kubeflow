@@ -43,10 +43,7 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
             documentationItems: Array,
             quickLinks: Array,
             securityMessages: Array,
-            namespace: {
-                type: Object,
-                observer: '_namespaceChanged',
-            },
+            namespace: Object,
             platformDetails: Object,
             metrics: Object,
             platformInfo: {
@@ -69,16 +66,6 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
             }
             this.platformDetails = getGCPData(gcpProject);
         }
-    }
-
-    /**
-     * Rewrites the links adding the namespace as a query parameter.
-     * @param {namespace} namespace
-     */
-    _namespaceChanged(namespace) {
-        /* eslint-disable no-console */
-        console.log('meow', this.quickLinks, namespace);
-        /* eslint-enable no-console */
     }
 }
 
