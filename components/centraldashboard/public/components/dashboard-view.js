@@ -20,7 +20,6 @@ import './pipelines-card.js';
 import './resource-chart.js';
 import {getGCPData} from './resources/cloud-platform-data.js';
 import utilitiesMixin from './utilities-mixin.js';
-// eslint-disable
 // eslint-disable-next-line max-len
 export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utilitiesMixin(PolymerElement)) {
     static get template() {
@@ -35,10 +34,7 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
     /**
      * Object describing property-related metadata used by Polymer features
      */
-    static get properties() {
-        /* eslint-disable no-console */
-        console.log('woof');
-        // eslint-enable no-console
+    static get properties() {cc
         return {
             documentationItems: Array,
             quickLinks: Array,
