@@ -78,15 +78,6 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
     _namespaceChanged(namespace) {
         /* eslint-disable no-console */
         console.log('meow', this.quickLinks, namespace);
-        this.quickLinks.map((quickLink) => {
-            quickLink.link = this.buildHref(quickLink.link, {ns: namespace});
-            console.log(' I am inside the map');
-            return quickLink;
-        });
-        // We need to deep-copy and re-assign in order to trigger the
-        // re-rendering of the component
-        this.quickLinks = JSON.parse(JSON.stringify(this.quickLinks));
-        console.log('tweet', this.quickLinks, namespace);
         /* eslint-enable no-console */
     }
 }
