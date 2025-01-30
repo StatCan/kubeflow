@@ -20,7 +20,7 @@ import './pipelines-card.js';
 import './resource-chart.js';
 import {getGCPData} from './resources/cloud-platform-data.js';
 import utilitiesMixin from './utilities-mixin.js';
-
+// eslint-disable
 // eslint-disable-next-line max-len
 export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utilitiesMixin(PolymerElement)) {
     static get template() {
@@ -36,6 +36,9 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
      * Object describing property-related metadata used by Polymer features
      */
     static get properties() {
+        /* eslint-disable no-console */
+        console.log('woof');
+        // eslint-enable no-console
         return {
             documentationItems: Array,
             quickLinks: Array,
@@ -73,6 +76,8 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
      * @param {namespace} namespace
      */
     _namespaceChanged(namespace) {
+        /* eslint-disable no-console */
+        console.log('meow', this.quickLinks, namespace);
         this.quickLinks.map((quickLink) => {
             quickLink.link = this.buildHref(quickLink.link, {ns: namespace});
             return quickLink;
@@ -80,6 +85,7 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
         // We need to deep-copy and re-assign in order to trigger the
         // re-rendering of the component
         this.quickLinks = JSON.parse(JSON.stringify(this.quickLinks));
+        /* eslint-enable no-console */
     }
 }
 
