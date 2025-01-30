@@ -80,6 +80,7 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
         console.log('meow', this.quickLinks, namespace);
         this.quickLinks.map((quickLink) => {
             quickLink.link = this.buildHref(quickLink.link, {ns: namespace});
+            console.log(' I am inside the map');
             return quickLink;
         });
         // We need to deep-copy and re-assign in order to trigger the
