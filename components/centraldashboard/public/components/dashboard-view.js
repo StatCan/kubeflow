@@ -86,6 +86,7 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
         // re-rendering of the component
         this.quickLinks = JSON.parse(JSON.stringify(this.quickLinks));
         /* eslint-enable no-console */
+        console.log('tweet', this.quickLinks, namespace);
     }
 }
 
