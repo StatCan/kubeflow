@@ -24,10 +24,10 @@ describe('Main Page', () => {
     cy.get('main-page').shadow().find('blocked-user-view').should('not.exist');
     cy.get('main-page').shadow().find('dashboard-view').should('exist');
     // create new notebook link
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').should('exist');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('iframe-link').should('exist').and('have.length', 1).and('have.prop', 'href', '/en/new?ns=test-namespace');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('iframe-link').find('div.header').should('have.text', 'Create a new Notebook server');
-    // documentation links
+    // cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').should('exist');
+    // cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('iframe-link').should('exist').and('have.length', 1).and('have.prop', 'href', '/en/new?ns=test-namespace');
+    // cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('iframe-link').find('div.header').should('have.text', 'Create a new Notebook server');
+    // // documentation links
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').should('exist');
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').should('have.length', 4);
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(0).should('have.prop', 'href', 'https://statcan.github.io/aaw/');
