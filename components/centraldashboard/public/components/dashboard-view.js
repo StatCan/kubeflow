@@ -34,7 +34,7 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
     /**
      * Object describing property-related metadata used by Polymer features
      */
-    static get properties() {cc
+    static get properties() {
         return {
             documentationItems: Array,
             quickLinks: Array,
