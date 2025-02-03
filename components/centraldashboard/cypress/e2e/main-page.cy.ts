@@ -25,26 +25,33 @@ describe('Main Page', () => {
     cy.get('main-page').shadow().find('dashboard-view').should('exist');
     // create new notebook link
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').should('exist');
+
+    // cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links')
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('iframe-link').should('exist').and('have.length', 1).and('have.prop', 'href', '/en/new');
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('iframe-link').find('div.header').should('have.text', 'Create a new Notebook server');
     // documentation links
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').should('exist');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').should('have.length', 4);
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(0).should('have.prop', 'href', 'https://statcan.github.io/aaw/');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(0).find('div.header').should('have.text', 'Advanced Analytics Workspace Docs');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').should('have.length', 5);
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(0).should('have.prop', 'href', 'https://zone.pages.cloud.statcan.ca/docs/en/');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(0).find('div.header').should('have.text', 'The Zone Documentation');
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(0).find('aside').should('have.text', 'Helpful guides about our data and analysis tools');
 
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(1).should('have.prop', 'href', 'https://www.youtube.com/playlist?list=PL1zlA2D7AHugkDdiyeUHWOKGKUd3MB_nD');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(1).find('div.header').should('have.text', 'Video Tutorial Series');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(1).find('aside').should('have.text', 'YouTube playlist of videos for getting started with Advanced Analytics Workspace tools');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(1).should('have.prop', 'href', 'https://054gc.sharepoint.com/:v:/s/BusinessTransformationProject-Projetdetransformationd%27affaires/EadkAnASIZpMtwg_AFcrpKgBB7m7DujjRW1qytlcvgtzyw?e=C43f5v');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(1).find('div.header').should('have.text', 'The Zone Workshop');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(1).find('aside').should('have.text', 'Basic instructions when new to the zone!');
 
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(2).should('have.prop', 'href', 'https://statcan-aaw.slack.com/');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(2).find('div.header').should('have.text', 'Community Chat');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(2).find('aside').should('have.text', 'Slack workspace for discussion/support - requires sign-up for emails outside @canada.ca');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(2).should('have.prop', 'href', 'https://054gc-my.sharepoint.com/:v:/g/personal/souheil_yazji_statcan_gc_ca/EdEcN9rRejJNt_WaxAmO5h0Bsi-PK3ZbTDrIxaka9yr0mA?e=sxEmIP&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(2).find('div.header').should('have.text', 'Advanced Instructions Video 1');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(2).find('aside').should('have.text', 'Instruction for advanced users part 1');
 
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(3).should('have.prop', 'href', 'https://www.kubeflow.org/docs/');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(3).find('div.header').should('have.text', 'Official Kubeflow Docs');
-    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(3).find('aside').should('have.text', 'Advanced documentation for installing, running, and using Kubeflow');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(3).should('have.prop', 'href', 'https://054gc-my.sharepoint.com/:v:/g/personal/souheil_yazji_statcan_gc_ca/EX4R2PbQmm5DjeXzL2DQtuUBgp1MJiQ2GCoWtxqcVBGuwQ?e=PCfB2f');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(3).find('div.header').should('have.text', 'Advanced Instructions Video 2');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(3).find('aside').should('have.text', 'Instruction for advanced users part 2');
+    
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(4).should('have.prop', 'href', 'https://054gc-my.sharepoint.com/:v:/g/personal/souheil_yazji_statcan_gc_ca/Eb6J5KMIPWZAoU33m7iesZkBs1HDx0OT8rLSn_Sr-QtlnA?e=8Ni8jg');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(4).find('div.header').should('have.text', 'Advanced Instructions Video 3');
+    cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Documentation').find('a').eq(4).find('aside').should('have.text', 'Instruction for advanced users part 3');
+
     //activities tab
     cy.get('main-page').shadow().find('#ViewTabs > paper-tabs > paper-tab:nth-child(2)').click();
     cy.url().should('eq', 'http://localhost:8080/activity?ns=test-namespace');
