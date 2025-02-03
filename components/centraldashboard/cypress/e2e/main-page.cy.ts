@@ -25,8 +25,6 @@ describe('Main Page', () => {
     cy.get('main-page').shadow().find('dashboard-view').should('exist');
     // create new notebook link
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').should('exist');
-
-    // cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links')
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('iframe-link').should('exist').and('have.length', 1).and('have.prop', 'href', '/en/new');
     cy.get('main-page').shadow().find('dashboard-view').shadow().find('paper-card#Quick-Links').find('iframe-link').find('div.header').should('have.text', 'Create a new Notebook server');
     // documentation links
