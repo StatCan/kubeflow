@@ -20,7 +20,6 @@ import './pipelines-card.js';
 import './resource-chart.js';
 import {getGCPData} from './resources/cloud-platform-data.js';
 import utilitiesMixin from './utilities-mixin.js';
-
 // eslint-disable-next-line max-len
 export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utilitiesMixin(PolymerElement)) {
     static get template() {
@@ -40,10 +39,7 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
             documentationItems: Array,
             quickLinks: Array,
             securityMessages: Array,
-            namespace: {
-                type: Object,
-                observer: '_namespaceChanged',
-            },
+            namespace: Object,
             platformDetails: Object,
             metrics: Object,
             platformInfo: {
@@ -66,20 +62,6 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
             }
             this.platformDetails = getGCPData(gcpProject);
         }
-    }
-
-    /**
-     * Rewrites the links adding the namespace as a query parameter.
-     * @param {namespace} namespace
-     */
-    _namespaceChanged(namespace) {
-        this.quickLinks.map((quickLink) => {
-            quickLink.link = this.buildHref(quickLink.link, {ns: namespace});
-            return quickLink;
-        });
-        // We need to deep-copy and re-assign in order to trigger the
-        // re-rendering of the component
-        this.quickLinks = JSON.parse(JSON.stringify(this.quickLinks));
     }
 }
 
