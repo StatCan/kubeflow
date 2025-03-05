@@ -81,7 +81,6 @@ type NotebookMetricsData struct {
 	Result     []NotebookMetricsDataResults `json:"result"`
 }
 
-// NotebookMetrics struct
 type NotebookMetrics struct {
 	Status string              `json:"status"`
 	Data   NotebookMetricsData `json:"data"`
