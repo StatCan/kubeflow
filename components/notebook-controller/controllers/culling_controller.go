@@ -59,7 +59,6 @@ const (
 )
 
 // Each kernel of the Notebook Server has a status.
-// KernelStatus struct:
 type KernelStatus struct {
 	ID             string `json:"id"`
 	Name           string `json:"name"`
