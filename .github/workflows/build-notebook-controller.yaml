@@ -52,7 +52,7 @@ jobs:
         login-server: ${{ env.REGISTRY_NAME }}.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
-        
+
     # Connect to DEV Azure Container registry (ACR)
     - uses: azure/docker-login@v1
       with:
@@ -105,7 +105,6 @@ jobs:
             exit 1
           fi
         done
-
     # Pushes if this is a push to master or an update to a PR that has auto-deploy label
     - name: Test if we should push to ACR
       id: should-i-push
