@@ -382,7 +382,9 @@ func generateStatefulSet(instance *v1beta1.Notebook) *appsv1.StatefulSet {
 						"statefulset":   instance.Name,
 						"notebook-name": instance.Name,
 					},
-					Annotations: map[string]string{},
+					Annotations: map[string]string{
+						"cluster-autoscaler.kubernetes.io/safe-to-evict": "false",
+					},
 				},
 				Spec: *instance.Spec.Template.Spec.DeepCopy(),
 			},
