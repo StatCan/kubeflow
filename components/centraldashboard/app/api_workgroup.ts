@@ -283,7 +283,7 @@ export class WorkgroupApi {
                     registrationFlowAllowed: this.registrationFlowAllowed,
                     isAllowed: true,
                 };
-                console.log("existsHere", req, response);
+                console.log("existsHere", req.user, req.headers, response);
                 if (req.user.hasAuth) {
                     const workgroup = await this.getWorkgroupInfo(
                         req.user,
