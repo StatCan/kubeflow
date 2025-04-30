@@ -29,7 +29,7 @@ jobs:
       - name: Run frontend tests
         run: |
           cd components/centraldashboard
-          npm i --legacy-peer-deps
+          npm install
           CHROMIUM_BIN=$(which chrome) npm run test
   cypress-run:
     runs-on: ubuntu-latest
@@ -43,6 +43,6 @@ jobs:
       - name: Run UI & run Cypress tests in Chrome and Firefox
         run: |
           cd components/centraldashboard
-          npm i --legacy-peer-deps
+          npm i
           npm run dev & npx wait-on http://localhost:8080
           npm run ui-test-ci-all
