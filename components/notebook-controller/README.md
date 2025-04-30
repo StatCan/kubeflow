@@ -1,7 +1,6 @@
 # Notebook Controller
 
-The controller allows users to create a custom resource "Notebook" (jupyter
-notebook).
+The controller allows users to create a custom resource "Notebook" (jupyter notebook).
 
 It has been developed using **Golang** and
 **[Kubebuilder](https://book.kubebuilder.io/quick-start.html)**.
