@@ -119,7 +119,7 @@ jobs:
           github.event_name == 'pull_request' &&
           contains( github.event.pull_request.labels.*.name, 'auto-deploy')
         )
-      run: echo "::set-output name=boolean::true"
+      run: echo "boolean=true" >> "$GITHUB_OUTPUT"
 
     - name: Docker push
       if: steps.should-i-push.outputs.boolean == 'true'
@@ -133,4 +133,4 @@ jobs:
       uses: act10ns/slack@v1
       with: 
         status: failure
-        message: kubeflow build failed. https://github.com/StatCan/kubeflow/actions/runs/${{github.run_id}}
+        message: kubeflow build failed. https://github.com/StatCan/kubeflow/actions/runs/${{github.run_id}}i
