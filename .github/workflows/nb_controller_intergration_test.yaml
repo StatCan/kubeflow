@@ -3,9 +3,10 @@ on:
   pull_request:
     paths:
       - components/notebook-controller/**
-    branches:
-      - master
-      - v*-branch
+    types:
+      - 'opened'
+      - 'synchronize'
+      - 'reopened'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.number }}

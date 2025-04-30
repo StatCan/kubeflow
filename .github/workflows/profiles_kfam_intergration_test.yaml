@@ -4,9 +4,10 @@ on:
     paths:
       - components/profile-controller/**
       - components/access-management/**
-    branches:
-      - master
-      - v*-branch
+    types:
+      - 'opened'
+      - 'synchronize'
+      - 'reopened'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.number }}
