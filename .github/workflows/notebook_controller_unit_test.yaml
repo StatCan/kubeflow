@@ -3,6 +3,10 @@ on:
   pull_request:
     paths:
       - components/notebook-controller/**
+    types:
+      - 'opened'
+      - 'synchronize'
+      - 'reopened'
 
 jobs:
   build:

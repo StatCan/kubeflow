@@ -165,7 +165,7 @@ describe('KubernetesService', () => {
         ]
       } as unknown;  // needed to work around TS compiler
       mockApiClient.listNamespacedEvent.and.returnValue(Promise.resolve(
-          {response: mockResponse, body: response as k8s.V1EventList}));
+          {response: mockResponse, body: response as k8s.CoreV1EventList}));
 
       const events = await k8sService.getEventsForNamespace('kubeflow');
       const eventNames = events.map((n) => n.metadata.name);

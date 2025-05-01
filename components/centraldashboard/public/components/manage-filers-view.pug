@@ -62,7 +62,7 @@ section#Main-Content
                         button#shareSubmit(type="submit", on-click="updateShares") {{localize('manageFilersView.btnSubmit')}}
             template(is='dom-if', if="[[sharesErrors]]")
                 div.errorDiv
-                    b Latest Errors
+                    b {{localize('manageFilersView.lblLatestError')}}
                     table
                         template(is='dom-repeat', items='[[formatErrors(sharesErrors)]]')
                             tr 

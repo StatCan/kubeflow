@@ -12,32 +12,49 @@
     {
       "text": "Create a new Notebook server",
       "desc": "Notebook Servers",
-      "link": "/en/new?ns={ns}",
+      "link": "/en/new",
       "type": "internal"
+    },
+    {
+      "text": "New Feature Request",
+      "desc": "Request a new feature",
+      "link": "https://jirab.statcan.ca/browse/ZPS",
+      "type": "external"
+    },
+    {
+      "text": "Report a Bug",
+      "desc": "If an unexpected error occurs within the Zone",
+      "link": "https://teams.microsoft.com/l/channel/19%3A6b1e8caa87c34cab8ea7aaca66431bf0%40thread.tacv2/Incident%20Report%20-%20Rapport%20d%20incident?groupId=0650f167-deca-4966-b84f-b3494ab40b1d",
+      "type": "external"
     }
   ],
   "documentationItems": [
     {
-      "text": "Advanced Analytics Workspace Docs",
+      "text": "The Zone Documentation",
       "desc": "Helpful guides about our data and analysis tools",
-      "link": "https://statcan.github.io/aaw/"
+      "link": "https://zone.pages.cloud.statcan.ca/docs/en/"
     },
     {
-      "text": "Video Tutorial Series",
-      "desc": "YouTube playlist of videos for getting started with Advanced Analytics Workspace tools",
-      "link": "https://www.youtube.com/playlist?list=PL1zlA2D7AHugkDdiyeUHWOKGKUd3MB_nD"
+      "text": "The Zone Workshop",
+      "desc": "Basic instructions when new to the zone!",
+      "link": "https://054gc.sharepoint.com/:v:/s/BusinessTransformationProject-Projetdetransformationd%27affaires/EadkAnASIZpMtwg_AFcrpKgBB7m7DujjRW1qytlcvgtzyw?e=C43f5v"
     },
     {
-      "text": "Community Chat",
-      "desc": "Slack workspace for discussion/support - requires sign-up for emails outside @canada.ca",
-      "link": "https://statcan-aaw.slack.com/"
+      "text": "Advanced Instructions Video 1",
+      "desc": "Instruction for advanced users part 1",
+      "link": "https://054gc-my.sharepoint.com/:v:/g/personal/souheil_yazji_statcan_gc_ca/EdEcN9rRejJNt_WaxAmO5h0Bsi-PK3ZbTDrIxaka9yr0mA?e=sxEmIP&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D"
     },
     {
-      "text": "Official Kubeflow Docs",
-      "desc": "Advanced documentation for installing, running, and using Kubeflow",
-      "link": "https://www.kubeflow.org/docs/"
+      "text": "Advanced Instructions Video 2",
+      "desc": "Instruction for advanced users part 2",
+      "link": "https://054gc-my.sharepoint.com/:v:/g/personal/souheil_yazji_statcan_gc_ca/EX4R2PbQmm5DjeXzL2DQtuUBgp1MJiQ2GCoWtxqcVBGuwQ?e=PCfB2f"
+    },
+    {
+      "text": "Advanced Instructions Video 3",
+      "desc": "Instruction for advanced users part 3",
+      "link": "https://054gc-my.sharepoint.com/:v:/g/personal/souheil_yazji_statcan_gc_ca/Eb6J5KMIPWZAoU33m7iesZkBs1HDx0OT8rLSn_Sr-QtlnA?e=8Ni8jg"
     }
-  ],
+   ],
   "securityMessages": [
     "Statistics Canada networks are routinely monitored to ensure user compliance with the DAS Terms and Conditions. Inappropriate or unauthorized use of DAS will result in removal of all privileges and access to the DAS environments."
   ]

@@ -97,6 +97,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
             dashVersion: {type: String, value: VERSION},
             logoutUrl: {type: String, value: '/logout'},
             platformInfo: Object,
+            metrics: Object,
             inIframe: {type: Boolean, value: false, readOnly: true},
             hideTabs: {type: Boolean, value: false, readOnly: true},
             hideSidebar: {type: Boolean, value: false, readOnly: true},
@@ -423,6 +424,26 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
             queryParams);
     }
 
+
+    /**
+     * Parse namespace in external links
+     * @param {string} href - external link
+     * @param {Object} queryParamsChange - queryParams updated on-the-fly
+     * @return {string}
+     */
+    _buildExternalHref(href, queryParamsChange) {
+        // The "queryParams" value from "queryParamsChange" is not updated as
+        // expected in the "iframe-link", but it works in anchor element.
+        // A temporary workaround is  to use "this.queryParams" as an input
+        // instead of "queryParamsChange.base".
+        // const queryParams = queryParamsChange.base;
+        const queryParams = this.queryParams;
+        if (!queryParams || !queryParams['ns']) {
+            return href.replace('{ns}', '');
+        }
+        return href.replace('{ns}', queryParams['ns']);
+    }
+
     /**
      * Builds the new iframeSrc string based on the subroute path, current
      * hash fragment, and the query string parameters other than ns.
@@ -531,7 +552,16 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
     }
 
     _toggleMenuSection(e) {
-        e.target.nextElementSibling.toggle();
+        // look upwards until we find <paper-item>
+        let el = e.target;
+        while (el && el.tagName !== 'PAPER-ITEM') {
+            el = el.parentElement;
+        }
+
+        // if we found paper-item, the next sibling is the section
+        if (el) {
+            el.nextElementSibling.toggle();
+        }
     }
 
     /**
@@ -572,7 +602,25 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
             // This case is for non-identity networks, that have no namespaces
             this._setRegistrationFlow(true);
         }
-        this.ownedNamespace = namespaces.find((n) => n.role == 'owner');
+        // this.ownedNamespace = namespaces.find((n) => n.role == 'owner');
+        const ownedNamespaces = [];
+        const editNamespaces = [];
+        const viewNamespaces = [];
+        if (this.namespaces.length) {
+            this.namespaces.forEach((ns) => {
+                if (ns.role === 'owner') {
+                    ownedNamespaces.push(ns);
+                } else if (ns.role === 'contributor') {
+                    editNamespaces.push(ns);
+                } else if (ns.role === 'viewer') {
+                    viewNamespaces.push(ns);
+                }
+            });
+            this.ownedNamespaces = ownedNamespaces;
+            this.editNamespaces = editNamespaces;
+            this.viewNamespaces = viewNamespaces;
+            this.hasNamespaces = true;
+        }
         this.multiOwnedNamespaces = ownerRoleNamespaces;
         this.platformInfo = platform;
         const kVer = this.platformInfo.kubeflowVersion;

@@ -12,6 +12,8 @@ on:
       - 'opened'
       - 'synchronize'
       - 'reopened'
+  schedule: 
+    - cron: '0 22 * * *'   
 # Environment variables available to all jobs and steps in this workflow
 env:
   REGISTRY_NAME: k8scc01covidacr
@@ -52,7 +54,7 @@ jobs:
         login-server: ${{ env.REGISTRY_NAME }}.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
-        
+
     # Connect to DEV Azure Container registry (ACR)
     - uses: azure/docker-login@v1
       with:
@@ -105,7 +107,6 @@ jobs:
             exit 1
           fi
         done
-
     # Pushes if this is a push to master or an update to a PR that has auto-deploy label
     - name: Test if we should push to ACR
       id: should-i-push
@@ -115,7 +116,7 @@ jobs:
           github.event_name == 'pull_request' &&
           contains( github.event.pull_request.labels.*.name, 'auto-deploy')
         )
-      run: echo "::set-output name=boolean::true"
+      run: echo "boolean=true" >> "$GITHUB_OUTPUT"
 
     - name: Docker push
       if: steps.should-i-push.outputs.boolean == 'true'

@@ -1,7 +1,6 @@
 # Notebook Controller
 
-The controller allows users to create a custom resource "Notebook" (jupyter
-notebook).
+The controller allows users to create a custom resource "Notebook" (jupyter notebook).
 
 It has been developed using **Golang** and
 **[Kubebuilder](https://book.kubebuilder.io/quick-start.html)**.
@@ -22,18 +21,6 @@ spec:
       containers:
         - name: my-notebook
           image: kubeflownotebookswg/jupyter:master
-          args:
-            [
-              "start.sh",
-              "lab",
-              "--LabApp.token=''",
-              "--LabApp.allow_remote_access='True'",
-              "--LabApp.allow_root='True'",
-              "--LabApp.ip='*'",
-              "--LabApp.base_url=/test/my-notebook/",
-              "--port=8888",
-              "--no-browser",
-            ]
 ```
 
 The required fields are `containers[0].image` and (`containers[0].command` and/or `containers[0].args`).
