@@ -133,4 +133,4 @@ jobs:
       uses: act10ns/slack@v1
       with: 
         status: failure
-        message: kubeflow build failed. https://github.com/StatCan/kubeflow/actions/runs/${{github.run_id}}i
+        message: kubeflow build failed. https://github.com/StatCan/kubeflow/actions/runs/${{github.run_id}}
