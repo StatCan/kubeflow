@@ -35,7 +35,7 @@ export function getFormDefaults(): FormGroup {
           accessModes: [['ReadWriteOnce']],
           resources: fb.group({
             requests: fb.group({
-              storage: ['5Gi'],
+              storage: ['10Gi'],
             }),
           }),
         }),

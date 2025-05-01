@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 })
 export class VolumeSizeComponent implements OnInit {
   private ctrl: FormControl;
+  private sub: Subscription;
   public sizeNum = new FormControl(1, Validators.required);
 
   @Input()
@@ -16,26 +17,24 @@ export class VolumeSizeComponent implements OnInit {
     return this.ctrl;
   }
   set sizeCtrl(ctrl) {
-    const size = ctrl.value;
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
+
     this.ctrl = ctrl;
-    this.sizeNum.setValue(this.parseK8sGiSizeToInt(size));
+    this.sub = this.ctrl.valueChanges.subscribe(size => {
+      this.sizeNum.setValue(this.parseK8sGiSizeToInt(size));
+    });
   }
 
   constructor() {}
 
   ngOnInit(): void {
-    // This is used for the form, and does not contain Gi
     this.sizeNum.setValue(this.parseK8sGiSizeToInt(this.sizeCtrl.value));
-
-    // This is the FormGroup's control value, and we want Gi here
     this.sizeCtrl.setValue(`${this.sizeNum.value}Gi`);
 
     this.sizeNum.valueChanges.subscribe(size => {
-      if (size === null) {
-        this.sizeCtrl.setValue('');
-      } else {
-        this.sizeCtrl.setValue(`${size}Gi`, { emitEvent: false });
-      }
+      this.sizeCtrl.setValue(`${size}Gi`, { emitEvent: false });
     });
   }
 

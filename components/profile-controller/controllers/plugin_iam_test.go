@@ -307,6 +307,7 @@ func TestIsAnnotateOnly(t *testing.T) {
 	// Check that the result is true
 	assert.True(t, aws.isAnnotateOnly())
 
+
 	aws = &AwsIAMForServiceAccount{AnnotateOnly: false}
 	// Check that the result is true
 	assert.False(t, aws.isAnnotateOnly())

@@ -3,6 +3,7 @@
  */
 export enum NEW_VOLUME_TYPE {
   EMPTY = 'Empty',
+  ROK_SNAPSHOT = 'Rok snapshot',
   CUSTOM = 'Custom',
 }
 

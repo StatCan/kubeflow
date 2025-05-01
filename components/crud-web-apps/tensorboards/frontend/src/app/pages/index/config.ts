@@ -59,7 +59,7 @@ const actionsCol: TableColumn = {
   value: new ActionListValue([
     new ActionButtonValue({
       name: 'connect',
-      tooltip: $localize`Connect to the Tensorboard Server`,
+      tooltip: $localize`Connect to the Tensorboaard Server`,
       color: 'primary',
       field: 'connectAction',
       text: $localize`CONNECT`,

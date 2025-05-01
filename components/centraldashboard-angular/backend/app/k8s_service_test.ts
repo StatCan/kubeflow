@@ -7,6 +7,7 @@ describe('KubernetesService', () => {
   let mockResponse: jasmine.SpyObj<IncomingMessage>;
   let mockKubeConfig: jasmine.SpyObj<k8s.KubeConfig>;
   let mockApiClient: jasmine.SpyObj<k8s.Core_v1Api>;
+  let mockCustomApiClient: jasmine.SpyObj<k8s.Custom_objectsApi>;
   let k8sService: KubernetesService;
 
   beforeEach(() => {
@@ -18,8 +19,12 @@ describe('KubernetesService', () => {
     ]);
     mockApiClient = jasmine.createSpyObj<k8s.Core_v1Api>(
         'mockApiClient', ['listNamespace', 'listNamespacedEvent', 'listNode']);
+    mockCustomApiClient = jasmine.createSpyObj<k8s.Custom_objectsApi>(
+        'mockCustomApiClient', ['listNamespacedCustomObject']);
     mockKubeConfig.makeApiClient.withArgs(k8s.Core_v1Api)
         .and.returnValue(mockApiClient);
+    mockKubeConfig.makeApiClient.withArgs(k8s.Custom_objectsApi)
+        .and.returnValue(mockCustomApiClient);
 
     k8sService = new KubernetesService(mockKubeConfig);
   });
@@ -205,17 +210,25 @@ describe('KubernetesService', () => {
           }
         ]
       };
+      const listApplicationsResponse = {
+        items: [{
+          apiVersion: 'app.k8s.io/v1beta1',
+          kind: 'Application',
+          spec: {descriptor: {type: 'kubeflow', version: '1.0.0'}}
+        }]
+      };
       mockApiClient.listNode.and.returnValue(Promise.resolve(
           {response: mockResponse, body: listNodeResponse as k8s.V1NodeList}));
+      mockCustomApiClient.listNamespacedCustomObject.and.returnValue(
+          Promise.resolve(
+              {response: mockResponse, body: listApplicationsResponse}));
 
       const platformInfo = await k8sService.getPlatformInfo();
       expect(platformInfo).toEqual({
         provider:
             'gce://kubeflow-dev/us-east1-d/gke-kubeflow-default-pool-59885f2c-08tm',
         providerName: 'gce',
-        buildLabel: 'Build',
-        buildVersion: null,
-        buildId: null,
+        kubeflowVersion: '1.0.0'
       });
     });
 
@@ -239,16 +252,24 @@ describe('KubernetesService', () => {
           }
         ]
       };
+      const listApplicationsResponse = {
+        items: [{
+          apiVersion: 'app.k8s.io/v1beta1',
+          kind: 'Application',
+          spec: {descriptor: {type: 'kubeflow', version: '1.0.0'}}
+        }]
+      };
       mockApiClient.listNode.and.returnValue(Promise.resolve(
           {response: mockResponse, body: response as k8s.V1NodeList}));
+      mockCustomApiClient.listNamespacedCustomObject.and.returnValue(
+          Promise.resolve(
+              {response: mockResponse, body: listApplicationsResponse}));
 
       const platformInfo = await k8sService.getPlatformInfo();
       expect(platformInfo).toEqual({
         provider: 'other://',
         providerName: 'other',
-        buildLabel: 'Build',
-        buildVersion: null,
-        buildId: null,
+        kubeflowVersion: '1.0.0'
       });
     });
 
@@ -282,29 +303,34 @@ describe('KubernetesService', () => {
       };
       mockApiClient.listNode.and.returnValue(Promise.resolve(
           {response: mockResponse, body: listNodeResponse as k8s.V1NodeList}));
+      mockCustomApiClient.listNamespacedCustomObject.and.returnValue(
+          Promise.resolve({
+            response: mockResponse,
+            body: {
+              items: [],
+            }
+          }));
 
       const platformInfo = await k8sService.getPlatformInfo();
       expect(platformInfo).toEqual({
         provider:
             'gce://kubeflow-dev/us-east1-d/gke-kubeflow-default-pool-59885f2c-08tm',
         providerName: 'gce',
-        buildLabel: 'Build',
-        buildVersion: null,
-        buildId: null,
+        kubeflowVersion: 'unknown'
       });
     });
 
     it('Returns defaults on error', async () => {
       mockApiClient.listNode.and.returnValue(
           Promise.reject({response: mockResponse, body: 'testing-error'}));
+      mockCustomApiClient.listNamespacedCustomObject.and.returnValue(
+          Promise.reject({response: mockResponse, body: 'testing-error'}));
 
       const platformInfo = await k8sService.getPlatformInfo();
       expect(platformInfo).toEqual({
         provider: 'other://',
         providerName: 'other',
-        buildLabel: 'Build',
-        buildVersion: null,
-        buildId: null,
+        kubeflowVersion: 'unknown'
       });
     });
   });

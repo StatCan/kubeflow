@@ -34,7 +34,6 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
 import { HelpPopoverModule } from '../help-popover/help-popover.module';
 import { RouterModule } from '@angular/router';
-import { StatusIconModule } from '../status-icon/status-icon.module';
 
 @NgModule({
   imports: [
@@ -68,7 +67,6 @@ import { StatusIconModule } from '../status-icon/status-icon.module';
     MatSelectModule,
     HelpPopoverModule,
     RouterModule,
-    StatusIconModule,
   ],
   declarations: [
     ResourceTableComponent,

@@ -7,28 +7,19 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./access-modes.component.scss'],
 })
 export class VolumeAccessModesComponent implements OnInit {
-  // Control used in the FormGroup and is always an array
-  private modesCtrlPrv: FormControl;
+  // modesArray is always an array
+  @Input() modesCtrl: FormControl;
 
-  @Input()
-  get modesCtrl(): FormControl {
-    return this.modesCtrlPrv;
-  }
-  set modesCtrl(ctrl) {
-    this.modesCtrlPrv = ctrl;
-
-    // Update the initial value of temp control.
-    // We expect the input Group to always have one value
-    const modes = ctrl.value;
-    this.mode.setValue(modes[0]);
-  }
-
-  // used in the form, takes the first value of the array
   mode = new FormControl('', Validators.required);
 
   constructor() {}
 
   ngOnInit(): void {
+    // Update the initial value of temp control.
+    // We expect the input Group to always have one value
+    const modes = this.modesCtrl.value;
+    this.mode.setValue(modes[0]);
+
     this.mode.valueChanges.subscribe(mode => {
       this.modesCtrl.setValue([mode]);
     });

@@ -1,17 +1,10 @@
 #!/bin/bash
-
-set -euo pipefail
-
-KIND_VERSION="0.22.0"
-KIND_URL="https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-linux-amd64"
-
-echo "Setting up kind environment..."
+set -e
+echo "Fetching KinD executable ..."
 sudo swapoff -a
 sudo rm -f /swapfile
 sudo mkdir -p /tmp/etcd
 sudo mount -t tmpfs tmpfs /tmp/etcd
-
-echo "Installing kind ${KIND_VERSION} ..."
-curl -sL -o kind "$KIND_URL"
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64
 chmod +x ./kind
 sudo mv kind /usr/local/bin

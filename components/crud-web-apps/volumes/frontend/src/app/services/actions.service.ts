@@ -3,7 +3,6 @@ import {
   ConfirmDialogService,
   DialogConfig,
   DIALOG_RESP,
-  SnackBarConfig,
   SnackBarService,
   SnackType,
 } from 'kubeflow';
@@ -36,13 +35,11 @@ export class ActionsService {
             ref.close(DIALOG_RESP.ACCEPT);
 
             const object = `${namespace}/${name}`;
-            const config: SnackBarConfig = {
-              data: {
-                msg: `${object}: Delete request was sent.`,
-                snackType: SnackType.Info,
-              },
-            };
-            this.snackBar.open(config);
+            this.snackBar.open(
+              `${object}: Delete request was sent.`,
+              SnackType.Info,
+              3000,
+            );
           },
           error: err => {
             const errorMsg = `Error ${err}`;

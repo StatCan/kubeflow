@@ -10,7 +10,6 @@
       *ngIf="!volGroup.disabled"
       (opened)="panelOpen = true"
       (closed)="panelOpen = false"
-      data-cy="workspace volume"
     >
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -22,7 +21,6 @@
             <div
               class="pvc-name truncate"
               [matTooltip]="getVolumeName(volGroup.value)"
-              data-cy="volume name header"
             >
               {{ getVolumeName(volGroup.value) }},
             </div>

@@ -21,6 +21,7 @@ import { NameNamespaceInputsComponent } from './name-namespace-inputs/name-names
 import { NameInputComponent } from './name-namespace-inputs/name-input/name-input.component';
 import { IconModule } from '../icon/icon.module';
 import { PositiveNumberInputComponent } from './positive-number-input/positive-number-input.component';
+import { RokUrlInputComponent } from './rok-url-input/rok-url-input.component';
 import { AdvancedOptionsComponent } from './advanced-options/advanced-options.component';
 import { PopoverModule } from '../popover/popover.module';
 import { SubmitBarComponent } from './submit-bar/submit-bar.component';
@@ -32,6 +33,7 @@ import { StepInfoComponent } from './step-info/step-info.component';
     NameNamespaceInputsComponent,
     NameInputComponent,
     PositiveNumberInputComponent,
+    RokUrlInputComponent,
     AdvancedOptionsComponent,
     SubmitBarComponent,
     StepInfoComponent,
@@ -55,6 +57,7 @@ import { StepInfoComponent } from './step-info/step-info.component';
     NameNamespaceInputsComponent,
     NameInputComponent,
     PositiveNumberInputComponent,
+    RokUrlInputComponent,
     AdvancedOptionsComponent,
     SubmitBarComponent,
     StepInfoComponent,

@@ -1,7 +1,6 @@
 from kubeflow.kubeflow.crud_backend import status
 from werkzeug.exceptions import BadRequest
 
-
 def parse_tensorboard(tensorboard):
     """
     Process the Tensorboard object and format it as the UI expects it.
@@ -30,7 +29,7 @@ def get_tensorboard_dict(namespace, body):
     """
     metadata = {
         "name": body["name"],
-        "namespace": namespace,
+        "namespace": namespace, 
     }
     labels = get_tensorboard_configurations(body=body)
     if labels:
@@ -45,15 +44,14 @@ def get_tensorboard_dict(namespace, body):
 
     return tensorboard
 
-
 def get_tensorboard_configurations(body):
     labels = body.get("configurations", None)
     cr_labels = {}
-
+    
     if not isinstance(labels, list):
         raise BadRequest("Labels for PodDefaults are not list: %s" % labels)
 
     for label in labels:
         cr_labels[label] = "true"
-
+    
     return cr_labels

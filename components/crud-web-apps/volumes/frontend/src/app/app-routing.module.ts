@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { IndexDefaultComponent } from './pages/index/index-default/index-default.component';
+import { IndexComponent } from './pages/index/index.component';
 import { VolumeDetailsPageComponent } from './pages/volume-details-page/volume-details-page.component';
 
 const routes: Routes = [
-  { path: '', component: IndexDefaultComponent },
+  { path: '', component: IndexComponent },
   {
     path: 'volume/details/:namespace/:pvcName',
     component: VolumeDetailsPageComponent,

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {
   ConfirmDialogService,
   DIALOG_RESP,
-  SnackBarConfig,
   SnackBarService,
   SnackType,
 } from 'kubeflow';
@@ -35,14 +34,11 @@ export class ActionsService {
           next: _ => {
             ref.close(DIALOG_RESP.ACCEPT);
             const object = `${namespace}/${name}`;
-            const config: SnackBarConfig = {
-              data: {
-                msg: `${object}: Delete request was sent.`,
-                snackType: SnackType.Info,
-              },
-              duration: 5000,
-            };
-            this.snackBar.open(config);
+            this.snackBar.open(
+              `${object}: Delete request was sent.`,
+              SnackType.Info,
+              5000,
+            );
           },
           error: err => {
             const errorMsg = `Error ${err}`;
@@ -70,13 +66,11 @@ export class ActionsService {
   startNotebook(namespace: string, name: string): Observable<string> {
     return new Observable(subscriber => {
       this.backend.startNotebook(namespace, name).subscribe(response => {
-        const config: SnackBarConfig = {
-          data: {
-            msg: $localize`Starting Notebook server '${name}'...`,
-            snackType: SnackType.Info,
-          },
-        };
-        this.snackBar.open(config);
+        this.snackBar.open(
+          $localize`Starting Notebook server '${name}'...`,
+          SnackType.Info,
+          3000,
+        );
 
         subscriber.next(response);
         subscriber.complete();
@@ -97,13 +91,12 @@ export class ActionsService {
         this.backend.stopNotebook(namespace, name).subscribe({
           next: _ => {
             ref.close(DIALOG_RESP.ACCEPT);
-            const config: SnackBarConfig = {
-              data: {
-                msg: $localize`Stopping Notebook server '${name}'...`,
-                snackType: SnackType.Info,
-              },
-            };
-            this.snackBar.open(config);
+
+            this.snackBar.open(
+              $localize`Stopping Notebook server '${name}'...`,
+              SnackType.Info,
+              3000,
+            );
           },
           error: err => {
             const errorMsg = `Error ${err}`;

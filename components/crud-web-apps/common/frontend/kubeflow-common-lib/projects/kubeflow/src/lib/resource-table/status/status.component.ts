@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Status, STATUS_TYPE } from './types';
 import { StatusValue } from '../types';
 
 @Component({
@@ -6,7 +7,13 @@ import { StatusValue } from '../types';
   templateUrl: './status.component.html',
   styleUrls: ['./status.component.scss'],
 })
-export class StatusComponent {
+export class StatusComponent implements OnInit {
   @Input() row: any;
   @Input() config: StatusValue;
+
+  STATUS_TYPE = STATUS_TYPE;
+
+  constructor() {}
+
+  ngOnInit() {}
 }

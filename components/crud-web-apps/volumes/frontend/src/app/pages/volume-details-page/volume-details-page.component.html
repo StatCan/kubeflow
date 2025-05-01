@@ -13,12 +13,13 @@
     <ng-container *ngIf="pvcInfoLoaded">
       <div class="details-page-inner">
         <div class="details-page-inner-2">
+          <lib-status-icon></lib-status-icon>
           <lib-status-icon
-            class="small-padding-right"
-            [phase]="status"
+            [stateChanging]="false"
+            [status]="status"
           ></lib-status-icon>
 
-          <div class="mat-title">{{ name }}</div>
+          <div class="title">{{ name }}</div>
         </div>
       </div>
       <mat-tab-group

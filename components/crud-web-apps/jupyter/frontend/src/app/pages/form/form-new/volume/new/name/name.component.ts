@@ -1,5 +1,10 @@
-import { Component, Input, OnDestroy } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 const NB_NAME_SUBST = '{notebook-name}';
@@ -9,7 +14,7 @@ const NB_NAME_SUBST = '{notebook-name}';
   templateUrl: './name.component.html',
   styleUrls: ['./name.component.scss'],
 })
-export class VolumeNameComponent implements OnDestroy {
+export class VolumeNameComponent implements OnInit, OnDestroy {
   private templatedName = '';
   private subs = new Subscription();
   private group: FormGroup;
@@ -25,11 +30,6 @@ export class VolumeNameComponent implements OnDestroy {
 
     // substitute {notebook-name}
     const nameCtrl = this.getNameCtrl(this.metadataGroup);
-
-    // update the templated path, with the new initial value
-    this.templatedName = nameCtrl.value;
-
-    // set the form's value based on the templated name
     setTimeout(() => {
       nameCtrl.setValue(
         this.templatedName.replace(NB_NAME_SUBST, this.externalName),
@@ -59,6 +59,10 @@ export class VolumeNameComponent implements OnDestroy {
   }
 
   constructor() {}
+
+  ngOnInit(): void {
+    this.templatedName = this.getNameCtrl(this.metadataGroup).value as string;
+  }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();

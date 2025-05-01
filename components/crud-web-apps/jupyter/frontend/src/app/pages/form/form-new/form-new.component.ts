@@ -2,12 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Config, NotebookFormObject } from 'src/app/types';
 import { Subscription } from 'rxjs';
-import {
-  NamespaceService,
-  SnackBarConfig,
-  SnackBarService,
-  SnackType,
-} from 'kubeflow';
+import { NamespaceService, SnackBarService, SnackType } from 'kubeflow';
 import { Router } from '@angular/router';
 import { getFormDefaults, initFormControls } from './utils';
 import { JWABackendService } from 'src/app/services/backend.service';
@@ -64,14 +59,11 @@ export class FormNewComponent implements OnInit, OnDestroy {
     this.backend.getDefaultStorageClass().subscribe(defaultClass => {
       if (defaultClass.length === 0) {
         this.defaultStorageclass = false;
-        const configWarning: SnackBarConfig = {
-          data: {
-            msg: $localize`No default Storage Class is set. Can't create new Disks for the new Notebook. Please use an Existing Disk.`,
-            snackType: SnackType.Warning,
-          },
-          duration: 0,
-        };
-        this.popup.open(configWarning);
+        this.popup.open(
+          $localize`No default Storage Class is set. Can't create new Disks for the new Notebook. Please use an Existing Disk.`,
+          SnackType.Warning,
+          0,
+        );
       } else {
         this.defaultStorageclass = true;
       }
@@ -99,7 +91,7 @@ export class FormNewComponent implements OnInit, OnDestroy {
 
     // Use the custom image instead
     if (notebook.customImageCheck) {
-      notebook.image = notebook.customImage?.trim();
+      notebook.image = notebook.customImage;
     } else if (notebook.serverType === 'group-one') {
       // Set notebook image from imageGroupOne
       notebook.image = notebook.imageGroupOne;
@@ -164,24 +156,16 @@ export class FormNewComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    const configInfo: SnackBarConfig = {
-      data: {
-        msg: 'Submitting new Notebook...',
-        snackType: SnackType.Info,
-      },
-    };
-    this.popup.open(configInfo);
+    this.popup.open('Submitting new Notebook...', SnackType.Info, 3000);
 
     const notebook = this.getSubmitNotebook();
     this.backend.createNotebook(notebook).subscribe(() => {
       this.popup.close();
-      const configSuccess: SnackBarConfig = {
-        data: {
-          msg: 'Notebook created successfully.',
-          snackType: SnackType.Success,
-        },
-      };
-      this.popup.open(configSuccess);
+      this.popup.open(
+        'Notebook created successfully.',
+        SnackType.Success,
+        3000,
+      );
       this.goToNotebooks();
     });
   }

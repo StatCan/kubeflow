@@ -55,10 +55,5 @@ export class ActionIconValue {
     if (iconInit === '') {
       this.iconInit = iconReady;
     }
-
-    if (tooltip) {
-      this.tooltipInit = tooltip;
-      this.tooltipReady = tooltip;
-    }
   }
 }

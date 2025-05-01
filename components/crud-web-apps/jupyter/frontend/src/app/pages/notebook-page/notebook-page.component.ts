@@ -4,7 +4,6 @@ import {
   STATUS_TYPE,
   ToolbarButton,
   PollerService,
-  Status,
 } from 'kubeflow';
 import { JWABackendService } from 'src/app/services/backend.service';
 import { Subscription } from 'rxjs';
@@ -25,6 +24,7 @@ export class NotebookPageComponent implements OnInit, OnDestroy {
   public notebook: NotebookRawObject;
   public notebookPod: V1Pod;
   public notebookInfoLoaded = false;
+  public notebookStateChanging = false;
   public podRequestCompleted = false;
   public podRequestError = '';
   public selectedTab = { index: 0, name: 'overview' };
@@ -130,8 +130,69 @@ export class NotebookPageComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
   }
 
-  get status(): Status {
-    return this.notebook.processed_status;
+  get status(): STATUS_TYPE {
+    const [status, state] = this.getStatusAndState(this.notebook);
+    this.notebookStateChanging = state;
+    return status;
+  }
+
+  getStatusAndState(
+    notebook: NotebookRawObject,
+  ): [status: STATUS_TYPE, state: boolean] {
+    if (!notebook) {
+      console.warn('warning');
+      return [STATUS_TYPE.WARNING, null];
+    }
+    // Although containerState has a field called terminated,
+    // field Waiting is set even when the Notebook is stopped.
+    // and we need to check in the .annotations too
+
+    // Check if the Notebook is terminating right now
+    if (
+      'kubeflow-resource-stopped' in notebook.metadata.annotations &&
+      notebook.status.readyReplicas > 0
+    ) {
+      this.notebookStateChanging = true;
+      return [STATUS_TYPE.TERMINATING, true];
+    }
+
+    // Check if the Notebook is stopped
+    if ('kubeflow-resource-stopped' in notebook.metadata.annotations) {
+      this.notebookStateChanging = false;
+      return [STATUS_TYPE.STOPPED, false];
+    }
+
+    // Check if the Notebook is running
+    if (notebook.status?.containerState?.running) {
+      this.notebookStateChanging = false;
+      return [STATUS_TYPE.READY, false];
+    }
+
+    if (notebook.status?.containerState?.waiting) {
+      this.notebookStateChanging = true;
+      return [STATUS_TYPE.WAITING, true];
+    }
+
+    return [STATUS_TYPE.UNINITIALIZED, true];
+  }
+
+  get statusIcon(): string {
+    return this.getStatusIcon(this.status);
+  }
+
+  getStatusIcon(status: STATUS_TYPE): string {
+    if (status === STATUS_TYPE.WARNING) {
+      return 'warning';
+    }
+    if (status === STATUS_TYPE.WAITING || status === STATUS_TYPE.TERMINATING) {
+      return 'timelapse';
+    } else if (status === STATUS_TYPE.READY) {
+      return 'check_circle';
+    } else if (status === STATUS_TYPE.STOPPED) {
+      return 'stop_circle';
+    } else {
+      return STATUS_TYPE.UNINITIALIZED;
+    }
   }
 
   private updateButtons() {
@@ -140,14 +201,14 @@ export class NotebookPageComponent implements OnInit, OnDestroy {
       new ToolbarButton({
         text: 'CONNECT',
         icon: 'developer_board',
-        disabled: this.status.phase === STATUS_TYPE.READY ? false : true,
+        disabled: this.status === STATUS_TYPE.READY ? false : true,
         tooltip: 'Connect to this notebook',
         fn: () => {
           this.connectToNotebook();
         },
       }),
     );
-    if (this.status.phase === 'stopped') {
+    if (this.status === 'stopped') {
       buttons.push(
         new ToolbarButton({
           text: 'START',
@@ -163,8 +224,7 @@ export class NotebookPageComponent implements OnInit, OnDestroy {
         new ToolbarButton({
           text: 'STOP',
           icon: 'stop',
-          disabled:
-            this.status.phase === STATUS_TYPE.TERMINATING ? true : false,
+          disabled: this.status === STATUS_TYPE.TERMINATING ? true : false,
           tooltip: 'Stop this notebook',
           fn: () => {
             this.stopNotebook();
@@ -176,7 +236,7 @@ export class NotebookPageComponent implements OnInit, OnDestroy {
       new ToolbarButton({
         text: 'DELETE',
         icon: 'delete',
-        disabled: this.status.phase === STATUS_TYPE.TERMINATING ? true : false,
+        disabled: this.status === STATUS_TYPE.TERMINATING ? true : false,
         tooltip: 'Delete this notebook',
         fn: () => {
           this.deleteNotebook();

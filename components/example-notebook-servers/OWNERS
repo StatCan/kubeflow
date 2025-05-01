@@ -1,7 +1,7 @@
 approvers:
-  - kimwnasptd
-  - thesuperzapper
-emeritus_approvers:
-  - DavidSpek
   - elikatsis
+  - kimwnasptd
   - StefanoFioravanzo
+  - thesuperzapper
+  - DavidSpek
+reviewers:

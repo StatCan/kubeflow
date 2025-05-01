@@ -61,6 +61,7 @@
         "generation": 2,
         "labels": {
           "access-ml-pipeline": "true",
+          "access-rok": "true",
           "app": "a-test-01"
         },
         "name": "a-test-01",

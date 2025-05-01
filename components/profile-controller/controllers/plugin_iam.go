@@ -29,7 +29,7 @@ const (
 
 type AwsIAMForServiceAccount struct {
 	AwsIAMRole   string `json:"awsIamRole,omitempty"`
-	AnnotateOnly bool   `json:"annotateOnly,omitempty"`
+	AnnotateOnly bool   `json:"AnnotateOnly,omitempty"`
 }
 
 // ApplyPlugin annotate service account with the ARN of the IAM role and update trust relationship of IAM role

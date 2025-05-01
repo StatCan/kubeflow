@@ -10,7 +10,7 @@ export enum STATUS_TYPE {
 }
 
 export interface Status {
-  phase: STATUS_TYPE;
+  phase: string;
   state: string;
   message: string;
 }

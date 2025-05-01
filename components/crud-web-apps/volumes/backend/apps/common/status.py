@@ -51,14 +51,15 @@ def viewer_status(viewer):
     Return a string representing the status of that viewer. If a deletion
     timestamp is set we want to return a `Terminating` state.
     """
-    if viewer is None or not viewer:
+    try:
+        ready = viewer["status"]["ready"]
+    except KeyError:
         return status.STATUS_PHASE.UNINITIALIZED
 
-    metadata = viewer.get("metadata", {})
-    if "deletionTimestamp" in metadata:
+    if "deletionTimestamp" in viewer["metadata"]:
         return status.STATUS_PHASE.TERMINATING
 
-    if viewer.get("status", {}).get("ready", False):
-        return status.STATUS_PHASE.READY
+    if not ready:
+        return status.STATUS_PHASE.WAITING
 
-    return status.STATUS_PHASE.WAITING
+    return status.STATUS_PHASE.READY

@@ -130,16 +130,6 @@ apps = [
         ],
     },
     {
-        "name": "PVCViewer Controller",
-        "kustomization": "components/pvcviewer-controller/config/base/kustomization.yaml",
-        "images": [
-            {
-                "name": "docker.io/kubeflownotebookswg/pvcviewer-controller",
-                "newName": "docker.io/kubeflownotebookswg/pvcviewer-controller",
-            },
-        ],
-    },
-    {
         "name": "Access Management",
         "kustomization": "components/profile-controller/config/overlays/kubeflow/kustomization.yaml",
         "images": [

@@ -33,12 +33,14 @@ declare global {
       mockNotebooksAllNamespacesRequest(namespace: string): Chainable<void>;
 
       /**
-       * Custom command to mock requests at '/api/storageclasses'
+       * Custom command to mock requests at
+       *  - '/api/storageclasses'
+       *  - '/api/rok/storageclasses'
        */
       mockStorageClassesRequests(): Chainable<void>;
 
       /**
-       * Custom command to mock requests at '/api/storageclasses/default'
+       * Custom command to mock requests at - '/api/storageclasses/default'
        * and returns parameter defaultStorageClass
        */
       mockDefaultStorageClassRequest(

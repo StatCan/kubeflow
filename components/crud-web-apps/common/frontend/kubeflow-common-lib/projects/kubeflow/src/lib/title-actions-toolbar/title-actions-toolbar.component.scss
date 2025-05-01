@@ -1,9 +1,14 @@
-@import '../../styles/variables.scss';
+@import '../variables.scss';
 
 :host {
   display: block;
   width: 100%;
   padding-top: 8px;
+}
+
+.title {
+  font-weight: 400;
+  font-size: 24px;
 }
 
 .back-button {

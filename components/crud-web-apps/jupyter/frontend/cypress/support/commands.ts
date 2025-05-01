@@ -41,7 +41,7 @@ Cypress.Commands.add('mockNotebooksAllNamespacesRequest', settingsNamespace => {
 
 Cypress.Commands.add('mockStorageClassesRequests', () => {
   cy.intercept('GET', '/api/storageclasses', {
-    storageClasses: ['standard'],
+    storageClasses: ['rok', 'standard'],
   });
 });
 
