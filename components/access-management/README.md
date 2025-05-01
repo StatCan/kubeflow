@@ -1,7 +1,7 @@
 # Kubeflow Access Management API
 
 Kubeflow Access Management API provides fine-grain user-namespace level access control.
-The goal is to support multi-tenancy kubeflow cluster / services..
+The goal is to support multi-tenancy kubeflow cluster / services.
 
 ## Resources under management
 
