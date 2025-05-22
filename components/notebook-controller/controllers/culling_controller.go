@@ -44,6 +44,8 @@ var CPU_THRESHOLD = 0.09
 var AFTER_HOURS_CPU_THRESHOLD = 0.1
 var IO_THRESHOLD = 0
 var AFTER_HOURS_IO_THRESHOLD = 2
+var WORKDAY_END_HOUR_UTC = 23
+var WORKDAY_START_HOUR_UTC = 10
 
 // When a Resource should be stopped/culled, then the controller should add this
 // annotation in the Resource's Metadata. Then, inside the reconcile loop,
@@ -160,8 +162,7 @@ func (r *CullingReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	cpuThreshold := CPU_THRESHOLD
 	ioThreshold := IO_THRESHOLD
 	cullIdleTime := CULL_IDLE_TIME
-	// Between 19:00 EST and 7:00 EST set cpu, io and cull
-	if time.Now().UTC().Hour() > 22 || time.Now().UTC().Hour() < 11 {
+	if time.Now().UTC().Hour() >= WORKDAY_END_HOUR_UTC || time.Now().UTC().Hour() <= WORKDAY_START_HOUR_UTC {
 		cpuThreshold = AFTER_HOURS_CPU_THRESHOLD
 		ioThreshold = AFTER_HOURS_IO_THRESHOLD
 		cullIdleTime = AFTER_HOURS_CULL_IDLE_TIME
@@ -602,6 +603,19 @@ func initGlobalVars() error {
 	if err != nil {
 		return err
 	}
+
+	workdayEnd := os.Getenv("WORKDAY_END_HOUR_UTC")
+	WORKDAY_END_HOUR_UTC, err = strconv.Atoi(workdayEnd)
+	if err != nil {
+		return err
+	}
+
+	workdayStart := os.Getenv("WORKDAY_START_HOUR_UTC")
+	WORKDAY_START_HOUR_UTC, err = strconv.Atoi(workdayStart)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
