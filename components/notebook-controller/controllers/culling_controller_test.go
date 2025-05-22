@@ -254,7 +254,7 @@ func TestNotebookIsIdle(t *testing.T) {
 				os.Setenv(envVar, val)
 			}
 			initGlobalVars()
-			if notebookIsIdle(c.meta, TestLogger) != c.result {
+			if notebookIsIdle(c.meta, TestLogger, 5) != c.result {
 				t.Errorf("ENV VAR: %+v\n", c.env)
 				t.Errorf("Wrong result for case object: %+v\n", c.meta)
 			}
