@@ -28,17 +28,27 @@ import (
 // used, if the respective ENV vars are not present.
 // All the time numbers correspond to minutes.
 
-const DEFAULT_CULL_IDLE_TIME = "1440" // One day
+const DEFAULT_CULL_IDLE_TIME = 30
+const DEFAULT_AFTER_HOURS_CULL_IDLE_TIME = 10
+const DEFAULT_CPU_THRESHOLD = 0.09
+const DEFAULT_AFTER_HOURS_CPU_THRESHOLD = 0.1
+const DEFAULT_IO_THRESHOLD = 0
+const DEFAULT_AFTER_HOURS_IO_THRESHOLD = 2
 const DEFAULT_IDLENESS_CHECK_PERIOD = "1"
 const DEFAULT_ENABLE_CULLING = "false"
 const DEFAULT_CLUSTER_DOMAIN = "cluster.local"
 const DEFAULT_DEV = "false"
 
-var CULL_IDLE_TIME = 0
+var CULL_IDLE_TIME = 30
 var ENABLE_CULLING = false
 var IDLENESS_CHECK_PERIOD = 0
 var CLUSTER_DOMAIN = ""
 var DEV = false
+var AFTER_HOURS_CULL_IDLE_TIME = 10
+var CPU_THRESHOLD = 0.09
+var AFTER_HOURS_CPU_THRESHOLD = 0.1
+var IO_THRESHOLD = 0
+var AFTER_HOURS_IO_THRESHOLD = 2
 
 // When a Resource should be stopped/culled, then the controller should add this
 // annotation in the Resource's Metadata. Then, inside the reconcile loop,
@@ -152,13 +162,22 @@ func (r *CullingReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	}
 
 	// Check if culling period has passed (IDLENESS_CHECK_PERIOD ~ default 1 min)
+	cpuThreshold := CPU_THRESHOLD
+	ioThreshold := IO_THRESHOLD
+	cullIdleTime := CULL_IDLE_TIME
+	// Between 18:00 EST and 7:00 EST set cpu, io and cull
+	if time.Now().UTC().Hour() > 22 || time.Now().UTC().Hour() < 11 {
+		cpuThreshold = AFTER_HOURS_CPU_THRESHOLD
+		ioThreshold = AFTER_HOURS_IO_THRESHOLD
+		cullIdleTime = AFTER_HOURS_CULL_IDLE_TIME
+	}
+
 	if !cullingCheckPeriodHasPassed(instance.ObjectMeta, r.Log) {
 		log.Info("Not enough time has passed. Won't check for culling.")
 		return ctrl.Result{RequeueAfter: getRequeueTime()}, nil
 	}
-
 	// Update the LAST_ACTIVITY_ANNOTATION and LAST_ACTIVITY_CHECK_TIMESTAMP_ANNOTATION
-	updateNotebookLastActivityAnnotation(&instance.ObjectMeta, r.Log)
+	updateNotebookLastActivityAnnotation(&instance.ObjectMeta, r.Log, cpuThreshold, ioThreshold)
 	updateLastCullingCheckTimestampAnnotation(&instance.ObjectMeta, r.Log)
 	// Always keep track of the last time we checked for culling
 	err = r.Update(ctx, instance)
@@ -167,7 +186,7 @@ func (r *CullingReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	}
 
 	// Check if the Notebook needs to be stopped
-	if notebookIsIdle(instance.ObjectMeta, r.Log) {
+	if notebookIsIdle(instance.ObjectMeta, r.Log, cullIdleTime) {
 		log.Info(fmt.Sprintf(
 			"Notebook %s/%s needs culling. Updating Notebook CR Annotations...",
 			instance.Namespace, instance.Name))
@@ -197,7 +216,7 @@ func cullingCheckPeriodHasPassed(meta metav1.ObjectMeta, log logr.Logger) bool {
 }
 
 // Culling Logic
-func notebookIsIdle(meta metav1.ObjectMeta, log logr.Logger) bool {
+func notebookIsIdle(meta metav1.ObjectMeta, log logr.Logger, cullIdleTime int) bool {
 	// Being idle means that the Notebook can be culled/stopped
 	if meta.GetAnnotations() != nil {
 		if StopAnnotationIsSet(meta) {
@@ -212,7 +231,8 @@ func notebookIsIdle(meta metav1.ObjectMeta, log logr.Logger) bool {
 			return false
 		}
 
-		timeCap := LastActivity.Add(time.Duration(CULL_IDLE_TIME) * time.Minute)
+		// Jose note: this is where we'd use a passed in bool to see if its after hours then just cull after 1 min of idle time.
+		timeCap := LastActivity.Add(time.Duration(cullIdleTime) * time.Minute)
 		if time.Now().After(timeCap) {
 			return true
 		}
@@ -315,7 +335,7 @@ func allKernelsAreIdle(kernels []KernelStatus, log logr.Logger) bool {
 }
 
 // Update LAST_ACTIVITY_ANNOTATION
-func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logger) {
+func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logger, cpuThreshold float64, ioThreshold int) {
 	updated := false
 
 	nm, ns := meta.GetName(), meta.GetNamespace()
@@ -331,7 +351,7 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 		ns, nm)
 	cpuMetrics := getNotebookMetrics(nm, ns, url.QueryEscape(cpuQuery), log)
 	if cpuMetrics != nil && len(cpuMetrics.Data.Result) > 0 {
-		updateTimestampFromMetrics(meta, "CPU usage", *cpuMetrics, 0.09, log, &updated)
+		updateTimestampFromMetrics(meta, "CPU usage", *cpuMetrics, cpuThreshold, log, &updated)
 		if updated {
 			return
 		}
@@ -339,9 +359,10 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 
 	ioQuery := fmt.Sprintf("ceil(sum by(container) (rate(container_fs_reads_total{device=~\"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)\", namespace=\"%s\", container=\"%s\"}[2m]) + rate(container_fs_writes_total{device=~\"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)\", namespace=\"%s\", container=\"%s\"}[2m])))",
 		ns, nm, ns, nm)
+	// Jose note: here we'd bump up the > 0 to be at least 2 to avoid DB connection and SAS keeping things online
 	ioMetrics := getNotebookMetrics(nm, ns, url.QueryEscape(ioQuery), log)
 	if ioMetrics != nil && len(ioMetrics.Data.Result) > 0 {
-		updateTimestampFromMetrics(meta, "Disk IO", *ioMetrics, 0, log, &updated)
+		updateTimestampFromMetrics(meta, "Disk IO", *ioMetrics, float64(ioThreshold), log, &updated)
 		if updated {
 			return
 		}
@@ -532,13 +553,13 @@ func initGlobalVars() error {
 		DEV = true
 	}
 
-	idleTime := GetEnvDefault("CULL_IDLE_TIME", DEFAULT_CULL_IDLE_TIME)
+	idleTime := GetEnvDefault("CULL_IDLE_TIME", strconv.Itoa(DEFAULT_CULL_IDLE_TIME))
 	realIdleTime, err := strconv.Atoi(idleTime)
 	if err != nil {
 		log.Info(fmt.Sprintf(
 			"CULL_IDLE_TIME should be Int. Got %s instead. Using default value.",
 			idleTime))
-		realIdleTime, _ = strconv.Atoi(DEFAULT_CULL_IDLE_TIME)
+		realIdleTime = DEFAULT_CULL_IDLE_TIME
 	}
 	CULL_IDLE_TIME = realIdleTime
 
@@ -556,6 +577,7 @@ func initGlobalVars() error {
 	}
 	IDLENESS_CHECK_PERIOD = period
 
+	// Have to set values for new vars
 	return nil
 }
 
