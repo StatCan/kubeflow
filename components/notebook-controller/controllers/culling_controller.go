@@ -29,11 +29,6 @@ import (
 // All the time numbers correspond to minutes.
 
 const DEFAULT_CULL_IDLE_TIME = 30
-const DEFAULT_AFTER_HOURS_CULL_IDLE_TIME = 10
-const DEFAULT_CPU_THRESHOLD = 0.09
-const DEFAULT_AFTER_HOURS_CPU_THRESHOLD = 0.1
-const DEFAULT_IO_THRESHOLD = 0
-const DEFAULT_AFTER_HOURS_IO_THRESHOLD = 2
 const DEFAULT_IDLENESS_CHECK_PERIOD = "1"
 const DEFAULT_ENABLE_CULLING = "false"
 const DEFAULT_CLUSTER_DOMAIN = "cluster.local"
@@ -165,7 +160,7 @@ func (r *CullingReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	cpuThreshold := CPU_THRESHOLD
 	ioThreshold := IO_THRESHOLD
 	cullIdleTime := CULL_IDLE_TIME
-	// Between 18:00 EST and 7:00 EST set cpu, io and cull
+	// Between 19:00 EST and 7:00 EST set cpu, io and cull
 	if time.Now().UTC().Hour() > 22 || time.Now().UTC().Hour() < 11 {
 		cpuThreshold = AFTER_HOURS_CPU_THRESHOLD
 		ioThreshold = AFTER_HOURS_IO_THRESHOLD
@@ -577,7 +572,36 @@ func initGlobalVars() error {
 	}
 	IDLENESS_CHECK_PERIOD = period
 
-	// Have to set values for new vars
+	// Make sure these exist in the configmap
+	afterHrCullTime := os.Getenv("AFTER_HOURS_CULL_IDLE_TIME")
+	AFTER_HOURS_CULL_IDLE_TIME, err = strconv.Atoi(afterHrCullTime)
+	if err != nil {
+		return err
+	}
+
+	cpuThresh := os.Getenv("CPU_THRESHOLD")
+	CPU_THRESHOLD, err = strconv.ParseFloat(cpuThresh, 64)
+	if err != nil {
+		return err
+	}
+
+	afterHrCpuThresh := os.Getenv("AFTER_HOURS_CPU_THRESHOLD")
+	AFTER_HOURS_CPU_THRESHOLD, err = strconv.ParseFloat(afterHrCpuThresh, 64)
+	if err != nil {
+		return err
+	}
+
+	ioThresh := os.Getenv("IO_THRESHOLD")
+	IO_THRESHOLD, err = strconv.Atoi(ioThresh)
+	if err != nil {
+		return err
+	}
+
+	afterHrIoThresh := os.Getenv("AFTER_HOURS_IO_THRESHOLD")
+	AFTER_HOURS_IO_THRESHOLD, err = strconv.Atoi(afterHrIoThresh)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
