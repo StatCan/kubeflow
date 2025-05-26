@@ -227,7 +227,6 @@ func notebookIsIdle(meta metav1.ObjectMeta, log logr.Logger, cullIdleTime int) b
 			return false
 		}
 
-		// Jose note: this is where we'd use a passed in bool to see if its after hours then just cull after 1 min of idle time.
 		timeCap := LastActivity.Add(time.Duration(cullIdleTime) * time.Minute)
 		if time.Now().After(timeCap) {
 			return true
@@ -355,7 +354,6 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 
 	ioQuery := fmt.Sprintf("ceil(sum by(container) (rate(container_fs_reads_total{device=~\"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)\", namespace=\"%s\", container=\"%s\"}[2m]) + rate(container_fs_writes_total{device=~\"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)\", namespace=\"%s\", container=\"%s\"}[2m])))",
 		ns, nm, ns, nm)
-	// Jose note: here we'd bump up the > 0 to be at least 2 to avoid DB connection and SAS keeping things online
 	ioMetrics := getNotebookMetrics(nm, ns, url.QueryEscape(ioQuery), log)
 	if ioMetrics != nil && len(ioMetrics.Data.Result) > 0 {
 		updateTimestampFromMetrics(meta, "Disk IO", *ioMetrics, float64(ioThreshold), log, &updated)
