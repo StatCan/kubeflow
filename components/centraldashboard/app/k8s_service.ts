@@ -93,6 +93,17 @@ export class KubernetesService {
     }
   }
 
+  /** Retrieves the configmap data for thebanner. */
+  async getBannerConfigMap(): Promise<k8s.V1ConfigMap> {
+    try {
+      const { body } = await this.coreAPI.readNamespacedConfigMap("banner-configmap",this.namespace);
+      return body;
+    } catch (err) {
+      console.error('Unable to fetch ConfigMap:', err.response?.body || err.body || err);
+      return null;
+    }
+  }
+
   /** Retrieves the user allowlist for the DEV central dashboard. */
   async getAllowlistConfigMap(): Promise<k8s.V1ConfigMap> {
     try {

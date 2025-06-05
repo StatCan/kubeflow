@@ -264,6 +264,28 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
     }
 
     /**
+     * Set state for loading registration flow in case no dashboard Banner exists
+     * @param {Event} ev AJAX-response
+     */
+    _onHasDashboardBannerError(ev) {
+        const error = ((ev.detail.request||{}).response||{}).error ||
+            ev.detail.error;
+        this.showError(error);
+        return;
+    }
+
+    /**
+     * Set state for Central dashboard Banner
+     * @param {Event} ev AJAX-response
+     */
+    _onHasDashboardBannerResponse(ev) {
+        const {
+            bannerMessages,
+        } = ev.detail.response;
+        this.bannerMessages = bannerMessages || [];
+    }
+
+    /**
      * Set state for loading registration flow in case no workgroup exists
      * @param {Event} ev AJAX-response
      */
