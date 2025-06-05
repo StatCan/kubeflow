@@ -45,6 +45,7 @@ import './resources/kubeflow-icons.js';
 import './iframe-container.js';
 import './logout-button.js';
 import './blocked-user-view.js';
+import './header-banner.js';
 import utilitiesMixin from './utilities-mixin.js';
 import {IFRAME_LINK_PREFIX} from './iframe-link.js';
 import {languages} from '../assets/i18n/languages.json';
@@ -89,6 +90,10 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
                 value: [],
             },
             securityMessages: {
+                type: Array,
+                value: [],
+            },
+            bannerMessages: {
                 type: Array,
                 value: [],
             },
@@ -246,12 +251,16 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
             quickLinks,
             documentationItems,
             securityMessages,
+            bannerMessages,
         } = ev.detail.response;
         this.menuLinks = menuLinks || [];
         this.externalLinks = externalLinks || [];
         this.quickLinks = quickLinks || [];
         this.documentationItems = documentationItems || [];
         this.securityMessages = securityMessages || [];
+        this.bannerMessages = bannerMessages || [];
+        // TODO: fix
+        this.bannerMessages = securityMessages || [];
     }
 
     /**
