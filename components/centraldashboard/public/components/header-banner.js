@@ -20,25 +20,49 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 export class HeaderBanner extends PolymerElement {
     static get template() {
         return html`
+            <style include="paper-material-styles">
+                .banner-content {
+                    display: flex;
+                    flex-direction: column;
+                    background-color: orange;
+                }
+                
+                .banner-item {
+                    botder: 1px solid black;
+                    display: flex;
+                    flex: 1 1 auto;
+                }
+                .banner-icon {
+                    width: 30px;
+                    background: purple;
+                    height: 100%;
+                    margin-right: 10px;
+                    align-self: center;
+                }
+
+                .banner-item-text{
+                    flex: 1;
+                    padding: 10 px;
+                    background: green;
+                    overflow-wrap: break-word;
+                }
+            </style>
             <section class="banner-content">
-                <div class="banner-icon">
-                    <iron-icon icon="info"></iron-icon>
-                </div>
-                <div>
-                    <template is="dom-if" if="[[!isMessagesList(msg)]]">
-                        <template is="dom-repeat" items="[[msg]]">
-                            <span>[[item]]</span>
-                        </template>
-                    </template>
-                    <template is="dom-if" if="[[isMessagesList(msg)]]">
-                        <ul>
-                            <template is="dom-repeat" items="[[msg]]">
-                                <li>[[item]]</li>
-                            </template>
-                        </ul>
-                    </template>
-                </div>
-            </div>
+                <template is="dom-repeat" items="[[msg]]">
+                    <section class="banner-item">
+                        <div class="banner-icon">
+                            <iron-icon icon="info"></iron-icon>
+                        </div>
+                        <div class="banner-item-text">[[item]]</div>
+                    </section>
+                    <section class="banner-item">
+                        <div class="banner-icon">
+                            <iron-icon icon="info"></iron-icon>
+                        </div>
+                        <div class="banner-item-text">[[item]]</div>
+                    <section>
+                </template>
+            </section>
         `;
     }
 
