@@ -54,7 +54,6 @@ export class HeaderBanner extends PolymerElement {
      * @return {boolean} Is a list.
      */
     isMessagesList(msg) {
-        console.log("MEOW", msg);
         return msg.length > 1;
     }
 }
