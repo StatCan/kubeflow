@@ -115,8 +115,8 @@ export class Api {
             const cm = await this.k8sService.getBannerConfigMap();
             let bannerData = {};
             try {
-              bannerData = JSON.parse(cm.data["banner"]);
-              // Filter out any that are out of day for start/end
+              const bannerRaw = JSON.parse(cm.data["banner"]);
+              bannerData = bannerRaw["notif"];
             }catch(e){
               return apiError({
                 res, code: 500,
