@@ -251,20 +251,15 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
             quickLinks,
             documentationItems,
             securityMessages,
-            bannerMessages,
         } = ev.detail.response;
         this.menuLinks = menuLinks || [];
         this.externalLinks = externalLinks || [];
         this.quickLinks = quickLinks || [];
         this.documentationItems = documentationItems || [];
         this.securityMessages = securityMessages || [];
-        this.bannerMessages = bannerMessages || [];
-        // TODO: fix
-        this.bannerMessages = securityMessages || [];
     }
 
     /**
-     * Set state for loading registration flow in case no dashboard Banner exists
      * @param {Event} ev AJAX-response
      */
     _onHasDashboardBannerError(ev) {
@@ -279,10 +274,22 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      * @param {Event} ev AJAX-response
      */
     _onHasDashboardBannerResponse(ev) {
-        const {
-            bannerMessages,
-        } = ev.detail.response;
-        this.bannerMessages = bannerMessages || [];
+        const rawBannerMessages = ev.detail.response;
+        const bannerMessages = [];
+        // Filter out the out of date messages
+        rawBannerMessages.forEach((msg) => {
+            const start = new Date(msg['start-date']);
+            const end = new Date(msg['end-date']);
+            const now = new Date(Date.now());
+
+            if ((end > now) && (now >= start)) {
+                // Does not handle language change gracefully
+                msg['message']=(this.language === 'en')?
+                    msg['enMessage'] : msg['frMessage'];
+                bannerMessages.push(msg);
+            }
+        });
+        this.bannerMessages = bannerMessages;
     }
 
     /**

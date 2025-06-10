@@ -24,17 +24,15 @@ export class HeaderBanner extends PolymerElement {
                 .banner-content {
                     display: flex;
                     flex-direction: column;
-                    background-color: orange;
                 }
                 
                 .banner-item {
-                    botder: 1px solid black;
                     display: flex;
                     flex: 1 1 auto;
+                    padding: 10px;
                 }
                 .banner-icon {
                     width: 30px;
-                    background: purple;
                     height: 100%;
                     margin-right: 10px;
                     align-self: center;
@@ -42,25 +40,37 @@ export class HeaderBanner extends PolymerElement {
 
                 .banner-item-text{
                     flex: 1;
-                    padding: 10 px;
-                    background: green;
+                    
                     overflow-wrap: break-word;
+                    align-self: center;
+
+                }
+                .info{
+                    color: #004085;
+                    background-color: #cce5ff;
+                    border-color: #b8daff;
+                }
+                .warning{
+                    color: #856404;
+                    background-color: #fff3cd;
+                    border-color: #ffeeba;
+                }
+                .error{
+                    color: #721c24;
+                    background-color: #f8d7da;
+                    border-color: #f5c6cb;
                 }
             </style>
             <section class="banner-content">
-                <template is="dom-repeat" items="[[msg]]">
-                    <section class="banner-item">
+                <template is="dom-repeat" items="[[msg]]" as="n">
+                    <section class$="banner-item {{n.type}}">
                         <div class="banner-icon">
-                            <iron-icon icon="info"></iron-icon>
+                            <iron-icon icon$="{{n.type}}"></iron-icon>
                         </div>
-                        <div class="banner-item-text">[[item]]</div>
+                        <div class="banner-item-text">                                              
+                                [[n.message]]
+                        </div>
                     </section>
-                    <section class="banner-item">
-                        <div class="banner-icon">
-                            <iron-icon icon="info"></iron-icon>
-                        </div>
-                        <div class="banner-item-text">[[item]]</div>
-                    <section>
                 </template>
             </section>
         `;
@@ -69,6 +79,10 @@ export class HeaderBanner extends PolymerElement {
     static get properties() {
         return {
             msg: Array,
+            language: {
+                type: String,
+                value: "fr"
+            }
         };
     }
 
@@ -79,6 +93,10 @@ export class HeaderBanner extends PolymerElement {
      */
     isMessagesList(msg) {
         return msg.length > 1;
+    }
+
+    bannerStyle(n) {
+        return n.type;
     }
 }
 
