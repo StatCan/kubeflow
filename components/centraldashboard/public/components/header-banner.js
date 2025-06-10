@@ -25,7 +25,6 @@ export class HeaderBanner extends PolymerElement {
                     display: flex;
                     flex-direction: column;
                 }
-                
                 .banner-item {
                     display: flex;
                     flex: 1 1 auto;
@@ -37,13 +36,10 @@ export class HeaderBanner extends PolymerElement {
                     margin-right: 10px;
                     align-self: center;
                 }
-
                 .banner-item-text{
-                    flex: 1;
-                    
+                    flex: 1; 
                     overflow-wrap: break-word;
                     align-self: center;
-
                 }
                 .info{
                     color: #004085;
