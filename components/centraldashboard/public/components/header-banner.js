@@ -63,7 +63,7 @@ export class HeaderBanner extends PolymerElement {
                             <iron-icon icon$="{{n.type}}"></iron-icon>
                         </div>
                         <div class="banner-item-text">
-                            [[n.message]]
+                            [[displayMessage(n, language)]]
                         </div>
                     </section>
                 </template>
@@ -79,6 +79,16 @@ export class HeaderBanner extends PolymerElement {
                 value: 'fr',
             },
         };
+    }
+    /**
+     * Display the right text depending on language
+     * @param {Object} notification
+     * @param {string} language
+     * @return {string} message in the correct language
+     */
+    displayMessage(notification, language) {
+        return language == 'en' ?
+            notification['enMessage'] : notification['frMessage'];
     }
 }
 

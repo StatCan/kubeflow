@@ -278,14 +278,12 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
         const bannerMessages = [];
         // Filter out the out of date messages
         rawBannerMessages.forEach((msg) => {
-            const start = new Date(msg['start-date']);
-            const end = new Date(msg['end-date']);
-            const now = new Date(Date.now());
+            // formats all the dates Tue May 12 2020 to compare
+            const start = new Date(msg['start-date']).toDateString();
+            const end = new Date(msg['end-date']).toDateString();
+            const now = new Date(Date.now()).toDateString();
 
-            if ((end > now) && (now >= start)) {
-                // Does not handle language change gracefully
-                msg['message']=(this.language === 'en')?
-                    msg['enMessage'] : msg['frMessage'];
+            if ((end >= now) && (now >= start)) {
                 bannerMessages.push(msg);
             }
         });

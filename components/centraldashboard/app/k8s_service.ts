@@ -93,10 +93,10 @@ export class KubernetesService {
     }
   }
 
-  /** Retrieves the configmap data for thebanner. */
+  /** Retrieves the configmap data for the banner. */
   async getBannerConfigMap(): Promise<k8s.V1ConfigMap> {
     try {
-      const { body } = await this.coreAPI.readNamespacedConfigMap("banner-configmap",this.namespace);
+      const { body } = await this.coreAPI.readNamespacedConfigMap("banner-config",this.namespace);
       return body;
     } catch (err) {
       console.error('Unable to fetch ConfigMap:', err.response?.body || err.body || err);
