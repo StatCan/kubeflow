@@ -14,9 +14,8 @@ import './card-styles.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 
 /**
- * Component to retrieve and display recently modified Jupyter Notebooks.
+ * Component to display the banner messages
  */
-/* eslint-disable */
 export class HeaderBanner extends PolymerElement {
     static get template() {
         return html`
@@ -63,8 +62,8 @@ export class HeaderBanner extends PolymerElement {
                         <div class="banner-icon">
                             <iron-icon icon$="{{n.type}}"></iron-icon>
                         </div>
-                        <div class="banner-item-text">                                              
-                                [[n.message]]
+                        <div class="banner-item-text">
+                            [[n.message]]
                         </div>
                     </section>
                 </template>
@@ -77,22 +76,9 @@ export class HeaderBanner extends PolymerElement {
             msg: Array,
             language: {
                 type: String,
-                value: "fr"
-            }
+                value: 'fr',
+            },
         };
-    }
-
-    /**
-     * Check if messages is a list
-     * @param {string} msg
-     * @return {boolean} Is a list.
-     */
-    isMessagesList(msg) {
-        return msg.length > 1;
-    }
-
-    bannerStyle(n) {
-        return n.type;
     }
 }
 
