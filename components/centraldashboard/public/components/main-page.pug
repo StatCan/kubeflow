@@ -4,6 +4,8 @@ iron-ajax(auto, url='/api/metrics', handle-as='json',
     last-response='{{metrics}}', loading='{{pageLoading}}')
 iron-ajax(auto, id='ajax-dashboard-links', url='/api/dashboard-links', handle-as='json', params='[[_getLanguageParams()]]',
     on-response='_onHasDashboardLinksResponse', on-error='_onHasDashboardLinksError', loading='{{pageLoading}}')
+iron-ajax(auto, id='ajax-banner', url='/api/dashboard-banner', handle-as='json', 
+    on-response='_onHasDashboardBannerResponse', on-error='_onHasDashboardBannerError', loading='{{pageLoading}}')
 iron-ajax#envInfo(auto='[[_shouldFetchEnv]]', url='/api/workgroup/env-info', handle-as='json',
     on-response='_onEnvInfoResponse')
 iron-ajax(auto, url="[[getNotebookServersUrl]]", handle-as="json",
@@ -63,7 +65,8 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
         footer.footer
             section.information
     app-header-layout(fullbleed)
-        app-header(slot='header', hides, hidden$='[[notFoundInIframe]]')
+        app-header(hides, hidden$='[[notFoundInIframe]]')
+            header-banner(msg='[[bannerMessages]]', language='[[language]]')
             app-toolbar
                 template(is='dom-if', if='![[persistent]]')
                     aside#Narrow-Slider(hides, hidden$='[[!narrowMode]]')

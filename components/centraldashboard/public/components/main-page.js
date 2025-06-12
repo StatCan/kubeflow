@@ -45,6 +45,7 @@ import './resources/kubeflow-icons.js';
 import './iframe-container.js';
 import './logout-button.js';
 import './blocked-user-view.js';
+import './header-banner.js';
 import utilitiesMixin from './utilities-mixin.js';
 import {IFRAME_LINK_PREFIX} from './iframe-link.js';
 import {languages} from '../assets/i18n/languages.json';
@@ -89,6 +90,10 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
                 value: [],
             },
             securityMessages: {
+                type: Array,
+                value: [],
+            },
+            bannerMessages: {
                 type: Array,
                 value: [],
             },
@@ -252,6 +257,37 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
         this.quickLinks = quickLinks || [];
         this.documentationItems = documentationItems || [];
         this.securityMessages = securityMessages || [];
+    }
+
+    /**
+     * @param {Event} ev AJAX-response
+     */
+    _onHasDashboardBannerError(ev) {
+        const error = ((ev.detail.request||{}).response||{}).error ||
+            ev.detail.error;
+        this.showError(error);
+        return;
+    }
+
+    /**
+     * Set state for Central dashboard Banner
+     * @param {Event} ev AJAX-response
+     */
+    _onHasDashboardBannerResponse(ev) {
+        const rawBannerMessages = ev.detail.response;
+        const bannerMessages = [];
+        // Filter out the out of date messages
+        rawBannerMessages.forEach((msg) => {
+            // formats all the dates Tue May 12 2020 to compare
+            const start = new Date(msg['start-date']).toDateString();
+            const end = new Date(msg['end-date']).toDateString();
+            const now = new Date(Date.now()).toDateString();
+
+            if ((end >= now) && (now >= start)) {
+                bannerMessages.push(msg);
+            }
+        });
+        this.bannerMessages = bannerMessages;
     }
 
     /**

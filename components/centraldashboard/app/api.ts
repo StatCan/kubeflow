@@ -8,6 +8,7 @@ export const ERRORS = {
   no_metrics_service_configured: 'No metrics service configured',
   operation_not_supported: 'Operation not supported',
   invalid_links_config: 'Cannot load dashboard menu link',
+  invalid_banner_config: 'Cannot load banner content',
   invalid_settings: 'Cannot load dashboard settings',
   invalid_get_filers: 'Failed to load filers',
   invalid_get_existing_shares: 'Failed to load existing shares',
@@ -107,6 +108,22 @@ export class Api {
               });
             }
             res.json(langLinks);
+          })
+        .get(
+          '/dashboard-banner',
+          async (req: Request, res: Response) => {
+            const cm = await this.k8sService.getBannerConfigMap();
+            let bannerData = {};
+            try {
+              const bannerRaw = JSON.parse(cm.data["banner"]);
+              bannerData = bannerRaw["notif"];
+            }catch(e){
+              return apiError({
+                res, code: 500,
+                error: ERRORS.invalid_banner_config,
+              });
+            }
+            res.json(bannerData);
           })
         .get(
           '/dashboard-settings',
