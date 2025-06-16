@@ -234,9 +234,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      * @param {Event} ev AJAX-response
      */
     _onHasDashboardLinksError(ev) {
-        const error = ((ev.detail.request||{}).response||{}).error ||
-            ev.detail.error;
-        this.showError(error);
+        this.showError('mainPage.errGetDashLinks');
         return;
     }
 
@@ -263,9 +261,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
      * @param {Event} ev AJAX-response
      */
     _onHasDashboardBannerError(ev) {
-        const error = ((ev.detail.request||{}).response||{}).error ||
-            ev.detail.error;
-        this.showError(error);
+        this.showError('mainPage.errGetBanner');
         return;
     }
 
@@ -279,11 +275,12 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
         // Filter out the out of date messages
         rawBannerMessages.forEach((msg) => {
             // formats all the dates Tue May 12 2020 to compare
-            const start = new Date(msg['start-date']).toDateString();
-            const end = new Date(msg['end-date']).toDateString();
-            const now = new Date(Date.now()).toDateString();
+            const now = new Date().toLocaleDateString();
 
-            if ((end >= now) && (now >= start)) {
+            if ((new Date(msg['end-date']).getTime()
+                    >= new Date(now).getTime()) &&
+                (new Date(now).getTime() >=
+                    new Date(msg['start-date']).getTime())) {
                 bannerMessages.push(msg);
             }
         });
