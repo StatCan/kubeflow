@@ -64,8 +64,8 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                     iron-icon.external(icon="launch")
         footer.footer
             section.information
-    app-header-layout(fullbleed)
-        app-header(hides, hidden$='[[notFoundInIframe]]')
+    app-header-layout#mainHeaderLayout(fullbleed)
+        app-header#mainHeader(slot='header', hides, hidden$='[[notFoundInIframe]]')
             header-banner(msg='[[bannerMessages]]', language='[[language]]')
             app-toolbar
                 template(is='dom-if', if='![[persistent]]')

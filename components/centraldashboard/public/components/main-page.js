@@ -285,6 +285,16 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
             }
         });
         this.bannerMessages = bannerMessages;
+
+        // styling fixes to the header layout
+        // when there are banner messages to display
+        if (bannerMessages.length > 0) {
+            const shadowStyle = this.$.mainHeaderLayout.shadowRoot
+                .lastElementChild.lastElementChild.style;
+            shadowStyle['padding-top'] = '0px';
+            const mainHeader = this.$.mainHeader;
+            mainHeader.style.position = 'sticky';
+        }
     }
 
     /**
