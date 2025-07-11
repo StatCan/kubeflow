@@ -23,6 +23,19 @@
     margin: 0 auto;
 }
 
+.release-notes {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.release-notes-markdown {
+    padding: 0.5em 1em;
+}
+
+.release-notes-markdown a {
+    color: revert;
+}
+
 .security-messages {
     width: 80%;
     margin: 0 auto;
