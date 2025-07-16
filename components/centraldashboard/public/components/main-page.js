@@ -26,6 +26,8 @@ import '@polymer/neon-animation/animations/fade-out-animation.js';
 // eslint-disable-next-line max-len
 import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-behavior.js';
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
+// eslint-disable-next-line max-len
+import {IronResizableBehavior} from '@polymer/iron-resizable-behavior/iron-resizable-behavior.js';
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
 import css from './main-page.css';
@@ -54,7 +56,7 @@ import {languages} from '../assets/i18n/languages.json';
  * Entry point for application UI.
  */
 // eslint-disable-next-line max-len
-export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMixin(PolymerElement)) {
+export class MainPage extends mixinBehaviors([AppLocalizeBehavior, IronResizableBehavior], utilitiesMixin(PolymerElement)) {
     static get template() {
         const vars = {logo};
         return html([
@@ -289,7 +291,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior], utilitiesMix
         // fixes the header layout
         // when there are banner messages to display
         if (bannerMessages.length > 0) {
-            window.dispatchEvent(new Event('resize'));
+            this.notifyResize();
         }
     }
 
