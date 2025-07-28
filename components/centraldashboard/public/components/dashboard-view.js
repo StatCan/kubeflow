@@ -66,8 +66,8 @@ export class DashboardView extends mixinBehaviors([AppLocalizeBehavior], utiliti
     }
 
     _onGetReleaseNotes(ev) {
-        const releaseNotes = ev.detail.response.body;
-        this.releaseNotes = releaseNotes;
+        this.releaseNotes = ev.detail.response.body;
+        this.releaseNotesDateTime = ev.detail.response.published_at;
     }
 
     _onErrorReleaseNotes(ev) {

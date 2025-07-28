@@ -61,6 +61,11 @@ div#grid
                             slot='item-icon', alt='[[item.text]]', tabindex=-1)
 .release-notes
     paper-card(heading="{{localize('dashboardView.releaseNotes')}}")
+        aside(secondary) 
+            p 
+                | {{localize('dashboardView.releaseNotesLastUpdated')}}: [[releaseNotesDateTime]]
+                br 
+                | {{localize('dashboardView.releaseNotesEnglish')}}
         marked-element.release-notes-markdown(markdown="[[releaseNotes]]")
             div(slot="markdown-html")
     
