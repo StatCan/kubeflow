@@ -15,15 +15,42 @@ iron-ajax#DeleteSharesErrorAjax(method='DELETE', url='/api/delete-shares-error/[
 
 h1 {{localize('manageFilersView.lblManageFilers')}}
 section#Main-Content
-    article.Filers
-        h2
-            iron-icon.icon(icon='kubeflow:namespace')
-            span.text {{localize('manageFilersView.lblFilers')}}
-        .content.small
-            template(is='dom-if', if="[[isLoading(filersLoading, existingSharesLoading, requestingSharesLoading)]]")
-                paper-spinner-lite(active)
-            div
-                span {{localize('manageFilersView.lblExistingSharesTable')}}
+    div
+        paper-card
+            div.card-content
+                div
+                    h2
+                        iron-icon.card-icon(icon="info")
+                        |   How to connect to filers on the Zone
+                div 
+                    p Before you can access filers from your notebook servers, you first need to set which filer shares you require.
+                    p 
+                        b To open a filer share connection for your notebook servers: 
+                        ol 
+                            li Select the filer from the dropdown (ex. FLD9Filer).
+                            li 
+                                | Input the path to the desired filer share in the textbox. It needs to 
+                                b match exactly 
+                                | what you see in AVD, including capitalization (ex. /data/ABC_Prod).
+                                br
+                                i From your AVD, you can right-click on your desired folder in the filer, and then do "Copy UNC path". Just make sure to trim off the filer at the start of that copied path value
+                            li Submit your new filer share connection.
+                    p After submitting your filer share connection, wait a few seconds before refreshing the page. Afterwards, you should see your filer share in either the "Requested shares" table (if it needs more time to process) or the "Connected shares" table (if the connection was successful).
+                    p 
+                        | All your notebook servers should have access to the "connected" filer shares!
+                        br
+                        | They will appear under "$HOME/filers" and will follow the same exact path that was entered for the filer share.
+                    p
+                        b Please note that if you requested a new filer share connection while you currently have running notebook server, you will have to restart the notebook for the filer connection to appear.
+                    a(href="https://zone.pages.cloud.statcan.ca/docs/en/5-Storage/FieldFilers.html", target="_blank", rel="noopener noreferrer") Click here for more information about filer connections on the Zone and their limitations
+    template(is='dom-if', if="[[isLoading(filersLoading, existingSharesLoading, requestingSharesLoading)]]")
+        paper-spinner-lite(active) 
+    div.content.small
+        div.tableDiv
+            h2 {{localize('manageFilersView.lblExistingSharesTable')}}
+            template(is='dom-if', if="[[isEmpty(existingShares)]]")
+                span No connected shares
+            template(is='dom-if', if="[[!isEmpty(existingShares)]]")
                 table.filersTable
                     template(is='dom-repeat', items='[[formatUserShares(existingShares)]]' index-as="i" as="svm")
                         template(is='dom-repeat', items='{{svm.shares}}' index-as="j" as='share')
@@ -33,8 +60,11 @@ section#Main-Content
                                 td {{share}}
                                 td
                                     button(type="button", on-click="deleteExistingShare") {{localize('manageFilersView.btnDelete')}}
-            div
-                span {{localize('manageFilersView.lblRequestingSharesTable')}}
+        div.tableDiv
+            h2 {{localize('manageFilersView.lblRequestingSharesTable')}}
+            template(is='dom-if', if="[[isEmpty(requestingShares)]]")
+                span No requested shares
+            template(is='dom-if', if="[[!isEmpty(requestingShares)]]")
                 table.filersTable
                     template(is='dom-repeat', items='[[formatUserShares(requestingShares)]]' index-as="i" as="svm")
                         template(is='dom-repeat', items='{{svm.shares}}' index-as="j" as='share')
@@ -42,33 +72,33 @@ section#Main-Content
                                 template(is='dom-if', if="[[renderHeader(j)]]")
                                     th(rowspan$='[[getRowspan(svm.shares)]]') {{svm.svm}}
                                 td {{share}}                 
-            div
-                h2 {{localize('manageFilersView.headerAddFiler')}}
-                form#filersForm
-                    div.formInputDiv
-                        label(for="filersSelect") {{localize('manageFilersView.lblFiler')}}
-                        span 
-                            select#filersSelect(name="filersSelect", on-change="onChangeFilers", value="", required)
-                                option(value="") {{localize('manageFilersView.optionFiler')}}
-                                template(is='dom-repeat', items='{{filers}}')
-                                    option(value="{{item.vserver}}") {{item.name}}
-                    div.formInputDiv
-                        label(for="sharesInput" style="float: left") {{localize('manageFilersView.lblShare')}}
-                        span
-                            input#sharesInput(name="sharesInput", value="", placeholder="{{localize('manageFilersView.placeholderShare')}}", required)
-                    aside.Error {{validateError}}
+        div
+            h2 {{localize('manageFilersView.headerAddFiler')}}
+            form#filersForm
+                div.formInputDiv
+                    label(for="filersSelect") {{localize('manageFilersView.lblFiler')}}
+                    span 
+                        select#filersSelect(name="filersSelect", on-change="onChangeFilers", value="", required)
+                            option(value="") {{localize('manageFilersView.optionFiler')}}
+                            template(is='dom-repeat', items='{{filers}}')
+                                option(value="{{item.vserver}}") {{item.name}}
+                div.formInputDiv
+                    label(for="sharesInput" style="float: left") {{localize('manageFilersView.lblShare')}}
+                    span
+                        input#sharesInput(name="sharesInput", value="", placeholder="{{localize('manageFilersView.placeholderShare')}}", required)
+                aside.Error {{validateError}}
 
-                    template(is='dom-if', if="[[filers]]")
-                        button#shareSubmit(type="submit", on-click="updateShares") {{localize('manageFilersView.btnSubmit')}}
-            template(is='dom-if', if="[[sharesErrors]]")
-                div.errorDiv
-                    b {{localize('manageFilersView.lblLatestError')}}
-                    table
-                        template(is='dom-repeat', items='[[formatErrors(sharesErrors)]]')
-                            tr 
-                                td [{{item.Timestamp}}] - {{item.Svm}}/{{item.Share}}: {{item.ErrorMessage}}
-                                td 
-                                    paper-icon-button(icon='icons:clear', on-click="deleteShareError")
+                template(is='dom-if', if="[[filers]]")
+                    button#shareSubmit(type="submit", on-click="updateShares") {{localize('manageFilersView.btnSubmit')}}
+        template(is='dom-if', if="[[sharesErrors]]")
+            div.errorDiv
+                b {{localize('manageFilersView.lblLatestError')}}
+                table
+                    template(is='dom-repeat', items='[[formatErrors(sharesErrors)]]')
+                        tr 
+                            td [{{item.Timestamp}}] - {{item.Svm}}/{{item.Share}}: {{item.ErrorMessage}}
+                            td 
+                                paper-icon-button(icon='icons:clear', on-click="deleteShareError")
 
     paper-toast#FilersErrorToast(duration=8000, horizontal-align="center")
         strong [[errorText]]
