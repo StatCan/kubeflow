@@ -21,35 +21,35 @@ section#Main-Content
                 div
                     h2
                         iron-icon.card-icon(icon="info")
-                        |   How to connect to filers on the Zone
+                        |   {{localize('manageFilersView.cardHeading')}}
                 div 
-                    p Before you can access filers from your notebook servers, you first need to set which filer shares you require.
+                    p {{localize('manageFilersView.cardP1')}}
                     p 
-                        b To open a filer share connection for your notebook servers: 
+                        b {{localize('manageFilersView.cardP2')}}
                         ol 
-                            li Select the filer from the dropdown (ex. FLD9Filer).
+                            li {{localize('manageFilersView.cardList1')}}
                             li 
-                                | Input the path to the desired filer share in the textbox. It needs to 
-                                b match exactly 
-                                | what you see in AVD, including capitalization (ex. /data/ABC_Prod).
+                                | {{localize('manageFilersView.cardList2.1')}}
+                                b {{localize('manageFilersView.cardList2.2')}}
+                                | {{localize('manageFilersView.cardList2.3')}}
                                 br
-                                i From your AVD, you can right-click on your desired folder in the filer, and then do "Copy UNC path". Just make sure to trim off the filer at the start of that copied path value
-                            li Submit your new filer share connection.
-                    p After submitting your filer share connection, wait a few seconds before refreshing the page. Afterwards, you should see your filer share in either the "Requested shares" table (if it needs more time to process) or the "Connected shares" table (if the connection was successful).
+                                i {{localize('manageFilersView.cardList2.4')}}
+                            li {{localize('manageFilersView.cardList3')}}
+                    p {{localize('manageFilersView.cardP3')}}
                     p 
-                        | All your notebook servers should have access to the "connected" filer shares!
+                        | {{localize('manageFilersView.cardP4.1')}}
                         br
-                        | They will appear under "$HOME/filers" and will follow the same exact path that was entered for the filer share.
+                        | {{localize('manageFilersView.cardP4.2')}}
                     p
-                        b Please note that if you requested a new filer share connection while you currently have running notebook server, you will have to restart the notebook for the filer connection to appear.
-                    a(href="https://zone.pages.cloud.statcan.ca/docs/en/5-Storage/FieldFilers.html", target="_blank", rel="noopener noreferrer") Click here for more information about filer connections on the Zone and their limitations
+                        b {{localize('manageFilersView.cardP5')}}
+                    a(href="https://zone.pages.cloud.statcan.ca/docs/en/5-Storage/FieldFilers.html", target="_blank", rel="noopener noreferrer") {{localize('manageFilersView.cardLink')}}
     template(is='dom-if', if="[[isLoading(filersLoading, existingSharesLoading, requestingSharesLoading)]]")
         paper-spinner-lite(active) 
     div.content.small
         div.tableDiv
             h2 {{localize('manageFilersView.lblExistingSharesTable')}}
             template(is='dom-if', if="[[isEmpty(existingShares)]]")
-                span No connected shares
+                span {{localize('manageFilersView.NoConnectedShares')}}
             template(is='dom-if', if="[[!isEmpty(existingShares)]]")
                 table.filersTable
                     template(is='dom-repeat', items='[[formatUserShares(existingShares)]]' index-as="i" as="svm")
@@ -63,7 +63,7 @@ section#Main-Content
         div.tableDiv
             h2 {{localize('manageFilersView.lblRequestingSharesTable')}}
             template(is='dom-if', if="[[isEmpty(requestingShares)]]")
-                span No requested shares
+                span {{localize('manageFilersView.NoRequestedShares')}}
             template(is='dom-if', if="[[!isEmpty(requestingShares)]]")
                 table.filersTable
                     template(is='dom-repeat', items='[[formatUserShares(requestingShares)]]' index-as="i" as="svm")
