@@ -15,34 +15,36 @@ iron-ajax#DeleteSharesErrorAjax(method='DELETE', url='/api/delete-shares-error/[
 
 h1 {{localize('manageFilersView.lblManageFilers')}}
 section#Main-Content
-    div
-        paper-card
-            div.card-content
-                div
-                    h2
-                        iron-icon.card-icon(icon="info")
-                        |   {{localize('manageFilersView.cardHeading')}}
-                div 
-                    p {{localize('manageFilersView.cardP1')}}
-                    p 
-                        b {{localize('manageFilersView.cardP2')}}
-                        ol 
-                            li {{localize('manageFilersView.cardList1')}}
-                            li 
-                                | {{localize('manageFilersView.cardList2.1')}}
-                                b {{localize('manageFilersView.cardList2.2')}}
-                                | {{localize('manageFilersView.cardList2.3')}}
-                                br
-                                i {{localize('manageFilersView.cardList2.4')}}
-                            li {{localize('manageFilersView.cardList3')}}
-                    p {{localize('manageFilersView.cardP3')}}
-                    p 
-                        | {{localize('manageFilersView.cardP4.1')}}
-                        br
-                        | {{localize('manageFilersView.cardP4.2')}}
-                    p
-                        b {{localize('manageFilersView.cardP5')}}
-                    a(href="https://zone.pages.cloud.statcan.ca/docs/en/5-Storage/FieldFilers.html", target="_blank", rel="noopener noreferrer") {{localize('manageFilersView.cardLink')}}
+    div.instructions
+        button#collapseButton(on-click="toggle", class$="collapsible [[getActiveClass(existingShares)]]")
+            h2
+                iron-icon.card-icon(icon="info")
+                span.card-header-text {{localize('manageFilersView.cardHeading')}}
+        iron-collapse(opened="[[isEmpty(existingShares)]]")#collapse
+            paper-card
+                div.card-content
+                    div 
+                        p {{localize('manageFilersView.cardP1')}}
+                        p 
+                            b {{localize('manageFilersView.cardP2')}}
+                            ol 
+                                li {{localize('manageFilersView.cardList1')}}
+                                li 
+                                    | {{localize('manageFilersView.cardList2.1')}}
+                                    b {{localize('manageFilersView.cardList2.2')}}
+                                    | {{localize('manageFilersView.cardList2.3')}}
+                                    br
+                                    i {{localize('manageFilersView.cardList2.4')}}
+                                li {{localize('manageFilersView.cardList3')}}
+                        p {{localize('manageFilersView.cardP3')}}
+                        p 
+                            | {{localize('manageFilersView.cardP4.1')}}
+                            br
+                            | {{localize('manageFilersView.cardP4.2')}}
+                        p
+                            b {{localize('manageFilersView.cardP5')}}
+                        a(href="{{localize('manageFilersView.cardLink')}}", target="_blank", rel="noopener noreferrer") {{localize('manageFilersView.cardLinkMessage')}}
+
     template(is='dom-if', if="[[isLoading(filersLoading, existingSharesLoading, requestingSharesLoading)]]")
         paper-spinner-lite(active) 
     div.content.small

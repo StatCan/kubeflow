@@ -6,6 +6,7 @@ import '@polymer/paper-item/paper-icon-item.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-spinner/paper-spinner-lite.js';
 import '@polymer/paper-card/paper-card.js';
+import '@polymer/iron-collapse/iron-collapse.js';
 
 // eslint-disable-next-line max-len
 import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-behavior.js';
@@ -284,6 +285,16 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
     */
     getRowspan(items) {
         return items.length;
+    }
+
+    toggle() {
+        this.$.collapseButton.classList.toggle('active');
+        this.$.collapse.toggle();
+    }
+
+    getActiveClass(userShares) {
+        return userShares == null || Object.keys(userShares).length === 0 ?
+            'active' : '';
     }
 }
 
