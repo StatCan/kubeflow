@@ -8,45 +8,32 @@
 }
 h1, h2 {
   font-family: Google Sans;
-  font-size: 1.2em;
-  margin: 0;
 }
 h1 {
   color: black;
   padding: 1rem;
   border-bottom: 1px solid var(--border-color);
-}
-#Main-Content {
-  padding: 1rem;
-}
-article:not(:first-of-type) {
-  margin-top: 1.5em;
+  font-size: 1.2em;
+  margin: 0;
 }
 h2 {
   @apply --layout-horizontal;
   @apply --layout-center;
   font-size: 1em;
-  font-weight: 500;
-  color: var(--subheading-color);
-  margin: .5em 0;
 }
-h2 .icon {
-  color: var(--accent-color);
-  margin-right: 1rem;
-  /* Because Hamburger icon has a padding area for ripple*/
-  padding-left: .6rem;
-}
-.content {
-  margin-left: calc(1.6rem + 24px);
-  color: var(--content-color);
-  font-size: .9em;
+
+#Main-Content {
+  padding: 1.3em;
 }
 .content.small {
   max-width: 640px;
 }
 
-.filersTable{
+.tableDiv{
   margin-bottom: 1.5em;
+}
+
+.filersTable{
   border-collapse: collapse;
   border: 1px solid gray;
 }
@@ -63,8 +50,6 @@ th, td{
   padding: .5em;
   margin: .5em;
 }
-
-[hidden] {display: none !important}
 
 paper-toast#FilersErrorToast {
   background: #F44336;
@@ -106,4 +91,61 @@ label {
 .errorDiv{
   background-color: #ff9b9b;
   color: #212324;
+}
+
+.instructions {
+  margin-bottom: .75em;
+}
+
+paper-card {
+  background-color: aliceblue;
+  width: 80%;
+}
+
+.card-content {
+  padding-top: 0px;
+}
+
+.card-icon {
+  margin-right: 5px;
+}
+
+.card-header-text {
+  margin-right: auto;
+}
+
+li:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: #e6f3ff;
+  border: none;
+  box-shadow: 
+    rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, 
+    rgba(0, 0, 0, 0.12) 0px 1px 5px 0px, 
+    rgba(0, 0, 0, 0.2) 0px 3px 1px -2px;
+  cursor: pointer;
+  font-size: 16px;
+  outline: none;
+  padding: 0px 16px;
+  text-align: left;
+  width: 80%;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .collapsible:hover {
+  background-color: #cce6ff;
+}
+
+.collapsible > h2:after {
+  content: '\02795'; /* Unicode character for "plus" sign (+) */
+  font-weight: bold;
+  justify-content: right;
+  margin-left: 5px;
+}
+
+.active > h2:after {
+  content: "\2796"; /* Unicode character for "minus" sign (-) */
 }
