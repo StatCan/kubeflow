@@ -1,8 +1,7 @@
 import {Router, Request, Response, NextFunction} from 'express';
 import {KubernetesService} from './k8s_service';
 import {Interval, MetricsService} from './metrics_service';
-import {readFile} from 'fs/promises';
-import {resolve} from 'path';
+import fetch from 'node-fetch';
 import NodeCache from 'node-cache';
 
 export const ERRORS = {
