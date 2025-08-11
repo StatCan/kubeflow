@@ -250,14 +250,14 @@ export class Api {
                     res.json(releaseNotesData);
                   }else{
                     console.log("cache3");
-                    const headers: Headers = new Headers()
-                    headers.set('Content-Type', 'application/json')
-                    headers.set('Accept', 'application/json')
+                    const headers: Headers = new Headers();
+                    headers.set('Content-Type', 'application/json');
+                    headers.set('Accept', 'application/json');
 
                     const request: RequestInfo = new Request('https://api.github.com/repos/statcan/zone-kubeflow-containers/releases/latest', {
                       method: 'GET',
-                      headers: headers
-                    })
+                      headers,
+                    });
 
                     const data = await fetch(request)
                     .then(res=>{
