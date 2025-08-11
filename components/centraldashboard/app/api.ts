@@ -251,15 +251,13 @@ export class Api {
                   }else{
                     console.log("cache3");
 
-                    const request: RequestInfo = new Request('https://api.github.com/repos/statcan/zone-kubeflow-containers/releases/latest', {
+                    const data = await fetch('https://api.github.com/repos/statcan/zone-kubeflow-containers/releases/latest', {
                       method: 'GET',
                       headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
                       },
-                    });
-
-                    const data = await fetch(request)
+                    })
                     .then(res=>{
                       if(!res.ok){
                         const message = ERRORS.invalid_release_notes+': '+res.statusText;
