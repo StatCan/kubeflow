@@ -250,13 +250,13 @@ export class Api {
                     res.json(releaseNotesData);
                   }else{
                     console.log("cache3");
-                    const headers: Headers = new Headers();
-                    headers.set('Content-Type', 'application/json');
-                    headers.set('Accept', 'application/json');
 
                     const request: RequestInfo = new Request('https://api.github.com/repos/statcan/zone-kubeflow-containers/releases/latest', {
                       method: 'GET',
-                      headers,
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                      },
                     });
 
                     const data = await fetch(request)
@@ -281,7 +281,7 @@ export class Api {
                   }
               }catch(e){
                   console.error(e);
-                  
+
                   return apiError({
                       res, code: 500,
                       error: ERRORS.invalid_release_notes,
