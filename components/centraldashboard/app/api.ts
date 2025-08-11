@@ -280,6 +280,8 @@ export class Api {
                     res.json(data);
                   }
               }catch(e){
+                  console.error(e);
+                  
                   return apiError({
                       res, code: 500,
                       error: ERRORS.invalid_release_notes,
