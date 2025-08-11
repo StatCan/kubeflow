@@ -3,6 +3,7 @@ import {KubernetesService} from './k8s_service';
 import {Interval, MetricsService} from './metrics_service';
 import {readFile} from 'fs/promises';
 import {resolve} from 'path';
+import NodeCache from 'node-cache';
 
 export const ERRORS = {
   no_metrics_service_configured: 'No metrics service configured',
@@ -19,7 +20,10 @@ export const ERRORS = {
   invalid_delete_existing_shares: 'Failed to delete existing shares configmap' ,
   invalid_get_shares_errors: 'Failed to load shares errors',
   invalid_delete_shares_errors: 'Failed to delete from shares errors',
+  invalid_release_notes: 'Failed to get latest release notes for zone-kubeflow-containers',
 };
+
+const releaseNotesCache = "releaseNotes";
 
 export function apiError(a: {res: Response, error: string, code?: number}) {
   const {res, error} = a;
@@ -31,6 +35,7 @@ export function apiError(a: {res: Response, error: string, code?: number}) {
 
 export class Api {
   constructor(
+      private cache: NodeCache,
       private k8sService: KubernetesService,
       private metricsService?: MetricsService,
     ) {}
@@ -230,6 +235,54 @@ export class Api {
                   return apiError({
                       res, code: 500,
                       error: ERRORS.invalid_delete_shares_errors,
+                  });
+              }
+          })
+        .get(
+          '/releaseNotes',
+          async (req: Request, res: Response) => {
+              try {
+                  const releaseNotesData = this.cache.get(releaseNotesCache);
+                  console.log("cache", releaseNotesData);
+                  
+                  if(releaseNotesData){
+                    console.log("cache2");
+                    res.json(releaseNotesData);
+                  }else{
+                    console.log("cache3");
+                    const headers: Headers = new Headers()
+                    headers.set('Content-Type', 'application/json')
+                    headers.set('Accept', 'application/json')
+
+                    const request: RequestInfo = new Request('https://api.github.com/repos/statcan/zone-kubeflow-containers/releases/latest', {
+                      method: 'GET',
+                      headers: headers
+                    })
+
+                    const data = await fetch(request)
+                    .then(res=>{
+                      if(!res.ok){
+                        const message = ERRORS.invalid_release_notes+': '+res.statusText;
+                        console.error(message);
+                        
+                        throw new Error(message);
+                      }else{
+                        return res.json();
+                      }
+                    });
+
+                    // sets the release notes in a cache
+                    // to help with the github rate limit.
+                    // TTL is in seconds
+                    this.cache.set(releaseNotesCache, data, 60*60);
+                    console.log("d", data.body);
+
+                    res.json(data);
+                  }
+              }catch(e){
+                  return apiError({
+                      res, code: 500,
+                      error: ERRORS.invalid_release_notes,
                   });
               }
           });

@@ -30,7 +30,7 @@
 
 .release-notes aside {
     padding-left: 16px;
-    color: var(--paper-item-body-secondary-color, var(--secondary-text-color))
+    color: var(--paper-item-body-secondary-color, var(--secondary-text-color));
 }
 
 .release-notes-markdown {
