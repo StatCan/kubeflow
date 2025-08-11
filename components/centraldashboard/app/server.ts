@@ -11,9 +11,6 @@ import {getMetricsService} from './metrics_service_factory';
 import {PrometheusMetricsService} from "./prometheus_metrics_service";
 import {PrometheusDriver} from "prometheus-query";
 
-import NodeCache from 'node-cache';
-const cache = new NodeCache();
-
 const isProduction = process.env.NODE_ENV === 'production';
 const codeEnvironment = isProduction?'production':'development';
 const defaultKfam = isProduction
@@ -77,7 +74,7 @@ async function main() {
       message: `I tick, therfore I am!`,
     });
   });
-  app.use('/api', new Api(cache, k8sService, metricsService).routes());
+  app.use('/api', new Api(k8sService, metricsService).routes());
   app.use('/api/workgroup', new WorkgroupApi(profilesService, k8sService, registrationFlowAllowed, USERID_HEADER).routes());
   app.use('/api', (req: Request, res: Response) =>
     apiError({

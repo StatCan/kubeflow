@@ -2,7 +2,9 @@ import {Router, Request, Response, NextFunction} from 'express';
 import {KubernetesService} from './k8s_service';
 import {Interval, MetricsService} from './metrics_service';
 import fetch from 'node-fetch';
+
 import NodeCache from 'node-cache';
+const cache = new NodeCache();
 
 export const ERRORS = {
   no_metrics_service_configured: 'No metrics service configured',
@@ -34,7 +36,6 @@ export function apiError(a: {res: Response, error: string, code?: number}) {
 
 export class Api {
   constructor(
-      private cache: NodeCache,
       private k8sService: KubernetesService,
       private metricsService?: MetricsService,
     ) {}
@@ -241,7 +242,7 @@ export class Api {
           '/releaseNotes',
           async (req: Request, res: Response) => {
               try {
-                  const releaseNotesData = this.cache.get(releaseNotesCache);
+                  const releaseNotesData = cache.get(releaseNotesCache);
                   console.log("cache", releaseNotesData);
                   
                   if(releaseNotesData){
@@ -271,7 +272,7 @@ export class Api {
                     // sets the release notes in a cache
                     // to help with the github rate limit.
                     // TTL is in seconds
-                    this.cache.set(releaseNotesCache, data, 60*60);
+                    cache.set(releaseNotesCache, data, 60*60);
                     console.log("d", data.body);
 
                     res.json(data);
