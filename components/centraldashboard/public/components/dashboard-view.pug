@@ -1,22 +1,57 @@
 template(is='dom-if', if='[[securityMessages.length]]')
-    div.security-messages
-        security-messages-card(messages='[[securityMessages]]')
-div#grid
-    .column
-        notebook-default-card(namespace='[[namespace]]', language='[[language]]', resources='[[resources]]')
-    .column
-        paper-card#Quick-Links(heading="{{localize('dashboardView.headingQuickLinks')}}")
-            template(is='dom-repeat', items='[[quickLinks]]')
-                template(is='dom-if', if='[[equals(item.type, "internal")]]')
-                    iframe-link.link(href$="[[item.link]]")
-                        paper-icon-item.external
-                            paper-ripple
-                            paper-item-body(two-line)
-                                .header [[item.text]]
-                                aside(secondary) [[item.desc]]
-                            iron-icon(icon='kubeflow:bolt', slot='item-icon')
-                template(is='dom-if', if='[[equals(item.type, "external")]]')
-                    a.link(href$='[[item.link]]', tabindex='-1', target='_blank')
+    .dashboard-cards
+        .single-column
+            security-messages-card(messages='[[securityMessages]]')
+.dashboard-cards
+    div#grid
+        .column
+            notebook-default-card(namespace='[[namespace]]', language='[[language]]', resources='[[resources]]')
+        .column
+            paper-card#Quick-Links(heading="{{localize('dashboardView.headingQuickLinks')}}")
+                template(is='dom-repeat', items='[[quickLinks]]')
+                    template(is='dom-if', if='[[equals(item.type, "internal")]]')
+                        iframe-link.link(href$="[[item.link]]")
+                            paper-icon-item.external
+                                paper-ripple
+                                paper-item-body(two-line)
+                                    .header [[item.text]]
+                                    aside(secondary) [[item.desc]]
+                                iron-icon(icon='kubeflow:bolt', slot='item-icon')
+                    template(is='dom-if', if='[[equals(item.type, "external")]]')
+                        a.link(href$='[[item.link]]', tabindex='-1', target='_blank')
+                            paper-icon-item.external
+                                paper-ripple
+                                paper-item-body(two-line)
+                                    .header [[item.text]]
+                                    aside(secondary) [[item.desc]]
+                                paper-icon-button.button(icon='open-in-new',
+                                    slot='item-icon', alt='[[item.text]]', tabindex=-1)
+            template(is='dom-if', if='[[metrics.resourceChartsLinkText]]')
+                resource-chart(header-text='Cluster CPU Utilization', metric='cpu',
+                    interval='Last60m',
+                    external-link='[[metrics.resourceChartsLink]]',
+                    external-link-text='[[metrics.resourceChartsLinkText]]')
+                resource-chart(header-text='Pod CPU Utilization', metric='podcpu',
+                    interval='Last60m',
+                    external-link='[[metrics.resourceChartsLink]]'
+                    external-link-text='[[metrics.resourceChartsLinkText]]')
+        .column
+            template(is='dom-if', if='[[platformDetails.links]]')
+                paper-card#Platform-Links(class$='[[platformDetails.name]]',
+                    heading='[[platformDetails.title]]', image='[[platformDetails.logo]]')
+                    template(is='dom-repeat', items='[[platformDetails.links]]')
+                        a.link(href$='[[item.link]]', tabindex='-1', target='_blank')
+                            paper-icon-item.external
+                                paper-ripple
+                                paper-item-body(two-line)
+                                    .header [[item.headerText]]
+                                    aside(secondary) [[item.secondaryText]]
+                                paper-icon-button.button(icon='open-in-new',
+                                    slot='item-icon', alt='[[item.text]]', tabindex=-1)
+            paper-card#Documentation(heading="{{localize('dashboardView.headingDocumentation')}}")
+                template(is='dom-repeat', items='[[documentationItems]]')
+                    a.link(href$='[[item.link]]', tabindex='-1',
+                                target='_blank')
                         paper-icon-item.external
                             paper-ripple
                             paper-item-body(two-line)
@@ -24,48 +59,16 @@ div#grid
                                 aside(secondary) [[item.desc]]
                             paper-icon-button.button(icon='open-in-new',
                                 slot='item-icon', alt='[[item.text]]', tabindex=-1)
-        template(is='dom-if', if='[[metrics.resourceChartsLinkText]]')
-            resource-chart(header-text='Cluster CPU Utilization', metric='cpu',
-                interval='Last60m',
-                external-link='[[metrics.resourceChartsLink]]',
-                external-link-text='[[metrics.resourceChartsLinkText]]')
-            resource-chart(header-text='Pod CPU Utilization', metric='podcpu',
-                interval='Last60m',
-                external-link='[[metrics.resourceChartsLink]]'
-                external-link-text='[[metrics.resourceChartsLinkText]]')
-    .column
-        template(is='dom-if', if='[[platformDetails.links]]')
-            paper-card#Platform-Links(class$='[[platformDetails.name]]',
-                heading='[[platformDetails.title]]', image='[[platformDetails.logo]]')
-                template(is='dom-repeat', items='[[platformDetails.links]]')
-                    a.link(href$='[[item.link]]', tabindex='-1', target='_blank')
+.dashboard-cards
+    .single-column
+        paper-card(heading="{{localize('dashboardView.releaseNotes')}}")
+            a.link(href='https://github.com/StatCan/zone-kubeflow-containers/releases/latest', tabindex='-1',
+                                target='_blank', rel='noopener noreferrer')
                         paper-icon-item.external
                             paper-ripple
                             paper-item-body(two-line)
-                                .header [[item.headerText]]
-                                aside(secondary) [[item.secondaryText]]
+                                .header {{localize('dashboardView.releaseNotesMessage')}}
+                                aside(secondary) {{localize('dashboardView.releaseNotesEnglish')}}
                             paper-icon-button.button(icon='open-in-new',
-                                slot='item-icon', alt='[[item.text]]', tabindex=-1)
-        paper-card#Documentation(heading="{{localize('dashboardView.headingDocumentation')}}")
-            template(is='dom-repeat', items='[[documentationItems]]')
-                a.link(href$='[[item.link]]', tabindex='-1',
-                            target='_blank')
-                    paper-icon-item.external
-                        paper-ripple
-                        paper-item-body(two-line)
-                            .header [[item.text]]
-                            aside(secondary) [[item.desc]]
-                        paper-icon-button.button(icon='open-in-new',
-                            slot='item-icon', alt='[[item.text]]', tabindex=-1)
-.release-notes
-    paper-card(heading="{{localize('dashboardView.releaseNotes')}}")
-        a.link(href='https://github.com/StatCan/zone-kubeflow-containers/releases/latest', tabindex='-1',
-                            target='_blank', rel='noopener noreferrer')
-                    paper-icon-item.external
-                        paper-ripple
-                        paper-item-body(two-line)
-                            .header {{localize('dashboardView.releaseNotesMessage')}} 
-                            aside(secondary) {{localize('dashboardView.releaseNotesEnglish')}}
-                        paper-icon-button.button(icon='open-in-new',
-                            slot='item-icon', alt="{{localize('dashboardView.releaseNotesMessage')}}", tabindex=-1)
+                                slot='item-icon', alt="{{localize('dashboardView.releaseNotesMessage')}}", tabindex=-1)
     
