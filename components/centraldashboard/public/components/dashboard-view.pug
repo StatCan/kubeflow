@@ -1,3 +1,5 @@
+iron-ajax(auto, url='/api/releaseNotes', handle-as='json',
+    on-response='_onGetReleaseNotes', on-error='_onErrorReleaseNotes', loading='{{notesLoading}}')
 template(is='dom-if', if='[[securityMessages.length]]')
     div.security-messages
         security-messages-card(messages='[[securityMessages]]')
@@ -57,3 +59,14 @@ div#grid
                             aside(secondary) [[item.desc]]
                         paper-icon-button.button(icon='open-in-new',
                             slot='item-icon', alt='[[item.text]]', tabindex=-1)
+.release-notes
+    paper-card(heading="{{localize('dashboardView.releaseNotes')}}")
+        aside(secondary)
+                p 
+                    span {{localize('dashboardView.releaseNotesEnglish')}}
+                    template(is='dom-if', if='[[releaseNotesDateTime]]')
+                        br
+                        span {{localize('dashboardView.releaseNotesLastUpdated')}}: [[releaseNotesDateTime]]
+        marked-element.release-notes-markdown(markdown="[[releaseNotes]]")
+            div(slot="markdown-html")
+    

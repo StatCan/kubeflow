@@ -23,6 +23,24 @@
     margin: 0 auto;
 }
 
+.release-notes {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.release-notes aside {
+    padding-left: 16px;
+    color: var(--paper-item-body-secondary-color, var(--secondary-text-color));
+}
+
+.release-notes-markdown {
+    padding-left: 16px;
+}
+
+.release-notes-markdown a {
+    color: revert;
+}
+
 .security-messages {
     width: 80%;
     margin: 0 auto;
