@@ -3,7 +3,7 @@ import {KubernetesService} from './k8s_service';
 import {Interval, MetricsService} from './metrics_service';
 import fetch from 'node-fetch';
 
-import NodeCache from 'node-cache';
+import NodeCache from '@cacheable/node-cache';
 const cache = new NodeCache();
 
 export const ERRORS = {
