@@ -4,6 +4,7 @@ import '@polymer/paper-card/paper-card.js';
 import '@polymer/paper-ripple/paper-ripple.js';
 import '@polymer/paper-item/paper-icon-item.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
+
 // eslint-disable-next-line max-len
 import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-behavior.js';
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';

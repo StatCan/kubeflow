@@ -16,16 +16,20 @@
     }
 }
 
+.dashboard-cards{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 #grid {
     display: grid;
     grid-gap: .75em; /* 12px */
     grid-template-columns: repeat(3, 1fr);
-    margin: 0 auto;
 }
 
-.security-messages {
+.single-column {
     width: 80%;
-    margin: 0 auto;
 }
 
 .column {
