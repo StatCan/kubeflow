@@ -122,7 +122,7 @@ export class KubernetesService {
   /** Retrieves the configmap data for the list of filers. */
   async getFilersListConfigMap(): Promise<k8s.V1ConfigMap> {
     try {
-      const { body } = await this.coreAPI.readNamespacedConfigMap("filers-list", "das");
+      const { body } = await this.coreAPI.readNamespacedConfigMap("filers-list", "zone");
       return body;
     } catch (err) {
       console.error('Unable to fetch filers list ConfigMap:', err.response?.body || err.body || err);
