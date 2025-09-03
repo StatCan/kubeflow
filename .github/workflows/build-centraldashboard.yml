@@ -2,7 +2,7 @@ name: component/centraldashboard
 on:
   push:
     branches:
-      - kubeflow-aaw2.0
+      - zone
     paths:
       - components/centraldashboard/**
   pull_request:
@@ -45,7 +45,7 @@ jobs:
       run: echo "REGISTRY=${{env.REGISTRY_NAME}}.azurecr.io" >> "$GITHUB_ENV"
    
     - name: Set ENV variable for pushes to master
-      if: github.event_name == 'push' && github.ref == 'refs/heads/kubeflow-aaw2.0'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/zone'
       run: echo "REGISTRY=${{env.REGISTRY_NAME}}.azurecr.io" >> "$GITHUB_ENV"
 
     # Connect to Azure Container registry (ACR)
@@ -72,11 +72,11 @@ jobs:
     - name: Docker build
       run: |
         docker build \
-          -t localhost:5000/kubeflow/centraldashboard-aaw2:${{ github.sha }} \
+          -t localhost:5000/kubeflow/centraldashboard-zone:${{ github.sha }} \
           --build-arg kubeflowversion=$(git describe --abbrev=0 --tags) \
           --build-arg commit=$(git rev-parse HEAD) \
           components/centraldashboard/
-        docker push localhost:5000/kubeflow/centraldashboard-aaw2:${{ github.sha }}
+        docker push localhost:5000/kubeflow/centraldashboard-zone:${{ github.sha }}
         docker image prune
 
     # Scan image for vulnerabilities
@@ -92,7 +92,7 @@ jobs:
           trivy image \
             --db-repository ${{ env.TRIVY_DATABASES }} \
             --java-db-repository ${{ env.TRIVY_JAVA_DATABASES }} \
-            image localhost:5000/kubeflow/centraldashboard-aaw2:${{ github.sha }} \
+            image localhost:5000/kubeflow/centraldashboard-zone:${{ github.sha }} \
             --exit-code 10 --timeout=20m --scanners vuln --severity CRITICAL \
           EXIT_CODE=$?
 
@@ -124,9 +124,9 @@ jobs:
     - name: Docker push
       if: steps.should-i-push.outputs.boolean == 'true'
       run: |
-        docker pull localhost:5000/kubeflow/centraldashboard-aaw2:${{ github.sha }}
-        docker tag localhost:5000/kubeflow/centraldashboard-aaw2:${{ github.sha }} ${{ env.REGISTRY }}/kubeflow/centraldashboard-aaw2:${{ github.sha }}
-        docker push ${{ env.REGISTRY }}/kubeflow/centraldashboard-aaw2:${{ github.sha }}
+        docker pull localhost:5000/kubeflow/centraldashboard-zone:${{ github.sha }}
+        docker tag localhost:5000/kubeflow/centraldashboard-zone:${{ github.sha }} ${{ env.REGISTRY }}/kubeflow/centraldashboard-zone:${{ github.sha }}
+        docker push ${{ env.REGISTRY }}/kubeflow/centraldashboard-zone:${{ github.sha }}
 
     - name: Slack Notification
       if: failure() && github.event_name=='schedule'
