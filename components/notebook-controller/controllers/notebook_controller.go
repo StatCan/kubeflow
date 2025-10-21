@@ -758,7 +758,7 @@ func (r *NotebookReconciler) reconcileAuthorizationPolicy(instance *v1beta1.Note
 		instance.Namespace), Namespace: instance.Namespace}, foundAuthPol)
 	//TESTING
 	val, _ := foundAuthPol.MarshalJSON()
-	log.Info("test debug", string(val), "err", err.Error())
+	log.Info("test debug", "authpol", string(val), "err", err.Error())
 
 	if err != nil && apierrs.IsNotFound(err) {
 		log.Info("Creating authorization policy", "namespace", instance.Namespace, "name",
