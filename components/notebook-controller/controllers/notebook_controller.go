@@ -207,6 +207,14 @@ func (r *NotebookReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		}
 	}
 
+	// Zone Change: Reconcile Authorization policy if we use ISTIO
+	if os.Getenv("USE_ISTIO") == "true" {
+		err = r.reconcileAuthorizationPolicy(instance)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
 	foundPod := &corev1.Pod{}
 	err = r.Get(ctx, types.NamespacedName{Name: ss.Name + "-0", Namespace: ss.Namespace}, foundPod)
 	if err != nil && apierrs.IsNotFound(err) {
@@ -617,6 +625,155 @@ func (r *NotebookReconciler) reconcileVirtualService(instance *v1beta1.Notebook)
 		log.Info("Updating virtual service", "namespace", instance.Namespace, "name",
 			virtualServiceName(instance.Name, instance.Namespace))
 		err = r.Update(context.TODO(), foundVirtual)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func authorizationPolicyName(kfName string, namespace string) string {
+	return fmt.Sprintf("notebook-%s-%s", namespace, kfName)
+}
+
+func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unstructured, error) {
+	// name := instance.Name
+	// namespace := instance.Namespace
+	// clusterDomain := "cluster.local"
+	// prefix := fmt.Sprintf("/notebook/%s/%s/", namespace, name)
+
+	// // unpack annotations from Notebook resource
+	// annotations := make(map[string]string)
+	// for k, v := range instance.ObjectMeta.Annotations {
+	// 	annotations[k] = v
+	// }
+
+	// rewrite := fmt.Sprintf("/notebook/%s/%s/", namespace, name)
+	// // If AnnotationRewriteURI is present, use this value for "rewrite"
+	// if _, ok := annotations[AnnotationRewriteURI]; ok && len(annotations[AnnotationRewriteURI]) > 0 {
+	// 	rewrite = annotations[AnnotationRewriteURI]
+	// }
+
+	// if clusterDomainFromEnv, ok := os.LookupEnv("CLUSTER_DOMAIN"); ok {
+	// 	clusterDomain = clusterDomainFromEnv
+	// }
+	// service := fmt.Sprintf("%s.%s.svc.%s", name, namespace, clusterDomain)
+
+	authpol := &unstructured.Unstructured{}
+	// vsvc.SetAPIVersion("networking.istio.io/v1alpha3")
+	// vsvc.SetKind("VirtualService")
+	// vsvc.SetName(virtualServiceName(name, namespace))
+	// vsvc.SetNamespace(namespace)
+
+	// istioHost := os.Getenv("ISTIO_HOST")
+	// if len(istioHost) == 0 {
+	// 	istioHost = "*"
+	// }
+	// if err := unstructured.SetNestedStringSlice(vsvc.Object, []string{istioHost}, "spec", "hosts"); err != nil {
+	// 	return nil, fmt.Errorf("Set .spec.hosts error: %v", err)
+
+	// }
+
+	// istioGateway := os.Getenv("ISTIO_GATEWAY")
+	// if len(istioGateway) == 0 {
+	// 	istioGateway = "kubeflow/kubeflow-gateway"
+	// }
+	// if err := unstructured.SetNestedStringSlice(vsvc.Object, []string{istioGateway},
+	// 	"spec", "gateways"); err != nil {
+	// 	return nil, fmt.Errorf("set .spec.gateways error: %v", err)
+	// }
+
+	// headersRequestSet := make(map[string]string)
+	// // If AnnotationHeadersRequestSet is present, use its values in "headers.request.set"
+	// if _, ok := annotations[AnnotationHeadersRequestSet]; ok && len(annotations[AnnotationHeadersRequestSet]) > 0 {
+	// 	requestHeadersBytes := []byte(annotations[AnnotationHeadersRequestSet])
+	// 	if err := json.Unmarshal(requestHeadersBytes, &headersRequestSet); err != nil {
+	// 		// if JSON decoding fails, set an empty map
+	// 		headersRequestSet = make(map[string]string)
+	// 	}
+	// }
+	// // cast from map[string]string, as SetNestedSlice needs map[string]interface{}
+	// headersRequestSetInterface := make(map[string]interface{})
+	// for key, element := range headersRequestSet {
+	// 	headersRequestSetInterface[key] = element
+	// }
+
+	// // the http section of the istio VirtualService spec
+	// http := []interface{}{
+	// 	map[string]interface{}{
+	// 		"headers": map[string]interface{}{
+	// 			"request": map[string]interface{}{
+	// 				"set": headersRequestSetInterface,
+	// 			},
+	// 		},
+	// 		"match": []interface{}{
+	// 			map[string]interface{}{
+	// 				"uri": map[string]interface{}{
+	// 					"prefix": prefix,
+	// 				},
+	// 			},
+	// 		},
+	// 		"rewrite": map[string]interface{}{
+	// 			"uri": rewrite,
+	// 		},
+	// 		"route": []interface{}{
+	// 			map[string]interface{}{
+	// 				"destination": map[string]interface{}{
+	// 					"host": service,
+	// 					"port": map[string]interface{}{
+	// 						"number": int64(DefaultServingPort),
+	// 					},
+	// 				},
+	// 			},
+	// 		},
+	// 	},
+	// }
+
+	// // add http section to istio VirtualService spec
+	// if err := unstructured.SetNestedSlice(vsvc.Object, http, "spec", "http"); err != nil {
+	// 	return nil, fmt.Errorf("set .spec.http error: %v", err)
+	// }
+
+	return authpol, nil
+}
+
+func (r *NotebookReconciler) reconcileAuthorizationPolicy(instance *v1beta1.Notebook) error {
+	log := r.Log.WithValues("notebook", instance.Namespace)
+	authorizationPolicy, err := generateAuthorizationPolicy(instance)
+	if err != nil {
+		log.Info("Unable to generate AuthorizationPolicy...", err)
+		return err
+	}
+	if err := ctrl.SetControllerReference(instance, authorizationPolicy, r.Scheme); err != nil {
+		return err
+	}
+	// Check if the authorization policy already exists.
+	foundAuthPol := &unstructured.Unstructured{}
+	justCreated := false
+	// foundAuthPol.SetAPIVersion("security.istio.io/v1beta1")
+	// foundAuthPol.SetKind("AuthorizationPolicy")
+	err = r.Get(context.TODO(), types.NamespacedName{Name: authorizationPolicyName(instance.Name,
+		instance.Namespace), Namespace: instance.Namespace}, foundAuthPol)
+	//TESTING
+	log.Info("test debug", foundAuthPol, "err", err)
+
+	if err != nil && apierrs.IsNotFound(err) {
+		log.Info("Creating authorization policy", "namespace", instance.Namespace, "name",
+			authorizationPolicyName(instance.Name, instance.Namespace))
+		err = r.Create(context.TODO(), authorizationPolicy)
+		justCreated = true
+		if err != nil {
+			return err
+		}
+	} else if err != nil {
+		return err
+	}
+
+	if !justCreated && reconcilehelper.CopyVirtualService(authorizationPolicy, foundAuthPol) {
+		log.Info("Updating authorization policy", "namespace", instance.Namespace, "name",
+			authorizationPolicyName(instance.Name, instance.Namespace))
+		err = r.Update(context.TODO(), foundAuthPol)
 		if err != nil {
 			return err
 		}
