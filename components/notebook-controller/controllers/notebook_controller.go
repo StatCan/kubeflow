@@ -638,8 +638,9 @@ func authorizationPolicyName(kfName string, namespace string) string {
 }
 
 func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unstructured, error) {
-	// name := instance.Name
-	// namespace := instance.Namespace
+	namespace := instance.Namespace
+	name := authorizationPolicyName(instance.Name, namespace)
+
 	// clusterDomain := "cluster.local"
 	// prefix := fmt.Sprintf("/notebook/%s/%s/", namespace, name)
 
@@ -661,10 +662,10 @@ func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unst
 	// service := fmt.Sprintf("%s.%s.svc.%s", name, namespace, clusterDomain)
 
 	authpol := &unstructured.Unstructured{}
-	// vsvc.SetAPIVersion("networking.istio.io/v1alpha3")
-	// vsvc.SetKind("VirtualService")
-	// vsvc.SetName(virtualServiceName(name, namespace))
-	// vsvc.SetNamespace(namespace)
+	authpol.SetAPIVersion("security.istio.io/v1beta1")
+	authpol.SetKind("AuthorizationPolicy")
+	authpol.SetName(authorizationPolicyName(name, namespace))
+	authpol.SetNamespace(namespace)
 
 	// istioHost := os.Getenv("ISTIO_HOST")
 	// if len(istioHost) == 0 {
