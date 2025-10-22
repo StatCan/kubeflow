@@ -638,8 +638,8 @@ func authorizationPolicyName(kfName string, namespace string) string {
 }
 
 // adds a prefix to a list of path strings.
-func authorizationPolicyPaths(prefix string, paths []string) []string {
-	newPaths := make([]string, len(paths))
+func authorizationPolicyPaths(prefix string, paths []string) []interface{} {
+	newPaths := make([]interface{}, len(paths))
 
 	for i, path := range paths {
 		newPaths[i] = prefix + path
@@ -672,7 +672,7 @@ func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unst
 		map[string]interface{}{
 			"to": map[string]interface{}{
 				"operation": map[string]interface{}{
-					"methods": []string{"GET"},
+					"methods": []interface{}{"GET"},
 					"paths": authorizationPolicyPaths(prefix, []string{
 						// jupyterlab file download
 						"/files/*",
@@ -685,7 +685,7 @@ func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unst
 			},
 			"from": map[string]interface{}{
 				"source": map[string]interface{}{
-					"notRemoteIpBlocks": []string{"0.0.0.0/0"},
+					"notRemoteIpBlocks": []interface{}{"0.0.0.0/0"},
 				},
 			},
 		},
@@ -693,7 +693,7 @@ func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unst
 		map[string]interface{}{
 			"to": map[string]interface{}{
 				"operation": map[string]interface{}{
-					"methods": []string{"GET"},
+					"methods": []interface{}{"GET"},
 					"paths": authorizationPolicyPaths(prefix, []string{
 						// SASStudios download
 						"/sasstudio/SASStudio/sasexec/sessions/*",
@@ -704,12 +704,12 @@ func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unst
 			},
 			"from": map[string]interface{}{
 				"source": map[string]interface{}{
-					"notRemoteIpBlocks": []string{"0.0.0.0/0"},
+					"notRemoteIpBlocks": []interface{}{"0.0.0.0/0"},
 				},
 			},
 			"when": map[string]interface{}{
 				"key":    "request.headers[Accept]",
-				"values": []string{"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"},
+				"values": []interface{}{"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"},
 			},
 		},
 	}
