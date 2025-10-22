@@ -634,107 +634,90 @@ func (r *NotebookReconciler) reconcileVirtualService(instance *v1beta1.Notebook)
 }
 
 func authorizationPolicyName(kfName string, namespace string) string {
-	return fmt.Sprintf("notebook-%s-%s", namespace, kfName)
+	return fmt.Sprintf("notebook-%s-%s-block-downloads", namespace, kfName)
+}
+
+// adds a prefix to a list of path strings.
+func authorizationPolicyPaths(prefix string, paths []string) []string {
+	newPaths := make([]string, len(paths))
+
+	for i, path := range paths {
+		newPaths[i] = prefix + path
+	}
+
+	return newPaths
 }
 
 func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unstructured, error) {
 	namespace := instance.Namespace
-	name := authorizationPolicyName(instance.Name, namespace)
-
-	// clusterDomain := "cluster.local"
-	// prefix := fmt.Sprintf("/notebook/%s/%s/", namespace, name)
-
-	// // unpack annotations from Notebook resource
-	// annotations := make(map[string]string)
-	// for k, v := range instance.ObjectMeta.Annotations {
-	// 	annotations[k] = v
-	// }
-
-	// rewrite := fmt.Sprintf("/notebook/%s/%s/", namespace, name)
-	// // If AnnotationRewriteURI is present, use this value for "rewrite"
-	// if _, ok := annotations[AnnotationRewriteURI]; ok && len(annotations[AnnotationRewriteURI]) > 0 {
-	// 	rewrite = annotations[AnnotationRewriteURI]
-	// }
-
-	// if clusterDomainFromEnv, ok := os.LookupEnv("CLUSTER_DOMAIN"); ok {
-	// 	clusterDomain = clusterDomainFromEnv
-	// }
-	// service := fmt.Sprintf("%s.%s.svc.%s", name, namespace, clusterDomain)
+	nbName := instance.Name
+	name := authorizationPolicyName(nbName, namespace)
 
 	authpol := &unstructured.Unstructured{}
 	authpol.SetAPIVersion("security.istio.io/v1beta1")
 	authpol.SetKind("AuthorizationPolicy")
-	authpol.SetName(authorizationPolicyName(name, namespace))
+	authpol.SetName(name)
 	authpol.SetNamespace(namespace)
 
-	// istioHost := os.Getenv("ISTIO_HOST")
-	// if len(istioHost) == 0 {
-	// 	istioHost = "*"
-	// }
-	// if err := unstructured.SetNestedStringSlice(vsvc.Object, []string{istioHost}, "spec", "hosts"); err != nil {
-	// 	return nil, fmt.Errorf("Set .spec.hosts error: %v", err)
+	// add action spec
+	if err := unstructured.SetNestedField(authpol.Object, "DENY", "spec", "action"); err != nil {
+		return nil, fmt.Errorf("set .spec.action error: %v", err)
+	}
 
-	// }
+	// define the prefix string for all the authorization policy paths
+	prefix := fmt.Sprintf("/notebook/%s/%s", namespace, nbName)
 
-	// istioGateway := os.Getenv("ISTIO_GATEWAY")
-	// if len(istioGateway) == 0 {
-	// 	istioGateway = "kubeflow/kubeflow-gateway"
-	// }
-	// if err := unstructured.SetNestedStringSlice(vsvc.Object, []string{istioGateway},
-	// 	"spec", "gateways"); err != nil {
-	// 	return nil, fmt.Errorf("set .spec.gateways error: %v", err)
-	// }
+	// create the rules struct for authorization policy
+	authPolRules := []interface{}{
+		map[string]interface{}{
+			"to": map[string]interface{}{
+				"operation": map[string]interface{}{
+					"methods": []string{"GET"},
+					"paths": authorizationPolicyPaths(prefix, []string{
+						// jupyterlab file download
+						"/files/*",
+						// jupyterlab export as new file type, then downloads
+						"/nbconvert*",
+						// RStudios export
+						"/rstudio/export*",
+					}),
+				},
+			},
+			"from": map[string]interface{}{
+				"source": map[string]interface{}{
+					"notRemoteIpBlocks": []string{"0.0.0.0/0"},
+				},
+			},
+		},
+		// these need to be blocked for a specific header value, or else desired functionality is lost for just normally reading files
+		map[string]interface{}{
+			"to": map[string]interface{}{
+				"operation": map[string]interface{}{
+					"methods": []string{"GET"},
+					"paths": authorizationPolicyPaths(prefix, []string{
+						// SASStudios download
+						"/sasstudio/SASStudio/sasexec/sessions/*",
+						// Contents API
+						"/api/contents/*",
+					}),
+				},
+			},
+			"from": map[string]interface{}{
+				"source": map[string]interface{}{
+					"notRemoteIpBlocks": []string{"0.0.0.0/0"},
+				},
+			},
+			"when": map[string]interface{}{
+				"key":    "request.headers[Accept]",
+				"values": []string{"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"},
+			},
+		},
+	}
 
-	// headersRequestSet := make(map[string]string)
-	// // If AnnotationHeadersRequestSet is present, use its values in "headers.request.set"
-	// if _, ok := annotations[AnnotationHeadersRequestSet]; ok && len(annotations[AnnotationHeadersRequestSet]) > 0 {
-	// 	requestHeadersBytes := []byte(annotations[AnnotationHeadersRequestSet])
-	// 	if err := json.Unmarshal(requestHeadersBytes, &headersRequestSet); err != nil {
-	// 		// if JSON decoding fails, set an empty map
-	// 		headersRequestSet = make(map[string]string)
-	// 	}
-	// }
-	// // cast from map[string]string, as SetNestedSlice needs map[string]interface{}
-	// headersRequestSetInterface := make(map[string]interface{})
-	// for key, element := range headersRequestSet {
-	// 	headersRequestSetInterface[key] = element
-	// }
-
-	// // the http section of the istio VirtualService spec
-	// http := []interface{}{
-	// 	map[string]interface{}{
-	// 		"headers": map[string]interface{}{
-	// 			"request": map[string]interface{}{
-	// 				"set": headersRequestSetInterface,
-	// 			},
-	// 		},
-	// 		"match": []interface{}{
-	// 			map[string]interface{}{
-	// 				"uri": map[string]interface{}{
-	// 					"prefix": prefix,
-	// 				},
-	// 			},
-	// 		},
-	// 		"rewrite": map[string]interface{}{
-	// 			"uri": rewrite,
-	// 		},
-	// 		"route": []interface{}{
-	// 			map[string]interface{}{
-	// 				"destination": map[string]interface{}{
-	// 					"host": service,
-	// 					"port": map[string]interface{}{
-	// 						"number": int64(DefaultServingPort),
-	// 					},
-	// 				},
-	// 			},
-	// 		},
-	// 	},
-	// }
-
-	// // add http section to istio VirtualService spec
-	// if err := unstructured.SetNestedSlice(vsvc.Object, http, "spec", "http"); err != nil {
-	// 	return nil, fmt.Errorf("set .spec.http error: %v", err)
-	// }
+	// add rules section to spec
+	if err := unstructured.SetNestedSlice(authpol.Object, authPolRules, "spec", "rules"); err != nil {
+		return nil, fmt.Errorf("set .spec.rules error: %v", err)
+	}
 
 	return authpol, nil
 }
@@ -752,13 +735,10 @@ func (r *NotebookReconciler) reconcileAuthorizationPolicy(instance *v1beta1.Note
 	// Check if the authorization policy already exists.
 	foundAuthPol := &unstructured.Unstructured{}
 	justCreated := false
-	// foundAuthPol.SetAPIVersion("security.istio.io/v1beta1")
-	// foundAuthPol.SetKind("AuthorizationPolicy")
+	foundAuthPol.SetAPIVersion("security.istio.io/v1beta1")
+	foundAuthPol.SetKind("AuthorizationPolicy")
 	err = r.Get(context.TODO(), types.NamespacedName{Name: authorizationPolicyName(instance.Name,
 		instance.Namespace), Namespace: instance.Namespace}, foundAuthPol)
-	//TESTING
-	val, _ := foundAuthPol.MarshalJSON()
-	log.Info("test debug", "authpol", string(val), "err", err.Error())
 
 	if err != nil && apierrs.IsNotFound(err) {
 		log.Info("Creating authorization policy", "namespace", instance.Namespace, "name",
