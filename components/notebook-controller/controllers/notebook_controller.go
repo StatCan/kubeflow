@@ -670,46 +670,56 @@ func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unst
 	// create the rules struct for authorization policy
 	authPolRules := []interface{}{
 		map[string]interface{}{
-			"to": map[string]interface{}{
-				"operation": map[string]interface{}{
-					"methods": []interface{}{"GET"},
-					"paths": authorizationPolicyPaths(prefix, []string{
-						// jupyterlab file download
-						"/files/*",
-						// jupyterlab export as new file type, then downloads
-						"/nbconvert*",
-						// RStudios export
-						"/rstudio/export*",
-					}),
+			"to": []interface{}{
+				map[string]interface{}{
+					"operation": map[string]interface{}{
+						"methods": []interface{}{"GET"},
+						"paths": authorizationPolicyPaths(prefix, []string{
+							// jupyterlab file download
+							"/files/*",
+							// jupyterlab export as new file type, then downloads
+							"/nbconvert*",
+							// RStudios export
+							"/rstudio/export*",
+						}),
+					},
 				},
 			},
-			"from": map[string]interface{}{
-				"source": map[string]interface{}{
-					"notRemoteIpBlocks": []interface{}{"0.0.0.0/0"},
+			"from": []interface{}{
+				map[string]interface{}{
+					"source": map[string]interface{}{
+						"notRemoteIpBlocks": []interface{}{"0.0.0.0/0"},
+					},
 				},
 			},
 		},
 		// these need to be blocked for a specific header value, or else desired functionality is lost for just normally reading files
 		map[string]interface{}{
-			"to": map[string]interface{}{
-				"operation": map[string]interface{}{
-					"methods": []interface{}{"GET"},
-					"paths": authorizationPolicyPaths(prefix, []string{
-						// SASStudios download
-						"/sasstudio/SASStudio/sasexec/sessions/*",
-						// Contents API
-						"/api/contents/*",
-					}),
+			"to": []interface{}{
+				map[string]interface{}{
+					"operation": map[string]interface{}{
+						"methods": []interface{}{"GET"},
+						"paths": authorizationPolicyPaths(prefix, []string{
+							// SASStudios download
+							"/sasstudio/SASStudio/sasexec/sessions/*",
+							// Contents API
+							"/api/contents/*",
+						}),
+					},
 				},
 			},
-			"from": map[string]interface{}{
-				"source": map[string]interface{}{
-					"notRemoteIpBlocks": []interface{}{"0.0.0.0/0"},
+			"from": []interface{}{
+				map[string]interface{}{
+					"source": map[string]interface{}{
+						"notRemoteIpBlocks": []interface{}{"0.0.0.0/0"},
+					},
 				},
 			},
-			"when": map[string]interface{}{
-				"key":    "request.headers[Accept]",
-				"values": []interface{}{"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"},
+			"when": []interface{}{
+				map[string]interface{}{
+					"key":    "request.headers[Accept]",
+					"values": []interface{}{"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"},
+				},
 			},
 		},
 	}
