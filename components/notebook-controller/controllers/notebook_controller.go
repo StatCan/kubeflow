@@ -70,6 +70,11 @@ func ignoreNotFound(err error) error {
 	return err
 }
 
+// Zone change: struct to store processed envs values
+type NotebookReconcilerEnvs struct {
+	AllowDownloadIPs map[string]interface{}
+}
+
 // NotebookReconciler reconciles a Notebook object
 type NotebookReconciler struct {
 	client.Client
@@ -77,6 +82,7 @@ type NotebookReconciler struct {
 	Scheme        *runtime.Scheme
 	Metrics       *metrics.Metrics
 	EventRecorder record.EventRecorder
+	Envs          *NotebookReconcilerEnvs
 }
 
 // +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
@@ -85,6 +91,7 @@ type NotebookReconciler struct {
 // +kubebuilder:rbac:groups=apps,resources=statefulsets,verbs="*"
 // +kubebuilder:rbac:groups=kubeflow.org,resources=notebooks;notebooks/status;notebooks/finalizers,verbs="*"
 // +kubebuilder:rbac:groups="networking.istio.io",resources=virtualservices,verbs="*"
+// +kubebuilder:rbac:groups="security.istio.io",resources=AuthorizationPolicies,verbs="*"
 
 func (r *NotebookReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := r.Log.WithValues("notebook", req.NamespacedName)
@@ -202,6 +209,14 @@ func (r *NotebookReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	// Reconcile virtual service if we use ISTIO.
 	if os.Getenv("USE_ISTIO") == "true" {
 		err = r.reconcileVirtualService(instance)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
+	// Zone Change: Reconcile Authorization policy if we use ISTIO
+	if os.Getenv("USE_ISTIO") == "true" {
+		err = r.reconcileAuthorizationPolicy(instance)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
@@ -625,6 +640,149 @@ func (r *NotebookReconciler) reconcileVirtualService(instance *v1beta1.Notebook)
 	return nil
 }
 
+func authorizationPolicyName(kfName string, namespace string) string {
+	return fmt.Sprintf("notebook-%s-%s-block-downloads", namespace, kfName)
+}
+
+// adds a prefix to a list of path strings.
+func authorizationPolicyPaths(prefix string, paths []string) []interface{} {
+	newPaths := make([]interface{}, len(paths))
+
+	for i, path := range paths {
+		newPaths[i] = prefix + path
+	}
+
+	return newPaths
+}
+
+// Zone: fn to generate AuthorizationPolicy to block downloads from notebooks
+func generateAuthorizationPolicy(instance *v1beta1.Notebook, authPolIPsInterface map[string]interface{}) (*unstructured.Unstructured, error) {
+	namespace := instance.Namespace
+	nbName := instance.Name
+	name := authorizationPolicyName(nbName, namespace)
+
+	authpol := &unstructured.Unstructured{}
+	authpol.SetAPIVersion("security.istio.io/v1beta1")
+	authpol.SetKind("AuthorizationPolicy")
+	authpol.SetName(name)
+	authpol.SetNamespace(namespace)
+
+	// add action spec
+	if err := unstructured.SetNestedField(authpol.Object, "DENY", "spec", "action"); err != nil {
+		return nil, fmt.Errorf("set .spec.action error: %v", err)
+	}
+
+	// define the prefix string for all the authorization policy paths
+	prefix := fmt.Sprintf("/notebook/%s/%s", namespace, nbName)
+
+	// create the rules struct for authorization policy
+	authPolRules := []interface{}{
+		map[string]interface{}{
+			"to": []interface{}{
+				map[string]interface{}{
+					"operation": map[string]interface{}{
+						"methods": []interface{}{"GET"},
+						"paths": authorizationPolicyPaths(prefix, []string{
+							// jupyterlab file download
+							"/files/*",
+							// jupyterlab export as new file type, then downloads
+							"/nbconvert*",
+							// RStudios export
+							"/rstudio/export*",
+						}),
+					},
+				},
+			},
+			"from": []interface{}{
+				map[string]interface{}{
+					"source": authPolIPsInterface,
+				},
+			},
+		},
+		// these need to be blocked for a specific header value, or else desired functionality is lost for just normally reading files
+		map[string]interface{}{
+			"to": []interface{}{
+				map[string]interface{}{
+					"operation": map[string]interface{}{
+						"methods": []interface{}{"GET"},
+						"paths": authorizationPolicyPaths(prefix, []string{
+							// SASStudios download
+							"/sasstudio/SASStudio/sasexec/sessions/*",
+							// Contents API
+							"/api/contents/*",
+						}),
+					},
+				},
+			},
+			"from": []interface{}{
+				map[string]interface{}{
+					"source": authPolIPsInterface,
+				},
+			},
+			"when": []interface{}{
+				map[string]interface{}{
+					"key":       "request.headers[Accept]",
+					"notValues": []interface{}{"*/*"},
+				},
+			},
+		},
+	}
+
+	// add rules section to spec
+	if err := unstructured.SetNestedSlice(authpol.Object, authPolRules, "spec", "rules"); err != nil {
+		return nil, fmt.Errorf("set .spec.rules error: %v", err)
+	}
+
+	return authpol, nil
+}
+
+// Zone: reconciles authorization policy to block downloads
+func (r *NotebookReconciler) reconcileAuthorizationPolicy(instance *v1beta1.Notebook) error {
+	log := r.Log.WithValues("notebook", instance.Namespace)
+	authorizationPolicy, err := generateAuthorizationPolicy(instance, r.Envs.AllowDownloadIPs)
+	if err != nil {
+		log.Info("Unable to generate AuthorizationPolicy...", err)
+		return err
+	}
+	if err := ctrl.SetControllerReference(instance, authorizationPolicy, r.Scheme); err != nil {
+		return err
+	}
+	// Check if the authorization policy already exists.
+	foundAuthPol := &unstructured.Unstructured{}
+	justCreated := false
+	foundAuthPol.SetAPIVersion("security.istio.io/v1beta1")
+	foundAuthPol.SetKind("AuthorizationPolicy")
+	err = r.Get(context.TODO(), types.NamespacedName{Name: authorizationPolicyName(instance.Name,
+		instance.Namespace), Namespace: instance.Namespace}, foundAuthPol)
+
+	if err != nil && apierrs.IsNotFound(err) {
+		log.Info("Creating authorization policy", "namespace", instance.Namespace, "name",
+			authorizationPolicyName(instance.Name, instance.Namespace))
+		err = r.Create(context.TODO(), authorizationPolicy)
+		justCreated = true
+		if err != nil {
+			return err
+		}
+	} else if err != nil {
+		return err
+	}
+
+	// Using "CopyVirtualService" here but that function works fine with AuthorizationPolicies
+	// since it just copies from one unstructured object to another, nothing virtualservice specific
+	// And its easier to just re-use this fn since reconcilehelper comes from the "common" component
+	// and this controller imports from kubeflow/kubeflow for it
+	if !justCreated && reconcilehelper.CopyVirtualService(authorizationPolicy, foundAuthPol) {
+		log.Info("Updating authorization policy", "namespace", instance.Namespace, "name",
+			authorizationPolicyName(instance.Name, instance.Namespace))
+		err = r.Update(context.TODO(), foundAuthPol)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func isStsOrPodEvent(event *corev1.Event) bool {
 	return event.InvolvedObject.Kind == "Pod" || event.InvolvedObject.Kind == "StatefulSet"
 }
@@ -742,6 +900,13 @@ func (r *NotebookReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		virtualService.SetAPIVersion("networking.istio.io/v1alpha3")
 		virtualService.SetKind("VirtualService")
 		builder.Owns(virtualService)
+	}
+	// watch Authorization Policy
+	if os.Getenv("USE_ISTIO") == "true" {
+		authpol := &unstructured.Unstructured{}
+		authpol.SetAPIVersion("security.istio.io/v1beta1")
+		authpol.SetKind("AuthorizationPolicy")
+		builder.Owns(authpol)
 	}
 
 	err := builder.Complete(r)

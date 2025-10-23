@@ -18,6 +18,7 @@ package main
 import (
 	"flag"
 	"os"
+	"strings"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -52,6 +53,31 @@ func init() {
 	utilruntime.Must(nbv1beta1.AddToScheme(scheme))
 
 	//+kubebuilder:scaffold:scheme
+}
+
+// Zone change: fn to parse IP list from env var.
+// returns map[string]interface{} to be used in authorization policy creation
+func parseAllowDownloadIPs() map[string]interface{} {
+	// default value
+	authPolIpsInterface := map[string]interface{}{
+		"remoteIpBlocks": []interface{}{"0.0.0.0/0"},
+	}
+	// get the IP blocks for the authorization policy (space seperated list)
+	authPolIpsValue := os.Getenv("ALLOW_DOWNLOAD_IPS")
+	if len(authPolIpsValue) != 0 {
+		ipList := strings.Split(authPolIpsValue, " ")
+
+		ipInterface := make([]interface{}, len(ipList))
+		for i, ip := range ipList {
+			ipInterface[i] = ip
+		}
+
+		authPolIpsInterface = map[string]interface{}{
+			"notRemoteIpBlocks": ipInterface,
+		}
+	}
+
+	return authPolIpsInterface
 }
 
 func main() {
@@ -102,6 +128,7 @@ func main() {
 		Scheme:        mgr.GetScheme(),
 		Metrics:       controller_metrics.NewMetrics(mgr.GetClient()),
 		EventRecorder: mgr.GetEventRecorderFor("notebook-controller"),
+		Envs:          &controllers.NotebookReconcilerEnvs{AllowDownloadIPs: parseAllowDownloadIPs()},
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Notebook")
 		os.Exit(1)
