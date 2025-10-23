@@ -70,6 +70,11 @@ func ignoreNotFound(err error) error {
 	return err
 }
 
+// Zone change: struct to store processed envs values
+type NotebookReconcilerEnvs struct {
+	AllowDownloadIPs map[string]interface{}
+}
+
 // NotebookReconciler reconciles a Notebook object
 type NotebookReconciler struct {
 	client.Client
@@ -77,6 +82,7 @@ type NotebookReconciler struct {
 	Scheme        *runtime.Scheme
 	Metrics       *metrics.Metrics
 	EventRecorder record.EventRecorder
+	Envs          *NotebookReconcilerEnvs
 }
 
 // +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
@@ -648,7 +654,7 @@ func authorizationPolicyPaths(prefix string, paths []string) []interface{} {
 	return newPaths
 }
 
-func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unstructured, error) {
+func generateAuthorizationPolicy(instance *v1beta1.Notebook, authPolIPsInterface map[string]interface{}) (*unstructured.Unstructured, error) {
 	namespace := instance.Namespace
 	nbName := instance.Name
 	name := authorizationPolicyName(nbName, namespace)
@@ -687,9 +693,7 @@ func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unst
 			},
 			"from": []interface{}{
 				map[string]interface{}{
-					"source": map[string]interface{}{
-						"notRemoteIpBlocks": []interface{}{"0.0.0.0/0"},
-					},
+					"source": authPolIPsInterface,
 				},
 			},
 		},
@@ -710,15 +714,13 @@ func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unst
 			},
 			"from": []interface{}{
 				map[string]interface{}{
-					"source": map[string]interface{}{
-						"notRemoteIpBlocks": []interface{}{"0.0.0.0/0"},
-					},
+					"source": authPolIPsInterface,
 				},
 			},
 			"when": []interface{}{
 				map[string]interface{}{
-					"key":    "request.headers[Accept]",
-					"values": []interface{}{"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"},
+					"key":       "request.headers[Accept]",
+					"notValues": []interface{}{"*/*"},
 				},
 			},
 		},
@@ -734,7 +736,7 @@ func generateAuthorizationPolicy(instance *v1beta1.Notebook) (*unstructured.Unst
 
 func (r *NotebookReconciler) reconcileAuthorizationPolicy(instance *v1beta1.Notebook) error {
 	log := r.Log.WithValues("notebook", instance.Namespace)
-	authorizationPolicy, err := generateAuthorizationPolicy(instance)
+	authorizationPolicy, err := generateAuthorizationPolicy(instance, r.Envs.AllowDownloadIPs)
 	if err != nil {
 		log.Info("Unable to generate AuthorizationPolicy...", err)
 		return err
