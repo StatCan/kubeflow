@@ -91,6 +91,7 @@ type NotebookReconciler struct {
 // +kubebuilder:rbac:groups=apps,resources=statefulsets,verbs="*"
 // +kubebuilder:rbac:groups=kubeflow.org,resources=notebooks;notebooks/status;notebooks/finalizers,verbs="*"
 // +kubebuilder:rbac:groups="networking.istio.io",resources=virtualservices,verbs="*"
+// +kubebuilder:rbac:groups="security.istio.io",resources=AuthorizationPolicies,verbs="*"
 
 func (r *NotebookReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := r.Log.WithValues("notebook", req.NamespacedName)
@@ -764,6 +765,10 @@ func (r *NotebookReconciler) reconcileAuthorizationPolicy(instance *v1beta1.Note
 		return err
 	}
 
+	// Using "CopyVirtualService" here but that function works fine with AuthorizationPolicies
+	// since it just copies from one unstructured object to another, nothing virtualservice specific
+	// And its easier to just re-use this fn since reconcilehelper comes from the "common" component
+	// and this controller import from kubeflow/kubeflow for it
 	if !justCreated && reconcilehelper.CopyVirtualService(authorizationPolicy, foundAuthPol) {
 		log.Info("Updating authorization policy", "namespace", instance.Namespace, "name",
 			authorizationPolicyName(instance.Name, instance.Namespace))
@@ -893,6 +898,13 @@ func (r *NotebookReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		virtualService.SetAPIVersion("networking.istio.io/v1alpha3")
 		virtualService.SetKind("VirtualService")
 		builder.Owns(virtualService)
+	}
+	// watch Authorization Policy
+	if os.Getenv("USE_ISTIO") == "true" {
+		authpol := &unstructured.Unstructured{}
+		authpol.SetAPIVersion("security.istio.io/v1beta1")
+		authpol.SetKind("AuthorizationPolicy")
+		builder.Owns(authpol)
 	}
 
 	err := builder.Complete(r)
