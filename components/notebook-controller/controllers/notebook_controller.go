@@ -655,6 +655,7 @@ func authorizationPolicyPaths(prefix string, paths []string) []interface{} {
 	return newPaths
 }
 
+// Zone: fn to generate AuthorizationPolicy to block downloads from notebooks
 func generateAuthorizationPolicy(instance *v1beta1.Notebook, authPolIPsInterface map[string]interface{}) (*unstructured.Unstructured, error) {
 	namespace := instance.Namespace
 	nbName := instance.Name
@@ -735,6 +736,7 @@ func generateAuthorizationPolicy(instance *v1beta1.Notebook, authPolIPsInterface
 	return authpol, nil
 }
 
+// Zone: reconciles authorization policy to block downloads
 func (r *NotebookReconciler) reconcileAuthorizationPolicy(instance *v1beta1.Notebook) error {
 	log := r.Log.WithValues("notebook", instance.Namespace)
 	authorizationPolicy, err := generateAuthorizationPolicy(instance, r.Envs.AllowDownloadIPs)
@@ -768,7 +770,7 @@ func (r *NotebookReconciler) reconcileAuthorizationPolicy(instance *v1beta1.Note
 	// Using "CopyVirtualService" here but that function works fine with AuthorizationPolicies
 	// since it just copies from one unstructured object to another, nothing virtualservice specific
 	// And its easier to just re-use this fn since reconcilehelper comes from the "common" component
-	// and this controller import from kubeflow/kubeflow for it
+	// and this controller imports from kubeflow/kubeflow for it
 	if !justCreated && reconcilehelper.CopyVirtualService(authorizationPolicy, foundAuthPol) {
 		log.Info("Updating authorization policy", "namespace", instance.Namespace, "name",
 			authorizationPolicyName(instance.Name, instance.Namespace))
