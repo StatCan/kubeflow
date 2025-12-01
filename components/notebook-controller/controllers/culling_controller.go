@@ -335,6 +335,7 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 
 	nm, ns := meta.GetName(), meta.GetNamespace()
 
+	// zone: Commented this out as the api call to get kernel activity for a notebook was constantly failing
 	// kernels := getNotebookApiKernels(nm, ns, log)
 	// if kernels != nil && len(kernels) > 0 {
 	// 	updateTimestampFromKernelsActivity(meta, kernels, log, &updated)
