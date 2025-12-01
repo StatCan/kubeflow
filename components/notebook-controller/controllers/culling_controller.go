@@ -334,6 +334,7 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 	updated := false
 
 	nm, ns := meta.GetName(), meta.GetNamespace()
+
 	// kernels := getNotebookApiKernels(nm, ns, log)
 	// if kernels != nil && len(kernels) > 0 {
 	// 	updateTimestampFromKernelsActivity(meta, kernels, log, &updated)
