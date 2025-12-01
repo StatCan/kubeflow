@@ -334,13 +334,15 @@ func updateNotebookLastActivityAnnotation(meta *metav1.ObjectMeta, log logr.Logg
 	updated := false
 
 	nm, ns := meta.GetName(), meta.GetNamespace()
-	kernels := getNotebookApiKernels(nm, ns, log)
-	if kernels != nil && len(kernels) > 0 {
-		updateTimestampFromKernelsActivity(meta, kernels, log, &updated)
-		if updated {
-			return
-		}
-	}
+
+	// zone: Commented this out as the api call to get kernel activity for a notebook was constantly failing
+	// kernels := getNotebookApiKernels(nm, ns, log)
+	// if kernels != nil && len(kernels) > 0 {
+	// 	updateTimestampFromKernelsActivity(meta, kernels, log, &updated)
+	// 	if updated {
+	// 		return
+	// 	}
+	// }
 
 	cpuQuery := fmt.Sprintf("sum by(container) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"%s\", container=\"%s\"})",
 		ns, nm)
