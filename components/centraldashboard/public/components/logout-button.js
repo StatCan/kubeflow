@@ -1,6 +1,7 @@
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+
+import '@polymer/iron-ajax/iron-ajax.js';
 import '@polymer/paper-button/paper-button.js';
-import css from './logout-button.css';
 
 /**
  * Logout button component.
@@ -9,25 +10,72 @@ import css from './logout-button.css';
  * AAW: Not using this compoent and the logoutURL env param. Doesn't work.
  * https://github.com/StatCan/kubeflow/issues/152
  */
+
 export class LogoutButton extends PolymerElement {
     static get template() {
-        return html([`
-            <style>${css.toString()}</style>
-            <a href$="{{logoutUrl}}" on-tap="logout">
-                <paper-button id="logout-button">
-                    <iron-icon icon="kubeflow:logout" 
-                               title="{{localize('landingPage.btnLogout')}}">
-                    </iron-icon>
-                </paper-button>
-            </a>
-        `]);
+        return html`
+            <paper-button id="logout-button" on-tap="logout">
+                <iron-icon icon='kubeflow:logout' title="Logout">
+                </iron-icon>
+            </paper-button>
+            <iron-ajax
+                id='logout'
+                url$='{{logoutUrl}}'
+                method='post'
+                handle-as='json'
+                headers='{{headers}}'
+                on-response='_postLogout'>
+            </iron-ajax>
+        `;
+    }
+
+    static get properties() {
+        return {
+            headers: {
+                type: Object,
+                computed: '_setHeaders()',
+            },
+            logoutUrl: {
+                type: String,
+            },
+        };
     }
 
     /**
-     * Set current page to logoutURL.
+     * After successful logout, redirects user to `afterLogoutURL`,
+     * received from the backend.
+     *
+     * @param {{Event}} event
+     * @private
+     */
+    _postLogout(event) {
+        window.location.replace(event.detail.response['afterLogoutURL']);
+    }
+
+    /**
+     * Call logout endpoint.
      */
     logout() {
-        window.top.location.href = this.logoutUrl;
+        // call iron-ajax
+        this.$.logout.generateRequest();
+    }
+
+    /**
+     * Set 'Authorization' header based on the existing cookie.
+     * Currently, the logout method only accepts authorization header, see:
+     * https://github.com/arrikto/oidc-authservice/blob/master/server.go#L386
+     *
+     * @return {{Object}} headers
+     * @private
+     */
+    _setHeaders() {
+        const cookie = ('; ' + document.cookie)
+            .split(`; authservice_session=`)
+            .pop()
+            .split(';')[0];
+        return {
+            'Authorization': `Bearer ${cookie}`,
+        };
     }
 }
 
