@@ -52,6 +52,7 @@ export class LogoutButton extends PolymerElement {
      */
     _postLogout(event) {
         //window.location.replace(event.detail.response['afterLogoutURL']);
+        // eslint-disable-next-line no-console
         console.log(event.detail.response);
     }
 
