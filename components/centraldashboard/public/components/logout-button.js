@@ -9,7 +9,7 @@ import '@polymer/paper-button/paper-button.js';
  *
  * AAW: Not using this component and the logoutURL env param. Doesn't work.
  * https://github.com/StatCan/kubeflow/issues/152
- * 
+ *
  * ZONE: Trying to use this component with oidc-authservice
  */
 
@@ -51,7 +51,8 @@ export class LogoutButton extends PolymerElement {
      * @private
      */
     _postLogout(event) {
-        window.location.replace(event.detail.response['afterLogoutURL']);
+        //window.location.replace(event.detail.response['afterLogoutURL']);
+        console.log(event.detail.response);
     }
 
     /**
