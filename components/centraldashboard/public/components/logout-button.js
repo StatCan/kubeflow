@@ -7,8 +7,10 @@ import '@polymer/paper-button/paper-button.js';
  * Logout button component.
  * Handles the logout requests and post-logout redirects.
  *
- * AAW: Not using this compoent and the logoutURL env param. Doesn't work.
+ * AAW: Not using this component and the logoutURL env param. Doesn't work.
  * https://github.com/StatCan/kubeflow/issues/152
+ * 
+ * ZONE: Trying to use this component
  */
 
 export class LogoutButton extends PolymerElement {
