@@ -34,7 +34,7 @@ export class LogoutButton extends PolymerElement {
             </paper-button>
             <iron-ajax
                 id='gettoken'
-                url$='/authservice/getToken'
+                url='/authservice/getToken'
                 method='get'
                 handle-as='json'
                 headers='{{headers}}'
