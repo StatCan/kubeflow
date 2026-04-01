@@ -29,7 +29,7 @@ export class LogoutButton extends PolymerElement {
                 on-response='_postLogout'>
             </iron-ajax>
             <paper-button id="token-button" on-tap="gettoken">
-                <iron-icon icon='kubeflow:logout' title="Test">
+                <iron-icon icon='kubeflow:account' title="Test">
                 </iron-icon>
             </paper-button>
             <iron-ajax
@@ -80,6 +80,11 @@ export class LogoutButton extends PolymerElement {
     logout() {
         // call iron-ajax
         this.$.logout.generateRequest();
+    }
+
+    gettoken() {
+        // call iron-ajax
+        this.$.gettoken.generateRequest();
     }
 
     /**
