@@ -28,18 +28,6 @@ export class LogoutButton extends PolymerElement {
                 headers='{{headers}}'
                 on-response='_postLogout'>
             </iron-ajax>
-            <paper-button id="token-button" on-tap="gettoken">
-                <iron-icon icon='kubeflow:account' title="Test">
-                </iron-icon>
-            </paper-button>
-            <iron-ajax
-                id='gettoken'
-                url='/authservice/getToken'
-                method='get'
-                handle-as='json'
-                headers='{{headers}}'
-                on-response='_postToken'>
-            </iron-ajax>
         `;
     }
 
@@ -63,15 +51,9 @@ export class LogoutButton extends PolymerElement {
      * @private
      */
     _postLogout(event) {
-        //window.location.replace(event.detail.response['afterLogoutURL']);
         // eslint-disable-next-line no-console
         console.log(event.detail.response);
-    }
-
-    _postToken(event) {
-        //window.location.replace(event.detail.response['afterLogoutURL']);
-        // eslint-disable-next-line no-console
-        console.log(event.detail.response);
+        window.location.replace(event.detail.response['afterLogoutURL']);
     }
 
     /**
@@ -80,11 +62,6 @@ export class LogoutButton extends PolymerElement {
     logout() {
         // call iron-ajax
         this.$.logout.generateRequest();
-    }
-
-    gettoken() {
-        // call iron-ajax
-        this.$.gettoken.generateRequest();
     }
 
     /**
