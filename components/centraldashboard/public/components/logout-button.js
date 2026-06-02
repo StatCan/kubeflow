@@ -2,6 +2,8 @@ import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
 import '@polymer/iron-ajax/iron-ajax.js';
 import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/iron-icons/iron-icons.js';
 
 /**
  * Logout button component.
@@ -13,10 +15,13 @@ import '@polymer/paper-button/paper-button.js';
 export class LogoutButton extends PolymerElement {
     static get template() {
         return html`
-            <paper-button id="logout-button" on-tap="logout">
-                <iron-icon icon='kubeflow:logout' title="Logout">
-                </iron-icon>
-            </paper-button>
+            <paper-icon-button 
+                id="logout-button" 
+                icon="kubeflow:logout" 
+                on-tap="logout"
+                title="{{localize('landingPage.btnLogout')}}"
+            >
+            </paper-icon-button>
             <iron-ajax
                     id='logout'
                     url$='{{logoutUrl}}'
