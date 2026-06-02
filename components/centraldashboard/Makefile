@@ -1,4 +1,4 @@
-IMG ?= centraldashboard-aaw2
+IMG ?= centraldashboard-zone
 TAG ?= $(shell git describe --tags --always --dirty)
 COMMIT = $(shell git rev-parse HEAD)
 DOCKERFILE ?= Dockerfile
