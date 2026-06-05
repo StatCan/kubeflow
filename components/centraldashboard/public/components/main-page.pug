@@ -81,8 +81,7 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
                     user='[[user]]', language='[[language]]', resources='[[resources]]')
                 footer#User-Badge
                     paper-button.language-button(on-click='_changeLanguage') {{localize('mainPage.languageButton')}}
-                    a(target="_top", href="/logout")
-                        iron-icon.icon(icon='kubeflow:logout' title="{{localize('landingPage.btnLogout')}}")
+                    logout-button#logoutComponent(logout-url='[[logoutUrl]]')
         main#Content
             section#ViewTabs(hidden$='[[hideTabs]]')
                 paper-tabs(selected='[[page]]', attr-for-selected='page')
