@@ -79,7 +79,7 @@ describe('Main Page', () => {
         "kubeflowVersion": "v1beta1",
         "provider": "test_provider",
         "providerName": "azure",
-        "logoutUrl": "/authservice/logout"
+        "logoutUrl": "/logout"
       },
       "namespaces": [
         {

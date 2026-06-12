@@ -351,7 +351,7 @@ export class MainPage extends mixinBehaviors([AppLocalizeBehavior, IronResizable
 
         switch (newPage) {
         case 'logout':
-            this.$.logoutComponent.logout();
+            window.top.location.href = '/logout';
             break;
         case 'activity':
             this.page = 'activity';
