@@ -17,8 +17,6 @@ on:
 # Environment variables available to all jobs and steps in this workflow
 env:
   REGISTRY_NAME: stcthezoneacr
-  CLUSTER_NAME: k8s-cancentral-02-covid-aks
-  CLUSTER_RESOURCE_GROUP: k8s-cancentral-01-covid-aks
   TRIVY_VERSION: "v0.72.0"
   TRIVY_DATABASES: '"ghcr.io/aquasecurity/trivy-db:2","public.ecr.aws/aquasecurity/trivy-db"'
   TRIVY_JAVA_DATABASES: '"ghcr.io/aquasecurity/trivy-java-db:1","public.ecr.aws/aquasecurity/trivy-java-db"'
