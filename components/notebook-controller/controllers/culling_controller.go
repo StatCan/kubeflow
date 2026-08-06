@@ -56,7 +56,11 @@ var WORKDAY_START_HOUR_UTC = 10
 // In case of Notebooks, the controller will reduce the replicas to 0 if
 // this annotation is set. If it's not set, then it will make the replicas 1.
 const STOP_ANNOTATION = "kubeflow-resource-stopped"
-const CULLING_STOP_ANNOTATION = "notebook-culling-stopped"
+
+// Zone: Annotation to keep track of when a resource was culled, so that we can
+// indicate if it was manually stopped or not.
+const CULLING_STOP_ANNOTATION = "kubeflow-resource-culling"
+
 const LAST_ACTIVITY_ANNOTATION = "notebooks.kubeflow.org/last-activity"
 const LAST_ACTIVITY_CHECK_TIMESTAMP_ANNOTATION = "notebooks.kubeflow.org/last_activity_check_timestamp"
 
