@@ -1,5 +1,5 @@
 # Image URL to use all building/pushing image targets
-IMG ?= notebook-controller
+IMG ?= ghcr.io/kubeflow/kubeflow/notebook-controller
 TAG ?= $(shell git describe --tags --always --dirty)
 ARCH ?= linux/amd64
 
@@ -66,8 +66,8 @@ vet: ## Run go vet against code.
 
 .PHONY: test
 test: manifests generate fmt vet envtest ## Run tests.
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test -v ./... -coverprofile cover.out
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test -v ./controllers/... -coverprofile cover.out
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) --arch=amd64 use $(ENVTEST_K8S_VERSION) -p path)" go test -v ./... -coverprofile cover.out
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) --arch=amd64 use $(ENVTEST_K8S_VERSION) -p path)" go test -v ./controllers/... -coverprofile cover.out
 
 .PHONY: manager
 manager: generate fmt vet ## Build manager binary.
