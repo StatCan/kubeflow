@@ -144,7 +144,7 @@ kustomize: ## Download kustomize locally if necessary.
 	$(call go-get-tool,$(KUSTOMIZE),sigs.k8s.io/kustomize/v3/cmd/kustomize@v3.2.0)
 
 ENVTEST = $(shell pwd)/bin/setup-envtest
-ENVTEST_VERSION?=release-0.14
+ENVTEST_VERSION?=release-0.19
 
 .PHONY: envtest
 envtest: ## Download envtest-setup locally if necessary.
