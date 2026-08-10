@@ -58,7 +58,7 @@ var WORKDAY_START_HOUR_UTC = 10
 const STOP_ANNOTATION = "kubeflow-resource-stopped"
 
 // Zone: Annotation to keep track of when a resource was culled, so that we can
-// indicate if it was manually stopped or not.
+// indentify if it was manually stopped or not.
 const CULLING_STOP_ANNOTATION = "kubeflow-resource-culling"
 
 const LAST_ACTIVITY_ANNOTATION = "notebooks.kubeflow.org/last-activity"
