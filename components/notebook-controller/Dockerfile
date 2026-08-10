@@ -30,5 +30,5 @@ FROM gcr.io/distroless/base:debug
 WORKDIR /
 COPY --from=builder /workspace/notebook-controller/manager .
 COPY --from=builder /workspace/notebook-controller/third_party/license.txt third_party/license.txt
-COPY --from=builder /go/pkg/mod/github.com/hashicorp third_party/hashicorp
+COPY --from=builder /go/pkg/mod/cache/download/github.com/hashicorp third_party/hashicorp
 ENTRYPOINT ["/manager"]
