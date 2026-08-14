@@ -4,7 +4,6 @@ describe('Main Page', () => {
     cy.mockDashboardLinksRequest();
     cy.mockEnvInfoRequest();
     cy.mockActivitiesRequest('test-namespace');
-    cy.mockGetNotebooksRequest('test-namespace');
     cy.mockDefaultNotebook('test-namespace');
     
     cy.visit('/');
@@ -13,8 +12,7 @@ describe('Main Page', () => {
       '@mockWorkgroupRequest', 
       '@mockDashboardLinksRequest', 
       '@mockEnvInfoRequest', 
-      '@mockActivitiesRequest', 
-      '@mockGetNotebooksRequest',
+      '@mockActivitiesRequest',
       '@mockDefaultNotebook'
     ]);
   });
@@ -110,37 +108,6 @@ describe('Main Page', () => {
 
   it('should change namespace', () => {
     cy.mockActivitiesRequest('test-namespace-2');
-    cy.intercept('GET', `/jupyter/api/namespaces/test-namespace-2/notebooks`, {
-      "success": true,
-      "status": 200,
-      "notebooks": [
-        {
-          "age": "2022-09-01T15:15:35Z",
-          "cpu": "1m",
-          "gpus": {
-            "count": 0,
-            "message": ""
-          },
-          "image": "kubeflownotebookswg/jupyter-scipy:latest",
-          "lastActivity": "2022-09-21T12:15:06Z",
-          "memory": "1073741824m",
-          "name": "test-notebook-for-testing",
-          "namespace": "test-namespace-2",
-          "serverType": "jupyter",
-          "shortImage": "jupyter-scipy:latest",
-          "status": {
-            "message": "Warning",
-            "phase": "warning",
-            "state": ""
-          },
-          "volumes": [
-            "dshm",
-            "dog-breed-nwmrc-tutorial-dog-breed-datavol-1-xrrmt-lf276",
-            "dog-breed-nwmrc-tutorial-dog-breed-workspace-24ntl-jcjlv"
-          ]
-        }
-      ]
-    }).as('mockGetNotebooksRequest2');
     cy.intercept('GET', `/jupyter/api/namespaces/test-namespace-2/defaultnotebook`, {
       statusCode: 500,
     }).as('mockDefaultNotebook2');
@@ -148,7 +115,6 @@ describe('Main Page', () => {
     cy.get('main-page').shadow().find('#NamespaceSelector').shadow().find('paper-menu-button > paper-listbox > paper-item:nth-child(2)').click({force: true});
     cy.wait([
       '@mockActivitiesRequest',
-      '@mockGetNotebooksRequest2',
       '@mockDefaultNotebook2'
     ]);
 

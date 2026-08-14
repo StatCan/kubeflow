@@ -60,12 +60,6 @@ Cypress.Commands.add('mockActivitiesRequest', (namespace: string) => {
   }).as('mockActivitiesRequest');
 });
 
-Cypress.Commands.add('mockGetNotebooksRequest', (namespace: string) => {
-  cy.intercept('GET', `/jupyter/api/namespaces/${namespace}/notebooks`, {
-    fixture: 'notebooks',
-  }).as('mockGetNotebooksRequest');
-});
-
 Cypress.Commands.add('mockGetContributorsRequest', (namespace: string) => {
   cy.intercept('GET', `/api/workgroup/get-contributors/${namespace}`, {
     fixture: 'contributors',
