@@ -42,12 +42,6 @@ declare global {
        * and returns object with mock activities for the given namespace
        */
       mockActivitiesRequest(namespace: string): Chainable<void>;
-
-      /**
-       * Custom command to mock request at '/jupyter/api/namespaces/<namespace>/notebooks'
-       * and returns an object with a mock array of notebooks for the given namespace
-       */
-      mockGetNotebooksRequest(namespace: string): Chainable<void>;
       
       /**
        * Custom command to mock request at '/api/workgroup/get-contributors/<namespace>'
