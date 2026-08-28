@@ -112,7 +112,26 @@ export class ManageFilersView extends mixinBehaviors([AppLocalizeBehavior], util
     }
 
     formatErrors(errors) {
-        return JSON.parse(errors.errors);
+        // The error messages coming from the errors ConfigMap
+        // (Which come from the controller) are too much.
+        // So we want to generalize/simplify them here.
+        const errorsList = JSON.parse(errors.errors);
+        errorsList.forEach((error)=>{
+            const timestamp = new Date(error.Timestamp);
+            // eslint-disable-next-line max-len
+            error.FormattedDatetime = `${timestamp.toDateString()} ${timestamp.toLocaleTimeString()}`;
+
+            if (error.ErrorMessage.includes(
+                'error when retrieving cifs share: entry doesn\'t exist'
+            )) {
+                // eslint-disable-next-line max-len
+                error.FormattedErrorMessage = `Could not find the path ${error.Svm}/${error.Share}.`;
+            } else {
+                // eslint-disable-next-line max-len
+                error.FormattedErrorMessage = 'An unexpected error has occured. Please reach our to the Zone team for assistance.';
+            }
+        });
+        return errorsList;
     }
 
     onChangeFilers(e) {

@@ -98,7 +98,7 @@ section#Main-Content
                 table
                     template(is='dom-repeat', items='[[formatErrors(sharesErrors)]]')
                         tr 
-                            td [{{item.Timestamp}}] - {{item.Svm}}/{{item.Share}}: {{item.ErrorMessage}}
+                            td [{{item.FormattedDatetime}}]: {{item.FormattedErrorMessage}}
                             td 
                                 paper-icon-button(icon='icons:clear', on-click="deleteShareError")
 
