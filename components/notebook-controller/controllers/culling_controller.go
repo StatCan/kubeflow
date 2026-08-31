@@ -508,6 +508,8 @@ func setStopAnnotation(meta *metav1.ObjectMeta, m *metrics.Metrics, log logr.Log
 		meta.SetAnnotations(map[string]string{})
 	}
 	meta.Annotations[STOP_ANNOTATION] = t.Format(time.RFC3339)
+	// Zone: Sets the culling stop time annotation as the same value as the stop annotation.
+	// We can use this annotation to check if a notebook was manually stopped or culled
 	meta.Annotations[CULLING_STOP_ANNOTATION] = t.Format(time.RFC3339)
 
 	if m != nil {
