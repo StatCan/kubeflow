@@ -10,6 +10,8 @@ import {KubernetesService} from './k8s_service';
 import {getMetricsService} from './metrics_service_factory';
 import {PrometheusMetricsService} from "./prometheus_metrics_service";
 import {PrometheusDriver} from "prometheus-query";
+import helmet from 'helmet'
+import * as crypto from "crypto";
 
 const isProduction = process.env.NODE_ENV === 'production';
 const codeEnvironment = isProduction?'production':'development';
@@ -53,6 +55,22 @@ async function main() {
   console.info(`Using Profiles service at ${profilesServiceUrl}`);
   const profilesService = new DefaultApi(profilesServiceUrl);
 
+  app.use((req, res, next) => {
+    res.locals.cspNonce = crypto.randomBytes(32).toString("hex");
+    next();
+  });
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          baseUri: ["'none'"],
+          objectScr: ["'none'"],
+          scriptSrc: [(req, res) => `'nonce-${res.locals.cspNonce}'`, "'strict-dynamic'"],
+        },
+      },
+    }),
+  );
+  
   app.use(express.json());
   app.use(express.static(frontEnd));
   app.use(attachUser(USERID_HEADER, USERID_PREFIX));
