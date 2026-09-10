@@ -1,5 +1,5 @@
 import {KubeConfig} from '@kubernetes/client-node';
-import express, {Request, Response} from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import {resolve} from 'path';
 
 import {Api, apiError} from './api';
@@ -10,7 +10,7 @@ import {KubernetesService} from './k8s_service';
 import {getMetricsService} from './metrics_service_factory';
 import {PrometheusMetricsService} from "./prometheus_metrics_service";
 import {PrometheusDriver} from "prometheus-query";
-import helmet from 'helmet'
+import helmet from 'helmet';
 import * as crypto from "crypto";
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -55,7 +55,7 @@ async function main() {
   console.info(`Using Profiles service at ${profilesServiceUrl}`);
   const profilesService = new DefaultApi(profilesServiceUrl);
 
-  app.use((req, res, next) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
     res.locals.cspNonce = crypto.randomBytes(32).toString("hex");
     next();
   });
@@ -65,7 +65,7 @@ async function main() {
         directives: {
           baseUri: ["'none'"],
           objectScr: ["'none'"],
-          scriptSrc: [(req, res) => `'nonce-${res.locals.cspNonce}'`, "'strict-dynamic'"],
+          scriptSrc: [(req, res) => `'nonce-${(res as Response).locals.cspNonce}'`],
         },
       },
     }),
