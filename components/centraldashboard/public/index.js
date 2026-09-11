@@ -1,6 +1,6 @@
 // Entrypoint for Webpack
 // eslint-disable-next-line camelcase,no-undef
-__webpack_nonce__ = '<?=nonce?>';
+__webpack_nonce__ = 'random123';
 
 import '@babel/polyfill';
 
