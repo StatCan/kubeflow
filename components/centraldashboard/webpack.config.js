@@ -163,7 +163,7 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             filename: resolve(DESTINATION, 'index.html'),
-            template: resolve(SRC, 'index.html'),
+            template: resolve(SRC, 'index.ejs'),
             inject: true,
             scriptLoading: 'defer',
             excludeChunks: ['dashboard_lib'],
