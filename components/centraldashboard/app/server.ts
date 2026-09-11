@@ -12,7 +12,6 @@ import {PrometheusMetricsService} from "./prometheus_metrics_service";
 import {PrometheusDriver} from "prometheus-query";
 import helmet from 'helmet';
 import * as crypto from "crypto";
-import ejs from 'ejs';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const codeEnvironment = isProduction?'production':'development';
@@ -66,7 +65,7 @@ async function main() {
         directives: {
           baseUri: ["'none'"],
           objectScr: ["'none'"],
-          scriptSrc: [(req, res) => `'nonce-${(res as Response).locals.cspNonce}'`],
+          scriptSrc: ["'self'", (req, res) => `'nonce-${(res as Response).locals.cspNonce}'`],
         },
       },
     }),
@@ -102,12 +101,9 @@ async function main() {
       code: 404,
     })
   );
-  app.set('view engine', 'ejs');
-  ejs.delimiter = '?';
 
   app.get('/*', (_: express.Request, res: express.Response) => {
-    // res.sendFile(resolve(frontEnd, 'index.html'));
-    res.render(resolve(frontEnd, 'index.ejs'), { nonce: res.locals.cspNonce });
+    res.sendFile(resolve(frontEnd, 'index.html'));
   });
   app.listen(
       port,
