@@ -63,8 +63,6 @@ async function main() {
     helmet({
       contentSecurityPolicy: {
         directives: {
-          baseUri: ["'none'"],
-          objectScr: ["'none'"],
           scriptSrc: ["'self'", (req, res) => `'nonce-${(res as Response).locals.cspNonce}'`],
         },
       },
