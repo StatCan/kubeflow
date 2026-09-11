@@ -66,6 +66,7 @@ async function main() {
           baseUri: ["'none'"],
           objectScr: ["'none'"],
           scriptSrc: ["'self'", (req, res) => `'nonce-${(res as Response).locals.cspNonce}'`],
+          styleSrc: ["'self'", (req, res) => `'nonce-${(res as Response).locals.cspNonce}'`],
         },
       },
     }),
