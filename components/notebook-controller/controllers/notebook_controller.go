@@ -577,6 +577,36 @@ func generateVirtualService(instance *v1beta1.Notebook) (*unstructured.Unstructu
 				map[string]interface{}{
 					"uri": map[string]interface{}{
 						"prefix": prefix,
+						"withoutHeaders": map[string]interface{}{
+							"content-security-policy": map[string]interface{}{},
+						},
+					},
+				},
+			},
+			"rewrite": map[string]interface{}{
+				"uri": rewrite,
+			},
+			"route": []interface{}{
+				map[string]interface{}{
+					"destination": map[string]interface{}{
+						"host": service,
+						"port": map[string]interface{}{
+							"number": int64(DefaultServingPort),
+						},
+					},
+				},
+			},
+		},
+		map[string]interface{}{
+			"headers": map[string]interface{}{
+				"request": map[string]interface{}{
+					"set": headersRequestSetInterface,
+				},
+			},
+			"match": []interface{}{
+				map[string]interface{}{
+					"uri": map[string]interface{}{
+						"prefix": prefix,
 					},
 				},
 			},
