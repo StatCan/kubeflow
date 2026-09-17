@@ -567,20 +567,15 @@ func generateVirtualService(instance *v1beta1.Notebook) (*unstructured.Unstructu
 				"request": map[string]interface{}{
 					"set": headersRequestSetInterface,
 				},
-				"response": map[string]interface{}{
-					"set": map[string]interface{}{
-						"content-security-policy": DefaultContentSecurityPolicy,
-					},
-				},
 			},
 			"match": []interface{}{
 				map[string]interface{}{
 					"uri": map[string]interface{}{
 						"prefix": prefix,
 					},
-					"withoutHeaders": map[string]interface{}{
+					"headers": map[string]interface{}{
 						"content-security-policy": map[string]interface{}{
-							"regex": "*",
+							"regex": ".+",
 						},
 					},
 				},
@@ -603,6 +598,11 @@ func generateVirtualService(instance *v1beta1.Notebook) (*unstructured.Unstructu
 			"headers": map[string]interface{}{
 				"request": map[string]interface{}{
 					"set": headersRequestSetInterface,
+				},
+				"response": map[string]interface{}{
+					"set": map[string]interface{}{
+						"content-security-policy": DefaultContentSecurityPolicy,
+					},
 				},
 			},
 			"match": []interface{}{
