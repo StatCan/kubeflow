@@ -579,7 +579,9 @@ func generateVirtualService(instance *v1beta1.Notebook) (*unstructured.Unstructu
 						"prefix": prefix,
 					},
 					"withoutHeaders": map[string]interface{}{
-						"content-security-policy": map[string]interface{}{},
+						"content-security-policy": map[string]interface{}{
+							"regex": "*",
+						},
 					},
 				},
 			},
