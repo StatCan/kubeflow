@@ -1,5 +1,5 @@
 import {KubeConfig} from '@kubernetes/client-node';
-import express, {Request, Response} from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import {resolve} from 'path';
 
 import {Api, apiError} from './api';
@@ -10,6 +10,8 @@ import {KubernetesService} from './k8s_service';
 import {getMetricsService} from './metrics_service_factory';
 import {PrometheusMetricsService} from "./prometheus_metrics_service";
 import {PrometheusDriver} from "prometheus-query";
+import helmet from 'helmet';
+import * as crypto from "crypto";
 
 const isProduction = process.env.NODE_ENV === 'production';
 const codeEnvironment = isProduction?'production':'development';
@@ -53,6 +55,20 @@ async function main() {
   console.info(`Using Profiles service at ${profilesServiceUrl}`);
   const profilesService = new DefaultApi(profilesServiceUrl);
 
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    res.locals.cspNonce = crypto.randomBytes(32).toString("hex");
+    next();
+  });
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          scriptSrc: ["'self'", (req, res) => `'nonce-${(res as Response).locals.cspNonce}'`],
+        },
+      },
+    }),
+  );
+  
   app.use(express.json());
   app.use(express.static(frontEnd));
   app.use(attachUser(USERID_HEADER, USERID_PREFIX));
@@ -83,6 +99,7 @@ async function main() {
       code: 404,
     })
   );
+
   app.get('/*', (_: express.Request, res: express.Response) => {
     res.sendFile(resolve(frontEnd, 'index.html'));
   });
